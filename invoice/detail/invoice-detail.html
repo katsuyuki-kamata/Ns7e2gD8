@@ -235,6 +235,7 @@
   
       <!-- ===== Body (VoucherDetailLayout) ===== -->  
       <div class="voucher-detail-body">  
+        <div class="voucher-detail-body-margin voucher-detail-body-margin--left" aria-hidden="true"></div>
         <div class="voucher-detail-body-in">  
 
           <!-- InspectorPane -->
@@ -387,17 +388,18 @@
                         <dt class="vd-inspector-field__label">有効期限</dt>
                         <dd class="vd-inspector-field__value">2026/05/17 23:59まで有効</dd>
                       </dl>
-                      <div class="vd-inspector-field">
+                      <div class="vd-inspector-field vd-inspector-field--share-url">
                         <p class="vd-inspector-field__label">共有リンクのURL</p>
-                        <div class="vd-share-url-row">
-                          <p class="vd-share-url">https://next-commerce-int.yayoi-kk.co.jp/r/AbCdEfGhIjKlMnOpQrStUvWxYz1234567890</p>
-                          <button type="button" class="vd-share-copy-btn outline-btn-hover" onclick="copyShareLinkUrl(this)" aria-label="共有リンクのURLをコピー">
-                            <svg role="img" width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                              <path fill="currentColor" d="M10 4C8.34315 4 7 5.34315 7 7V23C7 24.6569 8.34315 26 10 26H22C23.6569 26 25 24.6569 25 23V9.41421C25 8.88378 24.7893 8.37507 24.4142 8L20 3.58579C19.6249 3.21071 19.1162 3 18.5858 3H10ZM10 7H18V11H22V23H10V7ZM20 6.41421L21.5858 8H20V6.41421ZM5 9C5 7.34315 6.34315 6 8 6V8C7.44772 8 7 8.44772 7 9V25C7 25.5523 7.44772 26 8 26H20V28H8C6.34315 28 5 26.6569 5 25V9Z"/>
-                            </svg>
-                            <span>コピー</span>
-                          </button>
-                        </div>
+                        <button
+                          type="button"
+                          class="vd-share-copy-btn outline-btn-hover"
+                          data-share-url="https://next-commerce-int.yayoi-kk.co.jp/r/AbCdEfGhIjKlMnOpQrStUvWxYz1234567890"
+                          onclick="copyShareLinkUrl(this)"
+                          aria-label="リンクをコピー"
+                        >
+                          <img class="vd-share-copy-btn__icon" src="img/link.svg" width="16" height="16" alt="" aria-hidden="true" />
+                          <span>リンクをコピー</span>
+                        </button>
                       </div>
                       <a href="#" class="vd-inspector-link">新しい共有リンクを再発行</a>
                     </div>
@@ -465,6 +467,7 @@
           </div>  
 
         </div>  
+        <div class="voucher-detail-body-margin voucher-detail-body-margin--right" aria-hidden="true"></div>
       </div>  
   
     </div>  
