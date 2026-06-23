@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- この HTML のフォルダから components/set-app-base.js への相対パスだけ階層に合わせる（ここは templates/ なので ../） -->
+  <script src="../components/set-app-base.js"></script>
+  <title>ページタイトル - 弥生 請求書 Next</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!--
+    共通: ルート基準（styles.css, img/...）。
+    ページ専用: HTML と同じ階層のフォルダに置き、ルートからのパスで参照する。
+    例）invoice/invoice-list.html → invoice/invoice-list.css, invoice/invoice-list.js
+    例）invoice/detail/invoice-detail.html → invoice/detail/invoice-detail.css など
+    Tailwind CDN 利用時は、CDN の直後に *.tailwind.js（tailwind.config のみ）を読み込む。
+  -->
+  <script src="icons.js"></script>
+  <script src="render.js"></script>
+  <script src="layout-toggle.js"></script>
+  <script src="side-nav-cascade.js"></script>
+</head>
+<body>
+  <!--
+    レイアウトは .L 直下に .Ld のみ置く。
+    サイドナビ（La+Lc）とヘッダ（Lb）は layout-components.js が .Ld の直前に挿入する。
+  -->
+  <div class="L">
+    <div class="Ld">
+      <main style="padding: 32px">
+        <p>ここに本文を配置します。</p>
+      </main>
+    </div>
+  </div>
+
+  <!--
+    必ず </body> 直前の同期スクリプトでマウントすること。
+    （この時点ではまだ DOMContentLoaded 前のため、その後の render.js がナビ内の i[data-icon] を描画できる）
+
+    ・head 先頭付近に set-app-base.js を1本（上記のように深度に応じた相対パスのみ変更）
+    ・以降の link/script/img/href はルート基準で記述（window.SI_IMG_BASE は通常不要）
+
+    ■ preset: 'root'（index.html と同階層）
+      script: src="components/layout-components.js"
+      AppLayout.mount({ preset: 'root', pageTitle: 'ホーム', activeNav: 'home' });
+      activeNav: 'home' | 'invoice' | その他（未指定時はどちらも非選択表示に近い状態）
+
+    ■ preset: 'invoice'（invoice/invoice-list.html 相当）
+      set-app-base: src="../components/set-app-base.js"
+      AppLayout.mount({ preset: 'invoice', pageTitle: '請求書', activeNav: 'invoice' });
+      → .L に invoice-shell が付与される
+
+    ■ preset: 'invoiceDetail'（invoice/detail/ 配下）
+      set-app-base: src="../../components/set-app-base.js"
+      AppLayout.mount({ preset: 'invoiceDetail', pageTitle: '請求書', activeNav: 'invoice' });
+
+    任意: companyName（省略時は Y坂建設株式会社）
+    任意: homeHref / invoiceListHref / assetBase は AppLayout.NAV_DEFAULTS を上書きしたいときのみ指定
+  -->
+  <script src="components/layout-components.js"></script>
+  <script>
+    AppLayout.mount({
+      preset: 'root',
+      pageTitle: 'ページタイトル',
+      activeNav: 'home',
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>  
+<script src="components/set-app-base.js"></script>  
+<title>ホーム - 弥生 請求書 Next</title>  
+<link rel="stylesheet" href="styles.css"/>  
+<script src="icons.js"></script>  
+<script src="render.js"></script>  
+<script src="layout-toggle.js"></script>  
+<script src="side-nav-cascade.js"></script>  
+</head>  
+<body>  
+<div class="L">  
+<!-- Content -->  
+<div class="Ld">  
+<!-- Banner -->  
+<div class="Bn" style="margin:32px 32px 0" hidden>  
+<div class="mw"><div class="mi"><span style="flex-shrink:0;margin-top:2px;color:var(--r6)"><i data-icon="exclamation.square.filled" data-size="20"></i></span><span>メール送信に失敗した証憑が3件あります。</span></div></div>  
+<div class="bw"><button class="ob">メール送信履歴を確認</button></div>  
+</div>  
+<!-- Home 2-column -->  
+<div class="H">  
+<!-- Left -->  
+<div class="Hl">  
+<!-- Maintenance -->  
+<div class="Im" hidden><div class="mw"><div class="mi"><span style="flex-shrink:0;margin-top:4px;color:var(--o6)"><i data-icon="exclamation.triangle" data-size="20"></i></span><p>システムメンテナンスのお知らせ（実施日時：2026年03月28日(土) 02:00～08:00）</p></div></div><div class="bw"><button class="sb">詳細</button></div></div>  
+<!-- 要注意ステータスの証憑（AttentionDocuments / container query） -->  
+<div><h2 class="Sh">要注意ステータスの証憑</h2>  
+<div class="attention-documents-cq">  
+<div class="attention-documents-grid">  
+<div class="attention-documents-group attention-documents-group--2col">  
+<h2 class="attention-documents-heading"><span style="flex-shrink:0"><i data-icon="estimate" data-size="24" data-icon-src="img/estimates_outline_color.svg"></i></span>見積書</h2>  
+<div class="attention-card attention-card--disabled" aria-label="未発行の見積書はありません"><span class="attention-card__label">未発行</span><span class="attention-card__count"><span class="attention-card__num">0</span><span class="attention-card__unit">件</span></span><span class="attention-card__cta">確認する</span></div>  
+<a href="#" class="attention-card attention-card--notice" aria-label="未受注の見積書3件を確認する" data-pendo="attention-document-link-estimate-expired"><span class="attention-card__label"><span style="color:var(--o6)"><i data-icon="exclamation.triangle.filled" data-size="20"></i></span>未受注</span><span class="attention-card__count"><span class="attention-card__num">3</span><span class="attention-card__unit">件</span></span><span class="attention-card__cta">確認する</span></a>  
+</div>  
+<div class="attention-documents-group attention-documents-group--1col">  
+<h2 class="attention-documents-heading"><span style="flex-shrink:0"><i data-icon="delivery-note" data-size="24" data-icon-src="img/delivery_slips_color.svg"></i></span>納品書</h2>  
+<div class="attention-card attention-card--disabled" aria-label="未発行の納品書はありません"><span class="attention-card__label">未発行</span><span class="attention-card__count"><span class="attention-card__num">0</span><span class="attention-card__unit">件</span></span><span class="attention-card__cta">確認する</span></div>  
+</div>  
+<div class="attention-documents-group attention-documents-group--2col">  
+<h2 class="attention-documents-heading"><span style="flex-shrink:0"><i data-icon="invoice" data-size="24" data-icon-src="img/invoices_color.svg"></i></span>請求書</h2>  
+<a href="invoice/invoice-list.html?needingAttentionStatus=UNBILLED" class="attention-card attention-card--notice" aria-label="未請求の請求書2件を確認する" data-pendo="attention-document-link-invoice-unbilled"><span class="attention-card__label"><span style="color:var(--o6)"><i data-icon="exclamation.triangle.filled" data-size="20"></i></span>未請求</span><span class="attention-card__count"><span class="attention-card__num">2</span><span class="attention-card__unit">件</span></span><span class="attention-card__cta">確認する</span></a>  
+<a href="invoice/invoice-list.html?needingAttentionStatus=OVERDUE" class="attention-card attention-card--negative" aria-label="入金遅れの請求書1件を確認する" data-pendo="attention-document-link-invoice-overdue"><span class="attention-card__label"><span style="color:var(--r6)"><i data-icon="fire.filled" data-size="20"></i></span>入金遅れ</span><span class="attention-card__count"><span class="attention-card__num">1</span><span class="attention-card__unit">件</span></span><span class="attention-card__cta">確認する</span></a>  
+</div>  
+</div>  
+</div>  
+</div>  
+<!-- 証憑を作成（NewVoucherCards / container query） -->  
+<div><h2 class="Sh">証憑を作成</h2>  
+<div class="new-voucher-cards-cq">  
+<div class="new-voucher-cards-grid">  
+<a href="#" class="new-voucher-card new-voucher-card--estimate" data-pendo="new-voucher-link-estimate"><span class="new-voucher-card__icon"><i data-icon="estimate" data-size="24" data-icon-src="img/estimates_outline_color.svg"></i></span><div class="new-voucher-card__label">見積書を新規作成</div><span class="new-voucher-card__plus" aria-hidden="true"><svg height="24" width="24" role="img" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><title>追加</title><path fill="currentColor" d="M14.5 26.5C14.5 27.3284 15.1716 28 16 28C16.8284 28 17.5 27.3284 17.5 26.5V17.5H26.5C27.3284 17.5 28 16.8284 28 16C28 15.1716 27.3284 14.5 26.5 14.5H17.5V5.5C17.5 4.67157 16.8284 4 16 4C15.1716 4 14.5 4.67157 14.5 5.5V14.5H5.5C4.67157 14.5 4 15.1716 4 16C4 16.8284 4.67157 17.5 5.5 17.5H14.5V26.5Z"/></svg></span></a>  
+<a href="#" class="new-voucher-card new-voucher-card--delivery" data-pendo="new-voucher-link-delivery-note"><span class="new-voucher-card__icon"><i data-icon="delivery-note" data-size="24" data-icon-src="img/delivery_slips_color.svg"></i></span><div class="new-voucher-card__label">納品書を新規作成</div><span class="new-voucher-card__plus" aria-hidden="true"><svg height="24" width="24" role="img" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><title>追加</title><path fill="currentColor" d="M14.5 26.5C14.5 27.3284 15.1716 28 16 28C16.8284 28 17.5 27.3284 17.5 26.5V17.5H26.5C27.3284 17.5 28 16.8284 28 16C28 15.1716 27.3284 14.5 26.5 14.5H17.5V5.5C17.5 4.67157 16.8284 4 16 4C15.1716 4 14.5 4.67157 14.5 5.5V14.5H5.5C4.67157 14.5 4 15.1716 4 16C4 16.8284 4.67157 17.5 5.5 17.5H14.5V26.5Z"/></svg></span></a>  
+<a href="invoice/create.html" class="new-voucher-card new-voucher-card--invoice" data-pendo="new-voucher-link-invoice"><span class="new-voucher-card__icon"><i data-icon="invoice" data-size="24" data-icon-src="img/invoices_color.svg"></i></span><div class="new-voucher-card__label">請求書を新規作成</div><span class="new-voucher-card__plus" aria-hidden="true"><svg height="24" width="24" role="img" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><title>追加</title><path fill="currentColor" d="M14.5 26.5C14.5 27.3284 15.1716 28 16 28C16.8284 28 17.5 27.3284 17.5 26.5V17.5H26.5C27.3284 17.5 28 16.8284 28 16C28 15.1716 27.3284 14.5 26.5 14.5H17.5V5.5C17.5 4.67157 16.8284 4 16 4C15.1716 4 14.5 4.67157 14.5 5.5V14.5H5.5C4.67157 14.5 4 15.1716 4 16C4 16.8284 4.67157 17.5 5.5 17.5H14.5V26.5Z"/></svg></span></a>  
+</div>  
+</div>  
+</div>  
+<!-- よく使う取引先・送付先から作成（CreateFromClientSection） -->  
+<div class="create-from-client-cq">  
+<div class="create-from-client-title">よく使う取引先・送付先から作成</div>  
+<div class="create-from-client-grid">  
+<div class="create-from-client-card">  
+<h3 class="create-from-client-card__main" aria-label="株式会社サンプル商事 営業部 田中太郎"><div class="create-from-client-card__name" title="株式会社サンプル商事">株式会社サンプル商事</div><div class="create-from-client-card__sub"><span class="create-from-client-card__sub-icon" aria-hidden="true"><i data-icon="people" data-size="16"></i></span><span class="create-from-client-card__sub-text" title="営業部 田中太郎">営業部 田中太郎</span></div></h3>  
+<div class="create-from-client-card__actions">  
+<a href="#" role="button" class="create-from-client-card__action" aria-label="株式会社サンプル商事 営業部 田中太郎 宛に見積書を作成" data-pendo="link-estimate-create-from-client"><i data-icon="estimate" data-size="20"></i></a>  
+<a href="#" role="button" class="create-from-client-card__action" aria-label="株式会社サンプル商事 営業部 田中太郎 宛に納品書を作成" data-pendo="link-delivery-note-create-from-client"><i data-icon="delivery-note" data-size="20"></i></a>  
+<a href="invoice/invoice-list.html" role="button" class="create-from-client-card__action" aria-label="株式会社サンプル商事 営業部 田中太郎 宛に請求書を作成" data-pendo="link-invoice-create-from-client"><i data-icon="invoice" data-size="20"></i></a>  
+</div>  
+</div>  
+<div class="create-from-client-card">  
+<h3 class="create-from-client-card__main" aria-label="テスト工業株式会社"><div class="create-from-client-card__name" title="テスト工業株式会社">テスト工業株式会社</div><div class="create-from-client-card__sub"><span class="create-from-client-card__sub-text" title="—">—</span></div></h3>  
+<div class="create-from-client-card__actions">  
+<a href="#" role="button" class="create-from-client-card__action" aria-label="テスト工業株式会社 宛に見積書を作成" data-pendo="link-estimate-create-from-client"><i data-icon="estimate" data-size="20"></i></a>  
+<a href="#" role="button" class="create-from-client-card__action" aria-label="テスト工業株式会社 宛に納品書を作成" data-pendo="link-delivery-note-create-from-client"><i data-icon="delivery-note" data-size="20"></i></a>  
+<a href="invoice/invoice-list.html" role="button" class="create-from-client-card__action" aria-label="テスト工業株式会社 宛に請求書を作成" data-pendo="link-invoice-create-from-client"><i data-icon="invoice" data-size="20"></i></a>  
+</div>  
+</div>  
+<div class="create-from-client-card">  
+<h3 class="create-from-client-card__main" aria-label="ABC株式会社 経理部 鈴木花子"><div class="create-from-client-card__name" title="ABC株式会社">ABC株式会社</div><div class="create-from-client-card__sub"><span class="create-from-client-card__sub-icon" aria-hidden="true"><i data-icon="people" data-size="16"></i></span><span class="create-from-client-card__sub-text" title="経理部 鈴木花子">経理部 鈴木花子</span></div></h3>  
+<div class="create-from-client-card__actions">  
+<a href="#" role="button" class="create-from-client-card__action" aria-label="ABC株式会社 経理部 鈴木花子 宛に見積書を作成" data-pendo="link-estimate-create-from-client"><i data-icon="estimate" data-size="20"></i></a>  
+<a href="#" role="button" class="create-from-client-card__action" aria-label="ABC株式会社 経理部 鈴木花子 宛に納品書を作成" data-pendo="link-delivery-note-create-from-client"><i data-icon="delivery-note" data-size="20"></i></a>  
+<a href="invoice/invoice-list.html" role="button" class="create-from-client-card__action" aria-label="ABC株式会社 経理部 鈴木花子 宛に請求書を作成" data-pendo="link-invoice-create-from-client"><i data-icon="invoice" data-size="20"></i></a>  
+</div>  
+</div>  
+</div>  
+<a href="#" role="button" class="outline-btn-hover" data-pendo="link-client-index">すべての取引先・送付先を見る</a>  
+</div>  
+</div>  
+<!-- Right: より便利に使うための設定ウィジェット -->  
+<div>  
+<div class="user-achievement-widget">  
+<button type="button" class="user-achievement-widget__close" aria-label="閉じる" data-pendo="user-achievement-close"><span class="user-achievement-widget__close-inner"><svg height="20" width="20" role="img" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M5.93934 23.9393C5.35355 24.5251 5.35355 25.4749 5.93934 26.0607C6.52513 26.6464 7.47487 26.6464 8.06066 26.0607L16 18.1213L23.9394 26.0607C24.5251 26.6465 25.4749 26.6465 26.0607 26.0607C26.6465 25.4749 26.6465 24.5251 26.0607 23.9394L18.1213 16L26.0607 8.06066C26.6464 7.47487 26.6464 6.52513 26.0607 5.93934C25.4749 5.35355 24.5251 5.35355 23.9393 5.93934L16 13.8787L8.06068 5.93936C7.47489 5.35357 6.52514 5.35357 5.93936 5.93936C5.35357 6.52514 5.35357 7.47489 5.93936 8.06068L13.8787 16L5.93934 23.9393Z"/></svg></span></button>  
+<div class="user-achievement-widget__top">  
+<h2 class="user-achievement-widget__title">より便利に使うための設定</h2>  
+<div class="user-achievement-widget__progress">  
+<div class="user-achievement-widget__progress-main">  
+<div class="user-achievement-widget__donut"><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none" style="transform:rotate(-90deg)" aria-hidden="true"><circle cx="32" cy="32" r="29" stroke-width="6" stroke="var(--g2)" fill="none"/><circle cx="32" cy="32" r="29" stroke-width="6" stroke="var(--bl)" fill="none" stroke-dasharray="0 182.212373908208" stroke-linecap="round"/></svg></div>  
+<div class="user-achievement-widget__pct"><span class="user-achievement-widget__pct-num">0</span><span class="user-achievement-widget__pct-unit">%</span></div>  
+</div>  
+<div class="user-achievement-widget__progress-illust" aria-hidden="true"><img src="img/home_illust.svg" alt="" width="136" height="77" decoding="async"/></div>  
+</div>  
+</div>  
+<hr class="user-achievement-widget__hr" />  
+<div class="user-achievement-widget__body">  
+<p>情報を登録すると、より早くかんたんに証憑や適格請求書を作成できます。</p>  
+<div class="user-achievement-widget__section">  
+<h3>自社情報</h3>  
+<div class="user-achievement-widget__register"><a href="/settings/own-company" role="button" class="user-achievement-widget__register-link" aria-label="自社情報を登録" data-pendo="user-achievement-link-own-company"><span>登録</span></a></div>  
+<ul class="user-achievement-widget__list">  
+<li aria-label="達成リスト 郵便番号を登録する"><svg height="20" width="20" role="img" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M2 16C2 8.26801 8.26801 2 16 2C23.732 2 30 8.26801 30 16C30 23.732 23.732 30 16 30C8.26801 30 2 23.732 2 16Z"/></svg>郵便番号</li>  
+<li aria-label="達成リスト 住所を登録する"><svg height="20" width="20" role="img" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M2 16C2 8.26801 8.26801 2 16 2C23.732 2 30 8.26801 30 16C30 23.732 23.732 30 16 30C8.26801 30 2 23.732 2 16Z"/></svg>住所</li>  
+<li aria-label="達成リスト 自社名を登録する"><svg height="20" width="20" role="img" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M2 16C2 8.26801 8.26801 2 16 2C23.732 2 30 8.26801 30 16C30 23.732 23.732 30 16 30C8.26801 30 2 23.732 2 16Z"/></svg>自社名</li>  
+<li aria-label="達成リスト 適格請求書発行事業者の登録番号を登録する"><svg height="20" width="20" role="img" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M2 16C2 8.26801 8.26801 2 16 2C23.732 2 30 8.26801 30 16C30 23.732 23.732 30 16 30C8.26801 30 2 23.732 2 16Z"/></svg>適格請求書発行事業者の登録番号</li>  
+</ul>  
+</div>  
+<div class="user-achievement-widget__section">  
+<h3>取引先</h3>  
+<div class="user-achievement-widget__register"><a href="/delivery-destination" role="button" class="user-achievement-widget__register-link" aria-label="取引先を登録" data-pendo="user-achievement-link-client"><span>登録</span></a></div>  
+<ul class="user-achievement-widget__list">  
+<li aria-label="達成リスト 取引先を登録する"><svg height="20" width="20" role="img" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M2 16C2 8.26801 8.26801 2 16 2C23.732 2 30 8.26801 30 16C30 23.732 23.732 30 16 30C8.26801 30 2 23.732 2 16Z"/></svg>取引先を登録する</li>  
+</ul>  
+</div>  
+</div>  
+</div>  
+</div>  
+</div>  
+</div>  
+</div>  
+<script src="components/layout-components.js"></script>  
+<script>  
+AppLayout.mount({ preset: 'root', pageTitle: 'ホーム', activeNav: 'home' });  
+</script>  
+</body></html>

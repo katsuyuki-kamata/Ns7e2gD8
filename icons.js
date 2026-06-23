@@ -1,0 +1,25 @@
+/* アイコンはすべて img/ 配下の SVG。HTML で data-icon-src="img/別名.svg" を付けるとその箇所だけ画像を差し替え可能（色違い用など）。例: home は通常 img/home.svg、選択中ナビなどは img/home_color.svg。 */
+var SVGIcon = {
+  menu: { img: 'img/menu.svg', title: '' },
+  home: { img: 'img/home.svg', title: '' },
+  estimate: { img: 'img/estimates_outline.svg', title: '見積書' },
+  'delivery-note': { img: 'img/delivery_slips.svg', title: '納品書' },
+  invoice: { img: 'img/invoices.svg', title: '請求書' },
+  receipt: { img: 'img/certification.svg', title: '領収書' },
+  building: { img: 'img/building.svg', title: '' },
+  'cardboard-box': { img: 'img/cardboard-box.svg', title: '' },
+  gear: { img: 'img/gear.svg', title: '' },
+  trash: { img: 'img/trash.svg', title: '' },
+  'question.circle': { img: 'img/question_circle.svg', title: '' },
+  'bell.filled': { img: 'img/bell.svg', title: '' },
+  'exclamation.square.filled': { img: 'img/exclamation_square.svg', title: '' },
+  'exclamation.triangle': { img: 'img/exclamation_triangle.svg', title: '' },
+  'exclamation.triangle.filled': { img: 'img/exclamation_triangle.svg', title: '' },
+  'fire.filled': { img: 'img/fire.svg', title: '' },
+  plus: { img: 'img/plus.svg', title: '' },
+  people: { img: 'img/people.svg', title: '' },
+  cross: { img: 'img/cross.svg', title: '' },
+  'check.circle.filled': { img: 'img/check_circle.svg', title: '' },
+  'circle.filled': { img: 'img/circle_outline.svg', title: '' },
+};
+window.SI = SVGIcon;

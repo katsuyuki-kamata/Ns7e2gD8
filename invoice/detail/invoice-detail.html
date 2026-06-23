@@ -1,0 +1,486 @@
+<!DOCTYPE html>  
+<html lang="ja">  
+<head>  
+  <meta charset="UTF-8" />  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />  
+  <script src="../../components/set-app-base.js"></script>  
+  <title>請求書詳細 - プロトタイプ</title>  
+  <script src="https://cdn.tailwindcss.com"></script>  
+  <script src="invoice/detail/invoice-detail.tailwind.js"></script>  
+  <link rel="stylesheet" href="styles.css" />  
+  <link rel="stylesheet" href="invoice/detail/invoice-detail.css" />  
+  <script src="icons.js"></script>  
+  <script src="render.js"></script>
+  <script src="layout-toggle.js"></script>
+  <script src="side-nav-cascade.js"></script>  
+</head>  
+<body>  
+<div class="L">  
+  <div class="Ld">  
+    <div class="invoice-detail-main flex flex-col flex-1 min-h-0 min-w-0">  
+  <div class="flex-1 min-h-0 overflow-auto h-full" style="container-type: size; container-name: voucher-detail;">  
+    <div class="grid h-full min-w-[904px] overflow-y-auto" style="grid-template-rows: auto 1fr;">  
+  
+      <!-- ===== Header ===== -->  
+      <div class="border-b border-divider-small bg-[#FFF]">  
+        <!-- IssueMenu — ボタン行 -->  
+        <div style="  
+          display: flex;  
+          justify-content: flex-end;  
+          align-items: center;  
+          padding-top: 12px;  
+          padding-bottom: 12px;  
+        ">  
+          <div class="issue-menu-actions" style="  
+            display: flex;  
+            justify-content: flex-end;  
+            flex-direction: column;  
+            align-items: flex-end;  
+            gap: 8px;  
+            padding-right: 32px;  
+          ">  
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">  
+              <a  
+                href="invoice/pdf/sample.pdf"  
+                download="invoice.pdf"  
+                role="button"  
+                class="btn-primary-blue"  
+                data-pendo="button-pdf-download"  
+                style="  
+                  display: inline-flex;  
+                  flex-direction: row;  
+                  justify-content: center;  
+                  align-items: center;  
+                  gap: 8px;  
+                  padding-left: 12px;  
+                  padding-right: 16px;  
+                  min-width: 112px;  
+                  height: 40px;  
+                  font-size: 2.0rem;  
+                  font-weight: bold;  
+                  border-radius: 8px;  
+                  border: none;  
+                  cursor: pointer;  
+                  text-overflow: ellipsis;  
+                  overflow: hidden;  
+                  white-space: nowrap;  
+                  vertical-align: bottom;  
+                  color: #FFFFFF;  
+                  background: #0C71EE;  
+                  text-decoration: none;  
+                  transition: color 0.2s ease 0s, background 0.2s ease 0s, box-shadow 0.1s ease-in-out 0s;  
+                "  
+              >  
+                <span style="display: flex;">  
+                  <svg role="img" width="24" height="24" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display: inline-block;">  
+                    <path fill="currentColor" d="M9.14353 15.0792C9.72932 14.4934 10.6791 14.4934 11.2649 15.0792L15.0543 18.8687V3.5C15.0543 2.67157 15.7259 2 16.5543 2C17.3827 2 18.0543 2.67157 18.0543 3.5V18.8964L21.8715 15.0792C22.4572 14.4934 23.407 14.4934 23.9928 15.0792C24.5786 15.665 24.5786 16.6148 23.9928 17.2006L17.6288 23.5645C17.043 24.1503 16.0933 24.1503 15.5075 23.5645L9.14353 17.2006C8.55774 16.6148 8.55774 15.665 9.14353 15.0792ZM6.05429 27C5.22586 27 4.55429 27.6716 4.55429 28.5C4.55429 29.3284 5.22586 30 6.05429 30H27.0543C27.8827 30 28.5543 29.3284 28.5543 28.5C28.5543 27.6716 27.8827 27 27.0543 27H6.05429Z"/>  
+                  </svg>  
+                </span>  
+                <span>PDFダウンロード</span>  
+              </a>  
+              <button  
+                type="button"  
+                class="outline-btn-hover"  
+                aria-haspopup="menu"  
+                data-pendo="button-attachment"  
+                style="  
+                  display: inline-flex;  
+                  flex-direction: row;  
+                  justify-content: center;  
+                  align-items: center;  
+                  gap: 8px;  
+                  padding-left: 12px;  
+                  padding-right: 16px;  
+                  min-width: 112px;  
+                  height: 40px;  
+                  font-size: 2.0rem;  
+                  font-weight: bold;  
+                  border-radius: 8px;  
+                  border: none;  
+                  cursor: pointer;  
+                  text-overflow: ellipsis;  
+                  overflow: hidden;  
+                  white-space: nowrap;  
+                  vertical-align: bottom;  
+                  color: #3E4651;  
+                  background: transparent;  
+                  box-shadow: currentcolor 0px 0px 0px 2px inset;  
+                  transition: color 0.2s ease 0s, background 0.2s ease 0s, box-shadow 0.1s ease-in-out 0s;  
+                "  
+              >  
+                <span style="display: flex;">  
+                  <svg role="img" width="24" height="24" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display: inline-block;">  
+                    <path fill="currentColor" d="M29.2 15.0998L3.79995 4.6998C3.09995 4.3998 2.29995 5.0998 2.49995 5.8998L3.79995 10.9998C3.99995 11.7998 4.79995 12.2998 5.59995 12.0998C6.39995 11.8998 6.89995 11.0998 6.69995 10.2998L6.29995 8.8998L23.5 15.9998L8.99995 21.9998L6.29995 22.9998L7.69995 17.4998H13.5C14.3 17.4998 15 16.7998 15 15.9998C15 15.1998 14.3 14.4998 13.5 14.4998H6.49995C5.79995 14.4998 5.19995 14.9998 4.99995 15.5998L2.99995 24.1998L2.49995 26.0998C2.29995 26.8998 3.09995 27.5998 3.79995 27.2998L29.2 16.9998C30.1 16.5998 30.1 15.3998 29.2 15.0998Z"/>  
+                  </svg>  
+                </span>  
+                <span>送付</span>  
+              </button>  
+              <button  
+                type="button"  
+                class="outline-btn-hover"  
+                data-pendo="button-next-connection-issue-menu"  
+                style="  
+                  display: inline-flex;  
+                  flex-direction: row;  
+                  justify-content: center;  
+                  align-items: center;  
+                  gap: 8px;  
+                  padding-left: 12px;  
+                  padding-right: 16px;  
+                  min-width: 112px;  
+                  height: 40px;  
+                  font-size: 2.0rem;  
+                  font-weight: bold;  
+                  border-radius: 8px;  
+                  border: none;  
+                  cursor: pointer;  
+                  text-overflow: ellipsis;  
+                  overflow: hidden;  
+                  white-space: nowrap;  
+                  vertical-align: bottom;  
+                  color: #3E4651;  
+                  background: transparent;  
+                  box-shadow: currentcolor 0px 0px 0px 2px inset;  
+                  transition: color 0.2s ease 0s, background 0.2s ease 0s, box-shadow 0.1s ease-in-out 0s;  
+                "  
+              >  
+                <span style="display: flex;">  
+                  <svg role="img" width="24" height="24" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display: inline-block;">  
+                    <path fill="currentColor" clip-rule="evenodd" fill-rule="evenodd" d="M12.8 9.5C12.4 11.1 11.1 12.4 9.5 12.8V19.1C11.5 19.6 13 21.5 13 23.7C13 26.3 10.9 28.5 8.2 28.5C5.5 28.5 3.5 26.4 3.5 23.7C3.5 21.7 4.7 20 6.5 19.3V12.7C4.7 12 3.5 10.3 3.5 8.3C3.5 5.6 5.6 3.5 8.3 3.5C10.3 3.5 12 4.7 12.7 6.5H19.4C20.1 4.7 21.8 3.5 23.8 3.5C26.4 3.5 28.5 5.6 28.5 8.3C28.5 11 26.4 13.1 23.7 13.1C21.5 13.1 19.7 11.6 19.1 9.6H12.8V9.5ZM10 8.3C10 9.3 9.2 10.1 8.2 10.1C7.2 10.1 6.5 9.2 6.5 8.3C6.5 7.4 7.3 6.5 8.3 6.5C9.3 6.5 10 7.3 10 8.3ZM10 23.7C10 24.7 9.2 25.5 8.2 25.5C7.2 25.5 6.5 24.7 6.5 23.7C6.5 22.7 7.3 21.9 8.3 21.9C9.3 21.9 10 22.8 10 23.7ZM23.7 10C24.7 10 25.5 9.2 25.5 8.2C25.5 7.2 24.7 6.5 23.7 6.5C22.7 6.5 21.9 7.3 21.9 8.3C21.9 9.3 22.8 10 23.7 10ZM28.5 23.7C28.5 26.3 26.4 28.5 23.7 28.5C21 28.5 18.9 26.4 18.9 23.7C18.9 21 21 18.9 23.7 18.9C26.4 18.9 28.5 21 28.5 23.7ZM25.5 23.7C25.5 24.7 24.7 25.5 23.7 25.5C22.7 25.5 21.9 24.7 21.9 23.7C21.9 22.7 22.7 21.9 23.7 21.9C24.7 21.9 25.5 22.8 25.5 23.7Z"/>  
+                  </svg>  
+                </span>  
+                <span>弥生 Nextへデータ送信</span>  
+              </button>  
+            </div>  
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">  
+              <a  
+                href="#"  
+                role="button"  
+                class="outline-btn-hover"  
+                data-pendo="link-invoice-edit"  
+                style="  
+                  display: inline-flex;  
+                  flex-direction: row;  
+                  justify-content: center;  
+                  align-items: center;  
+                  gap: 8px;  
+                  padding-left: 12px;  
+                  padding-right: 16px;  
+                  min-width: 112px;  
+                  height: 40px;  
+                  font-size: 2.0rem;  
+                  font-weight: bold;  
+                  border-radius: 8px;  
+                  border: none;  
+                  cursor: pointer;  
+                  text-overflow: ellipsis;  
+                  overflow: hidden;  
+                  white-space: nowrap;  
+                  vertical-align: bottom;  
+                  color: #3E4651;  
+                  background: transparent;  
+                  box-shadow: currentcolor 0px 0px 0px 2px inset;  
+                  text-decoration: none;  
+                  transition: color 0.2s ease 0s, background 0.2s ease 0s, box-shadow 0.1s ease-in-out 0s;  
+                "  
+              >  
+                <span style="display: flex;">  
+                  <svg role="img" width="24" height="24" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display: inline-block;">  
+                    <path fill="currentColor" d="M22.6041 2.71978C23.5638 1.76007 25.1198 1.76007 26.0795 2.71978L29.2802 5.92052C30.2399 6.88022 30.2399 8.43621 29.2802 9.39592L12.6602 26.016C12.3444 26.3317 11.9702 26.583 11.5584 26.7558L4.11857 29.8769C2.86005 30.4049 1.59514 29.1399 2.1231 27.8814L5.24422 20.4416C5.41698 20.0298 5.66826 19.6556 5.98404 19.3398L22.6041 2.71978ZM24.6953 5.50612C24.5001 5.31085 24.1835 5.31085 23.9882 5.50612L22.2061 7.28827L24.7117 9.79392L26.4939 8.01177C26.6891 7.81651 26.6891 7.49993 26.4939 7.30466L24.6953 5.50612ZM8.06928 21.4251C8.02417 21.4702 7.98827 21.5236 7.96359 21.5825L6.37932 25.3589C6.31005 25.524 6.47601 25.6899 6.64112 25.6207L10.4175 24.0364C10.4764 24.0117 10.5298 23.9758 10.5749 23.9307L22.5929 11.9128L20.0872 9.40714L8.06928 21.4251Z"/>  
+                  </svg>  
+                </span>  
+                <span>編集</span>  
+              </a>  
+              <button  
+                type="button"  
+                class="outline-btn-hover"  
+                aria-haspopup="menu"  
+                data-pendo="button-other-operations"  
+                style="  
+                  display: inline-flex;  
+                  flex-direction: row;  
+                  justify-content: center;  
+                  align-items: center;  
+                  gap: 8px;  
+                  padding-left: 12px;  
+                  padding-right: 16px;  
+                  min-width: 112px;  
+                  height: 40px;  
+                  font-size: 2.0rem;  
+                  font-weight: bold;  
+                  border-radius: 8px;  
+                  border: none;  
+                  cursor: pointer;  
+                  text-overflow: ellipsis;  
+                  overflow: hidden;  
+                  white-space: nowrap;  
+                  vertical-align: bottom;  
+                  color: #3E4651;  
+                  background: transparent;  
+                  box-shadow: currentcolor 0px 0px 0px 2px inset;  
+                  transition: color 0.2s ease 0s, background 0.2s ease 0s, box-shadow 0.1s ease-in-out 0s;  
+                "  
+              >  
+                <span style="display: flex;">  
+                  <svg role="img" width="24" height="24" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display: inline-block;">  
+                    <path fill="currentColor" d="M9 16C9 17.3807 7.88071 18.5 6.5 18.5C5.11929 18.5 4 17.3807 4 16C4 14.6193 5.11929 13.5 6.5 13.5C7.88071 13.5 9 14.6193 9 16ZM18.5 16C18.5 17.3807 17.3807 18.5 16 18.5C14.6193 18.5 13.5 17.3807 13.5 16C13.5 14.6193 14.6193 13.5 16 13.5C17.3807 13.5 18.5 14.6193 18.5 16ZM25.5 18.5C26.8807 18.5 28 17.3807 28 16C28 14.6193 26.8807 13.5 25.5 13.5C24.1193 13.5 23 14.6193 23 16C23 17.3807 24.1193 18.5 25.5 18.5Z"/>  
+                  </svg>  
+                </span>  
+                <span>その他</span>  
+              </button>  
+            </div>  
+          </div>  
+        </div>  
+      </div>  
+  
+      <!-- ===== Body (VoucherDetailLayout) ===== -->  
+      <div class="voucher-detail-body">  
+        <div class="voucher-detail-body-in">  
+
+          <!-- InspectorPane -->
+          <div class="vd-inspector-column" id="voucher-detail-inspector-pane">
+            <button
+              type="button"
+              class="vd-inspector-toggle"
+              id="vd-inspector-toggle"
+              data-pendo="inspector-collapse-button"
+              data-src-expanded="img/arrow_small_right.svg"
+              data-src-collapsed="img/arrow_small_left.svg"
+              aria-expanded="true"
+              aria-controls="voucher-detail-inspector-content"
+              aria-label="インスペクタを閉じる"
+              onclick="toggleInspectorPane()"
+            >
+              <img
+                class="vd-inspector-toggle__icon"
+                src="img/arrow_small_right.svg"
+                width="24"
+                height="24"
+                alt=""
+                aria-hidden="true"
+              />
+            </button>
+            <div class="vd-inspector-panel" id="voucher-detail-inspector-content">
+            <div class="voucher-detail-inspector">
+              <div class="vd-inspector-sections">
+
+                <!-- 1. ステータス -->
+                <section class="vd-inspector-section" aria-labelledby="vd-section-status-title">
+                  <h2 class="vd-inspector-section__title" id="vd-section-status-title">ステータス</h2>
+                  <div class="vd-inspector-section__body">
+                    <div class="status-select-wrap">
+                      <button
+                        type="button"
+                        class="status-select-trigger status-select status-select--unbilled"
+                        aria-label="ステータス"
+                        aria-haspopup="listbox"
+                        aria-expanded="false"
+                        onclick="event.stopPropagation(); toggleStatusSelectPanel(this)"
+                      >
+                        <span class="status-select-label">未請求</span>
+                      </button>
+                      <div class="status-select-panel" role="listbox">
+                        <button type="button" role="option" class="status-select-item" data-value="UNBILLED" onclick="event.stopPropagation(); applyInvoiceStatus(this)">未請求</button>
+                        <button type="button" role="option" class="status-select-item" data-value="BILLED" onclick="event.stopPropagation(); applyInvoiceStatus(this)">請求済み</button>
+                        <button type="button" role="option" class="status-select-item" data-value="DEPOSITED" onclick="event.stopPropagation(); applyInvoiceStatus(this)">入金済み</button>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <hr class="vd-inspector-divider" aria-hidden="true" />
+
+                <!-- 2. 弥生 Nextへデータ送信 -->
+                <section class="vd-inspector-section" aria-labelledby="vd-section-datasend-title">
+                  <div class="vd-inspector-section__heading-row">
+                    <h2 class="vd-inspector-section__title" id="vd-section-datasend-title">弥生 Nextへデータ送信</h2>
+                    <button
+                      type="button"
+                      class="vd-inspector-help-btn"
+                      aria-label="弥生 Nextへデータ送信とは"
+                      aria-haspopup="dialog"
+                      data-pendo="button-description-next-connection"
+                    >
+                      <svg role="img" width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path fill="currentColor" d="M4.89999 16C4.89999 9.92487 9.82486 5 15.9 5C21.9751 5 26.9 9.92487 26.9 16C26.9 22.0751 21.9751 27 15.9 27C9.82486 27 4.89999 22.0751 4.89999 16ZM15.9 2C8.16801 2 1.89999 8.26801 1.89999 16C1.89999 23.732 8.16801 30 15.9 30C23.632 30 29.9 23.732 29.9 16C29.9 8.26801 23.632 2 15.9 2ZM14.15 9.75C14.15 8.7835 14.9335 8 15.9 8C16.8665 8 17.65 8.7835 17.65 9.75C17.65 10.7165 16.8665 11.5 15.9 11.5C14.9335 11.5 14.15 10.7165 14.15 9.75ZM17.4 22.5C17.4 23.3284 16.7284 24 15.9 24C15.0716 24 14.4 23.3284 14.4 22.5V15C14.4 14.1716 15.0716 13.5 15.9 13.5C16.7284 13.5 17.4 14.1716 17.4 15V22.5Z"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="vd-inspector-section__body">
+                    <p class="vd-inspector-meta">未送信</p>
+                    <button
+                      type="button"
+                      class="vd-inspector-datasend-btn outline-btn-hover--dark"
+                      data-pendo="button-next-connection-next-connection"
+                    >
+                      <svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path fill="currentColor" clip-rule="evenodd" fill-rule="evenodd" d="M12.8 9.5C12.4 11.1 11.1 12.4 9.5 12.8V19.1C11.5 19.6 13 21.5 13 23.7C13 26.3 10.9 28.5 8.2 28.5C5.5 28.5 3.5 26.4 3.5 23.7C3.5 21.7 4.7 20 6.5 19.3V12.7C4.7 12 3.5 10.3 3.5 8.3C3.5 5.6 5.6 3.5 8.3 3.5C10.3 3.5 12 4.7 12.7 6.5H19.4C20.1 4.7 21.8 3.5 23.8 3.5C26.4 3.5 28.5 5.6 28.5 8.3C28.5 11 26.4 13.1 23.7 13.1C21.5 13.1 19.7 11.6 19.1 9.6H12.8V9.5ZM10 8.3C10 9.3 9.2 10.1 8.2 10.1C7.2 10.1 6.5 9.2 6.5 8.3C6.5 7.4 7.3 6.5 8.3 6.5C9.3 6.5 10 7.3 10 8.3ZM10 23.7C10 24.7 9.2 25.5 8.2 25.5C7.2 25.5 6.5 24.7 6.5 23.7C6.5 22.7 7.3 21.9 8.3 21.9C9.3 21.9 10 22.8 10 23.7ZM23.7 10C24.7 10 25.5 9.2 25.5 8.2C25.5 7.2 24.7 6.5 23.7 6.5C22.7 6.5 21.9 7.3 21.9 8.3C21.9 9.3 22.8 10 23.7 10ZM28.5 23.7C28.5 26.3 26.4 28.5 23.7 28.5C21 28.5 18.9 26.4 18.9 23.7C18.9 21 21 18.9 23.7 18.9C26.4 18.9 28.5 21 28.5 23.7ZM25.5 23.7C25.5 24.7 24.7 25.5 23.7 25.5C22.7 25.5 21.9 24.7 21.9 23.7C21.9 22.7 22.7 21.9 23.7 21.9C24.7 21.9 25.5 22.8 25.5 23.7Z"/>
+                      </svg>
+                      <span>弥生 Nextへデータ送信</span>
+                    </button>
+                  </div>
+                </section>
+
+                <hr class="vd-inspector-divider" aria-hidden="true" />
+
+                <!-- 3. メール送信 -->
+                <section class="vd-inspector-section" aria-labelledby="vd-section-mail-title">
+                  <h2 class="vd-inspector-section__title" id="vd-section-mail-title">メール送信</h2>
+                  <div class="vd-inspector-section__body vd-inspector-section__body--mail">
+                    <div class="vd-mail-block">
+                      <dl class="vd-inspector-field">
+                        <dt class="vd-inspector-field__label">送信日時</dt>
+                        <dd class="vd-inspector-field__value">2026/05/12 15:24</dd>
+                      </dl>
+                      <div class="vd-inspector-field">
+                        <p class="vd-inspector-field__label">宛先と送信ステータス</p>
+                        <ul class="vd-mail-recipient-list">
+                          <li class="vd-mail-recipient">
+                            <span class="vd-mail-recipient__prefix">TO：</span>
+                            <div class="vd-mail-recipient__content">
+                              <span class="vd-mail-recipient__email">jiro_toda@mkitani-homes.co.jp</span>
+                              <span class="vd-mail-recipient__status">送信済み（PDF）</span>
+                            </div>
+                          </li>
+                          <li class="vd-mail-recipient">
+                            <span class="vd-mail-recipient__prefix">CC：</span>
+                            <div class="vd-mail-recipient__content">
+                              <span class="vd-mail-recipient__email">saki_nakatani@mkitani-homes.co.jp</span>
+                              <span class="vd-mail-recipient__status">送信済み（PDF）</span>
+                            </div>
+                          </li>
+                          <li class="vd-mail-recipient">
+                            <span class="vd-mail-recipient__prefix">CC：</span>
+                            <div class="vd-mail-recipient__content">
+                              <span class="vd-mail-recipient__email">takatoshi_akiyama@mkitani-homes.co.jp</span>
+                              <span class="vd-mail-recipient__status">送信済み（PDF）</span>
+                            </div>
+                          </li>
+                        </ul>
+                        <a href="#" class="vd-inspector-link" data-pendo="link-voucher-sent-email-history">この証憑のメール送信履歴</a>
+                      </div>
+                    </div>
+                    <a href="#" class="vd-inspector-link" data-pendo="link-all-sent-email-history">すべてのメール送信履歴</a>
+                  </div>
+                </section>
+
+                <hr class="vd-inspector-divider" aria-hidden="true" />
+
+                <!-- 4. 共有リンク発行 -->
+                <section class="vd-inspector-section" aria-labelledby="vd-section-share-title">
+                  <h2 class="vd-inspector-section__title" id="vd-section-share-title">共有リンク発行</h2>
+                  <div class="vd-inspector-section__body">
+                    <div class="vd-share-tabs" role="tablist" aria-label="共有リンク">
+                      <button type="button" class="vd-share-tab vd-share-tab--active" role="tab" id="vd-share-tab-active" aria-selected="true" aria-controls="vd-share-panel-active" onclick="switchShareLinkTab('active')">有効</button>
+                      <button type="button" class="vd-share-tab" role="tab" id="vd-share-tab-history" aria-selected="false" aria-controls="vd-share-panel-history" onclick="switchShareLinkTab('history')">履歴</button>
+                    </div>
+                    <div id="vd-share-panel-active" class="vd-share-panel vd-share-panel--active" role="tabpanel" aria-labelledby="vd-share-tab-active">
+                      <dl class="vd-inspector-field">
+                        <dt class="vd-inspector-field__label">発行日時</dt>
+                        <dd class="vd-inspector-field__value">2026/05/12 15:24</dd>
+                      </dl>
+                      <dl class="vd-inspector-field">
+                        <dt class="vd-inspector-field__label">発行者</dt>
+                        <dd class="vd-inspector-field__value">弥生　太郎</dd>
+                      </dl>
+                      <dl class="vd-inspector-field">
+                        <dt class="vd-inspector-field__label">有効期限</dt>
+                        <dd class="vd-inspector-field__value">2026/05/17 23:59まで有効</dd>
+                      </dl>
+                      <div class="vd-inspector-field">
+                        <p class="vd-inspector-field__label">共有リンクのURL</p>
+                        <div class="vd-share-url-row">
+                          <p class="vd-share-url">https://next-commerce-int.yayoi-kk.co.jp/r/AbCdEfGhIjKlMnOpQrStUvWxYz1234567890</p>
+                          <button type="button" class="vd-share-copy-btn outline-btn-hover" onclick="copyShareLinkUrl(this)" aria-label="共有リンクのURLをコピー">
+                            <svg role="img" width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                              <path fill="currentColor" d="M10 4C8.34315 4 7 5.34315 7 7V23C7 24.6569 8.34315 26 10 26H22C23.6569 26 25 24.6569 25 23V9.41421C25 8.88378 24.7893 8.37507 24.4142 8L20 3.58579C19.6249 3.21071 19.1162 3 18.5858 3H10ZM10 7H18V11H22V23H10V7ZM20 6.41421L21.5858 8H20V6.41421ZM5 9C5 7.34315 6.34315 6 8 6V8C7.44772 8 7 8.44772 7 9V25C7 25.5523 7.44772 26 8 26H20V28H8C6.34315 28 5 26.6569 5 25V9Z"/>
+                            </svg>
+                            <span>コピー</span>
+                          </button>
+                        </div>
+                      </div>
+                      <a href="#" class="vd-inspector-link">新しい共有リンクを再発行</a>
+                    </div>
+                    <div id="vd-share-panel-history" class="vd-share-panel" role="tabpanel" aria-labelledby="vd-share-tab-history" hidden>
+                      <p class="vd-inspector-meta">履歴はありません。</p>
+                    </div>
+                  </div>
+                </section>
+
+                <hr class="vd-inspector-divider" aria-hidden="true" />
+
+                <!-- 5. 請求書情報 -->
+                <section class="vd-inspector-section vd-inspector-section--last" aria-labelledby="vd-section-info-title">
+                  <h2 class="vd-inspector-section__title" id="vd-section-info-title">請求書情報</h2>
+                  <div class="vd-inspector-section__body">
+                    <dl class="vd-info-list">
+                      <div class="vd-info-item">
+                        <dt class="vd-inspector-field__label">請求日</dt>
+                        <dd class="vd-inspector-field__value">2026/04/30</dd>
+                      </div>
+                      <div class="vd-info-item">
+                        <dt class="vd-inspector-field__label">請求書番号</dt>
+                        <dd class="vd-inspector-field__value">20260430-001</dd>
+                      </div>
+                      <div class="vd-info-item">
+                        <dt class="vd-inspector-field__label">取引先名</dt>
+                        <dd class="vd-inspector-field__value">M木谷ホームズ株式会社</dd>
+                      </div>
+                      <div class="vd-info-item">
+                        <dt class="vd-inspector-field__label">送付先名</dt>
+                        <dd class="vd-inspector-field__value">営業部法人営業課　田中様</dd>
+                      </div>
+                      <div class="vd-info-item">
+                        <dt class="vd-inspector-field__label">件名</dt>
+                        <dd class="vd-inspector-field__value">事務所天井ボード張り施工費</dd>
+                      </div>
+                      <div class="vd-info-item">
+                        <dt class="vd-inspector-field__label">請求金額</dt>
+                        <dd class="vd-inspector-field__value">847,000円</dd>
+                      </div>
+                      <div class="vd-info-item">
+                        <dt class="vd-inspector-field__label">お支払期限</dt>
+                        <dd class="vd-inspector-field__value">2026/05/31</dd>
+                      </div>
+                    </dl>
+                  </div>
+                </section>
+
+              </div>
+            </div>
+            </div>
+          </div>
+
+          <!-- LeftPane (請求書PDFプレビュー) -->  
+          <div class="voucher-detail-right">  
+            <div class="voucher-detail-pdf-wrap">  
+              <div class="voucher-detail-pdf-canvas">  
+                <iframe  
+                  src="invoice/pdf/sample.pdf#page=1&zoom=100"  
+                  title="請求書PDFプレビュー"  
+                  loading="lazy"  
+                ></iframe>  
+              </div>  
+            </div>  
+          </div>  
+
+        </div>  
+      </div>  
+  
+    </div>  
+  </div>  
+  
+</div>  
+</div>  
+
+    </div>  
+  </div>  
+</div>  
+  
+  <script src="invoice/detail/invoice-detail.js"></script>  
+  <script src="components/layout-components.js"></script>  
+  <script>  
+    AppLayout.mount({ preset: 'invoiceDetail', pageTitle: '事務所天井ボード張り施工費', activeNav: 'invoice' });  
+  </script>  
+</body>  
+</html>

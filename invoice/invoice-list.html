@@ -1,0 +1,419 @@
+<!DOCTYPE html>  
+<html lang="ja">  
+<head>  
+  <meta charset="UTF-8" />  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />  
+  <script src="../components/set-app-base.js"></script>  
+  <title>請求書 - 弥生 請求書 Next</title>  
+  <script src="https://cdn.tailwindcss.com"></script>  
+  <script src="invoice/invoice-list.tailwind.js"></script>  
+  <link rel="stylesheet" href="styles.css" />  
+  <link rel="stylesheet" href="invoice/invoice-list.css" />  
+  <script src="icons.js"></script>  
+  <script src="render.js"></script>
+  <script src="layout-toggle.js"></script>
+  <script src="side-nav-cascade.js"></script>  
+</head>  
+<body>  
+<div class="L">  
+  <div class="Ld">  
+    <div class="invoice-list-main flex flex-col flex-1 min-h-0 bg-white">  
+  <!-- Banner (empty in normal state) -->  
+  <div></div>  
+  
+  <!-- Toolbar（topView グリッド） -->  
+  <div style="  
+    display: flex;  
+    flex-direction: column;  
+    gap: 16px;  
+    margin-top: 32px;  
+    margin-left: 32px;  
+    margin-right: 32px;  
+    flex-shrink: 0;  
+  ">  
+    <div style="  
+      display: grid;  
+      grid-template-columns: repeat(3, 1fr);  
+      grid-template-rows: repeat(2, 1fr);  
+      gap: 16px;  
+    ">  
+  
+      <div style="  
+        grid-column-start: 3;  
+        grid-row-start: 1;  
+        justify-self: end;  
+      ">  
+        <a  
+          href="invoice/create.html"  
+          role="button"  
+          class="toolbar-btn-primary"  
+          data-pendo="link-invoice-create"  
+          style="  
+            display: inline-flex;  
+            flex-direction: row;  
+            justify-content: center;  
+            align-items: center;  
+            gap: 8px;  
+            padding-left: 12px;  
+            padding-right: 16px;  
+            min-width: 112px;  
+            height: 40px;  
+            font-size: 2.0rem;  
+            font-weight: bold;  
+            border-radius: 8px;  
+            border: none;  
+            cursor: pointer;  
+            text-overflow: ellipsis;  
+            overflow: hidden;  
+            white-space: nowrap;  
+            vertical-align: bottom;  
+            color: #FFFFFF;  
+            background: #0C71EE;  
+            text-decoration: none;  
+            transition: color 0.2s ease 0s, background 0.2s ease 0s, box-shadow 0.1s ease-in-out 0s;  
+          "  
+        >  
+          <span style="display: flex;">  
+            <svg role="img" width="24" height="24" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display: inline-block;">  
+              <path fill="currentColor" d="M14.5 26.5C14.5 27.3284 15.1716 28 16 28C16.8284 28 17.5 27.3284 17.5 26.5V17.5H26.5C27.3284 17.5 28 16.8284 28 16C28 15.1716 27.3284 14.5 26.5 14.5H17.5V5.5C17.5 4.67157 16.8284 4 16 4C15.1716 4 14.5 4.67157 14.5 5.5V14.5H5.5C4.67157 14.5 4 15.1716 4 16C4 16.8284 4.67157 17.5 5.5 17.5H14.5V26.5Z"/>  
+            </svg>  
+          </span>  
+          <span>請求書を新規作成</span>  
+        </a>  
+      </div>  
+  
+      <div style="  
+        grid-row: span 2 / span 2;  
+        grid-column: 1 / span 2;  
+        grid-row-start: 1;  
+        min-width: 0;  
+      ">  
+        <div class="invoice-list-toolbar-filters">  
+  
+          <span class="invoice-list-toolbar-search">  
+            <svg  
+              role="img" width="32" height="32" viewBox="0 0 32 32"  
+              xmlns="http://www.w3.org/2000/svg"  
+              style="  
+                position: absolute;  
+                left: 0;  
+                margin-left: 16px;  
+                color: #3E4651;  
+                z-index: 1;  
+                pointer-events: none;  
+              "  
+            >  
+              <path fill="currentColor" d="M7.6001 13.6C7.6001 10.2863 10.2864 7.59998 13.6001 7.59998C16.9138 7.59998 19.6001 10.2863 19.6001 13.6C19.6001 16.9137 16.9138 19.6 13.6001 19.6C10.2864 19.6 7.6001 16.9137 7.6001 13.6ZM13.6001 4.59998C8.62953 4.59998 4.6001 8.62941 4.6001 13.6C4.6001 18.5705 8.62953 22.6 13.6001 22.6C15.5438 22.6 17.3437 21.9838 18.8149 20.9361L24.9139 27.0352C25.4997 27.621 26.4495 27.621 27.0353 27.0352C27.6211 26.4494 27.6211 25.4996 27.0353 24.9138L20.9362 18.8148C21.9839 17.3436 22.6001 15.5437 22.6001 13.6C22.6001 8.62941 18.5707 4.59998 13.6001 4.59998Z"/>  
+            </svg>  
+            <input  
+              type="search"  
+              class="toolbar-freeword-input"  
+              data-pendo="free-word-filter-invoice"  
+              placeholder="取引先名・送付先名・件名・品番・品名で検索"  
+              value=""  
+              style="  
+                position: relative;  
+                display: inline-flex;  
+                outline: none;  
+                width: 100%;  
+                height: 48px;  
+                border-style: solid;  
+                border-width: 1px;  
+                border-radius: 8px;  
+                padding-left: calc(32px + 32px);  
+                padding-right: 16px;  
+                font-size: 1.6rem;  
+                line-height: 1;  
+                font-weight: normal;  
+                overflow: hidden;  
+                text-overflow: ellipsis;  
+                white-space: nowrap;  
+                transition-duration: 0.2s;  
+                transition-property: border-color, box-shadow, background-color;  
+                color: #272C34;  
+                background: #F2F4F6;  
+                border-color: #F2F4F6;  
+              "  
+            />  
+          </span>  
+  
+          <div class="invoice-list-toolbar-filter-pair">  
+          <div style="  
+            display: flex;  
+            align-items: stretch;  
+            flex-direction: column;  
+            gap: 4px;  
+            width: calc(4.5em + 60px);  
+            max-width: 100%;  
+            flex-shrink: 0;  
+          ">  
+            <span style="display: flex; align-items: center; gap: 4px;">  
+              <label for="filter-data-send" style="  
+                font-size: 1.4rem;  
+                font-weight: normal;  
+                line-height: 1;  
+                color: #65707D;  
+              ">データ送信</label>  
+              <span style="display: flex; color: #3E4651;"></span>  
+            </span>  
+            <div style="display: flex; align-items: center; position: relative; width: 100%;">  
+              <select  
+                id="filter-data-send"  
+                class="toolbar-filter-select"  
+                aria-label="データ送信の状態で絞り込む"  
+                data-pendo="select-invoice-data-send"  
+                style="  
+                  appearance: none;  
+                  -webkit-appearance: none;  
+                  position: relative;  
+                  display: inline-flex;  
+                  align-items: center;  
+                  height: 32px;  
+                  width: 100%;  
+                  outline: none;  
+                  border-radius: 8px;  
+                  font-weight: normal;  
+                  line-height: 1.5;  
+                  overflow: hidden;  
+                  text-overflow: ellipsis;  
+                  white-space: nowrap;  
+                  color: #272C34;  
+                  border: 1px solid #65707D;  
+                  transition-duration: 0.2s;  
+                  transition-property: border-color, box-shadow, background-color;  
+                  transition-timing-function: ease;  
+                  font-size: 1.6rem;  
+                  padding-left: 16px;  
+                  padding-right: calc(20px + 24px);  
+                  background: #FFFFFF;  
+                  font-family: inherit;  
+                  cursor: pointer;  
+                "  
+              >  
+                <option value="">すべて</option>  
+                <option value="NOT_SENT">未送信</option>  
+                <option value="INCOMPLETE">未完了</option>  
+                <option value="SENT">送信済み</option>  
+              </select>  
+              <div style="  
+                position: absolute;  
+                top: 0;  
+                right: 8px;  
+                height: 100%;  
+                display: flex;  
+                align-items: center;  
+                gap: 8px;  
+                pointer-events: none;  
+              ">  
+                <svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="color: #65707D;">  
+                  <title>下向矢印</title>  
+                  <path fill="currentColor" d="M16.1215 22.7454C15.6982 22.7796 15.2632 22.6347 14.9393 22.3109L4.43881 11.8104C3.85302 11.2246 3.85302 10.2749 4.43881 9.68907C5.02459 9.10328 5.97434 9.10328 6.56013 9.68907L16.0001 19.129L25.4401 9.68905C26.0259 9.10326 26.9756 9.10326 27.5614 9.68905C28.1472 10.2748 28.1472 11.2246 27.5614 11.8104L17.0609 22.3109C16.7989 22.5729 16.464 22.7178 16.1215 22.7454Z"/>  
+                </svg>  
+              </div>  
+            </div>  
+          </div>  
+  
+          <div style="  
+            display: flex;  
+            align-items: stretch;  
+            flex-direction: column;  
+            gap: 4px;  
+            width: calc(4.5em + 60px);  
+            max-width: 100%;  
+            flex-shrink: 0;  
+          ">  
+            <span style="display: flex; align-items: center; gap: 4px;">  
+              <label for="filter-status" style="  
+                font-size: 1.4rem;  
+                font-weight: normal;  
+                line-height: 1;  
+                color: #65707D;  
+              ">ステータス</label>  
+              <span style="display: flex; color: #3E4651;"></span>  
+            </span>  
+            <div style="display: flex; align-items: center; position: relative; width: 100%;">  
+              <select  
+                id="filter-status"  
+                class="toolbar-filter-select"  
+                aria-label="請求書ステータスで絞り込む"  
+                data-pendo="select-invoice-status"  
+                style="  
+                  appearance: none;  
+                  -webkit-appearance: none;  
+                  position: relative;  
+                  display: inline-flex;  
+                  align-items: center;  
+                  height: 32px;  
+                  width: 100%;  
+                  outline: none;  
+                  border-radius: 8px;  
+                  font-weight: normal;  
+                  line-height: 1.5;  
+                  overflow: hidden;  
+                  text-overflow: ellipsis;  
+                  white-space: nowrap;  
+                  color: #272C34;  
+                  border: 1px solid #65707D;  
+                  transition-duration: 0.2s;  
+                  transition-property: border-color, box-shadow, background-color;  
+                  transition-timing-function: ease;  
+                  font-size: 1.6rem;  
+                  padding-left: 16px;  
+                  padding-right: calc(20px + 24px);  
+                  background: #FFFFFF;  
+                  font-family: inherit;  
+                  cursor: pointer;  
+                "  
+              >  
+                <option value="">すべて</option>  
+                <option value="UNBILLED">未請求</option>  
+                <option value="BILLED">請求済み</option>  
+                <option value="DEPOSITED">入金済み</option>  
+              </select>  
+              <div style="  
+                position: absolute;  
+                top: 0;  
+                right: 8px;  
+                height: 100%;  
+                display: flex;  
+                align-items: center;  
+                gap: 8px;  
+                pointer-events: none;  
+              ">  
+                <svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="color: #65707D;">  
+                  <title>下向矢印</title>  
+                  <path fill="currentColor" d="M16.1215 22.7454C15.6982 22.7796 15.2632 22.6347 14.9393 22.3109L4.43881 11.8104C3.85302 11.2246 3.85302 10.2749 4.43881 9.68907C5.02459 9.10328 5.97434 9.10328 6.56013 9.68907L16.0001 19.129L25.4401 9.68905C26.0259 9.10326 26.9756 9.10326 27.5614 9.68905C28.1472 10.2748 28.1472 11.2246 27.5614 11.8104L17.0609 22.3109C16.7989 22.5729 16.464 22.7178 16.1215 22.7454Z"/>  
+                </svg>  
+              </div>  
+            </div>  
+          </div>  
+          </div>  
+  
+        </div>  
+      </div>  
+  
+      <div style="  
+        grid-column-start: 3;  
+        grid-row-start: 2;  
+        justify-self: end;  
+        align-self: end;  
+        font-size: 1.6rem;  
+        line-height: 1.7;  
+        color: #272C34;  
+      ">  
+        <span>5件中　1～5件</span>  
+      </div>  
+  
+    </div>  
+  </div>  
+  
+  <!-- Table -->  
+  <div class="mt-6 mx-6 flex-1 min-h-0 overflow-auto">  
+    <table class="w-full border-collapse">  
+      <colgroup>  
+        <col class="invoice-col-inv-no" /><col style="width:0"/><col/><col/><col/>  
+        <col style="width:0"/><col class="invoice-col-send-status"/><col class="invoice-col-send-status"/><col style="width:0"/><col style="width:0"/>  
+      </colgroup>  
+      <thead class="sticky top-0 bg-white z-50">  
+        <tr>  
+          <th class="border-b border-divider"><div>請求書番号</div></th>  
+          <th class="border-b border-divider"><div>請求日</div></th>  
+          <th class="border-b border-divider"><div>取引先<span class="mx-2 h-4 border-r border-divider inline-block align-middle"></span>送付先</div></th>  
+          <th class="border-b border-divider"><div>件名</div></th>  
+          <th class="border-b border-divider"><div>金額</div></th>  
+          <th class="border-b border-divider"><div>お支払期限</div></th>  
+          <th class="border-b border-divider align-middle"><div class="w-full justify-center">データ送信</div></th>  
+          <th class="border-b border-divider align-middle"><div class="w-full justify-center">ステータス</div></th>  
+          <th class="border-b border-divider"><div>編集</div></th>  
+          <th class="border-b border-divider"><div>その他</div></th>  
+        </tr>  
+      </thead>  
+      <tbody>  
+        <!-- Row 1: 未請求 -->  
+        <tr class="transition-colors">  
+          <td class="border-b border-divider"><div><a href="invoice/detail/invoice-detail.html" class="text-text-link hover:underline">20250331-001</a></div></td>  
+          <td class="border-b border-divider"><div class="whitespace-nowrap">2025/03/31</div></td>  
+          <td class="border-b border-divider"><div class="flex-wrap gap-2 py-2">株式会社サンプル商事<span class="mx-2 border-r border-divider self-stretch inline-block h-4 align-middle"></span>本社</div></td>  
+          <td class="border-b border-divider"><div>Webサイト制作費用</div></td>  
+          <td class="border-b border-divider"><div class="justify-end whitespace-nowrap">550,000円</div></td>  
+          <td class="border-b border-divider"><div class="whitespace-nowrap">2025/04/30</div></td>  
+          <td class="border-b border-divider"><div class="data-send-cell flex"><button type="button" class="data-send-btn" title="送信"><img src="img/connection.svg" width="16" height="16" alt="" class="shrink-0" aria-hidden="true" />送信</button></div></td>  
+          <td class="border-b border-divider align-middle"><div class="w-full justify-center"><div class="status-select-wrap"><button type="button" class="status-select status-select-trigger status-select--unbilled" aria-label="ステータス" aria-expanded="false" aria-haspopup="menu" onclick="event.stopPropagation(); toggleStatusSelectPanel(this)"><span class="status-select-tag"><span class="status-select-label">未請求</span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" class="status-select-chevron"><title>下向矢印</title><path fill="currentColor" d="M14.9229 21.2941L6.43961 12.8108C5.85383 12.225 5.85383 11.2753 6.43961 10.6895C7.0254 10.1037 7.97515 10.1037 8.56093 10.6895L15.9998 18.1284L23.4384 10.6897C24.0242 10.1039 24.974 10.1039 25.5598 10.6897C26.1455 11.2755 26.1455 12.2253 25.5598 12.8111L17.0603 21.3105C16.4746 21.8963 15.5248 21.8963 14.939 21.3105C14.9336 21.305 14.9282 21.2996 14.9229 21.2941Z"/></svg></span></button><div class="status-select-panel"><div class="status-select-panel-card"><div class="status-select-panel-scroll" role="menu"><div class="status-select-panel-body"><button type="button" role="menuitem" class="status-select-item" data-pendo="invoice-status-unbilled" data-value="UNBILLED" onclick="event.stopPropagation(); applyInvoiceStatus(this)"><span class="status-select-item-label">未請求</span></button><button type="button" role="menuitem" class="status-select-item" data-pendo="invoice-status-billed" data-value="BILLED" onclick="event.stopPropagation(); applyInvoiceStatus(this)"><span class="status-select-item-label">請求済み</span></button><button type="button" role="menuitem" class="status-select-item" data-pendo="invoice-status-deposited" data-value="DEPOSITED" onclick="event.stopPropagation(); applyInvoiceStatus(this)"><span class="status-select-item-label">入金済み</span></button></div></div></div></div></div></div></td>  
+          <td class="border-b border-divider"><div><button class="icon-btn" title="編集"><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M22.6041 2.71978C23.5638 1.76007 25.1198 1.76007 26.0795 2.71978L29.2802 5.92052C30.2399 6.88022 30.2399 8.43621 29.2802 9.39592L12.6602 26.016C12.3444 26.3317 11.9702 26.583 11.5584 26.7558L4.11857 29.8769C2.86005 30.4049 1.59514 29.1399 2.1231 27.8814L5.24422 20.4416C5.41698 20.0298 5.66826 19.6556 5.98404 19.3398L22.6041 2.71978ZM24.6953 5.50612C24.5001 5.31085 24.1835 5.31085 23.9882 5.50612L22.2061 7.28827L24.7117 9.79392L26.4939 8.01177C26.6891 7.81651 26.6891 7.49993 26.4939 7.30466L24.6953 5.50612ZM8.06928 21.4251C8.02417 21.4702 7.98827 21.5236 7.96359 21.5825L6.37932 25.3589C6.31005 25.524 6.47601 25.6899 6.64112 25.6207L10.4175 24.0364C10.4764 24.0117 10.5298 23.9758 10.5749 23.9307L22.5929 11.9128L20.0872 9.40714L8.06928 21.4251Z"/></svg></button></div></td>  
+          <td class="border-b border-divider"><div class="invoice-list-dropdown-anchor"><button class="icon-btn" title="その他" onclick="toggleMenu(this)"><svg width="20" height="20" viewBox="0 0 32 32"><circle cx="7" cy="16" r="2.5" fill="currentColor"/><circle cx="16" cy="16" r="2.5" fill="currentColor"/><circle cx="25" cy="16" r="2.5" fill="currentColor"/></svg></button><div class="dropdown-menu" data-part="positioner" data-scope="menu"><div class="dropdown-menu-card"><div class="dropdown-menu-panel" role="menu" tabindex="0" aria-label="その他の操作"><a href="#" title="複製" role="menuitem" data-pendo="link-invoice-duplicate" class="dropdown-menu-item-link"><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;flex-shrink:0"><path fill="currentColor" clip-rule="evenodd" fill-rule="evenodd" d="M12.4545 4.875L12.4546 4.86736V4.46426H13.2728V4.46429H18.9999V8.98361C18.9999 10.5714 20.282 11.8586 21.8636 11.8586H26.7726V11.8572C27.0564 11.8573 27.3416 11.7592 27.5735 11.5587C28.0871 11.1146 28.145 10.3367 27.7027 9.821L21.8514 2.999C21.3074 2.36475 20.5151 2 19.6814 2H12.8636C11.2821 2 10 3.28718 10 4.875V7H6.86363C5.28209 7 4 8.28718 4 9.875V27.125C4 28.7128 5.28209 30 6.86363 30H19.1363C20.7179 30 22 28.7128 22 27.125V25H25.1363C26.7179 25 28 23.7128 28 22.125V15.5536C28 14.8731 27.4505 14.3214 26.7727 14.3214C26.0949 14.3214 25.5454 14.8731 25.5454 15.5536V22.125L25.5454 22.1314V22.5357H25.1405L25.1363 22.5357H12.8636L12.8601 22.5357H12.4546V22.1342L12.4545 22.125V4.875ZM19.5454 25H12.8636C11.2821 25 10 23.7128 10 22.125V9.46429H7.27279V9.46426H6.45461V9.86736L6.45455 9.875V22.125L6.45455 22.1314V22.5357H6.86363H19.1363H19.5454V22.1342L19.5454 22.125V25ZM21.4545 5.30357V8.98361C21.4545 9.21571 21.6329 9.39497 21.8636 9.39497H25.0726L21.4545 5.30357Z"/></svg><span class="dropdown-menu-item-label">複製</span></a><button type="button" role="menuitem" data-pendo="button-create-receipt" class="dropdown-menu-item-btn"><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;flex-shrink:0"><path fill="currentColor" clip-rule="evenodd" fill-rule="evenodd" d="M27 8H5V24H27V8ZM5 5C3.34 5 2 6.34 2 8V24C2 25.66 3.34 27 5 27H27C28.66 27 30 25.66 30 24V8C30 6.34 28.66 5 27 5H5ZM12.5 13H9.5V19H12.5V13ZM7 10.5V21.5H15V10.5H7ZM17 10.5H25V13H17V10.5ZM17 14.75H25V17.25H17V14.75ZM17 19H25V21.5H17V19Z"/></svg><span class="dropdown-menu-item-label">領収書を作成（PDF）</span></button><hr class="dropdown-menu-hr" aria-orientation="horizontal" /><button type="button" role="menuitem" data-pendo="button-send-to-trash" class="dropdown-menu-item-btn"><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;flex-shrink:0"><path fill="currentColor" d="M13 3.5C13 2.67157 13.6716 2 14.5 2H17.5C18.3284 2 19 2.67157 19 3.5C19 4.32843 18.3284 5 17.5 5H28.5C29.3284 5 30 5.67157 30 6.5C30 7.32843 29.3284 8 28.5 8H27V26.5C27 28.433 25.433 30 23.5 30H8.5C6.567 30 5 28.433 5 26.5V8H3.5C2.67157 8 2 7.32843 2 6.5C2 5.67157 2.67157 5 3.5 5H14.5C13.6716 5 13 4.32843 13 3.5ZM8 8V26.5C8 26.7761 8.22386 27 8.5 27H23.5C23.7761 27 24 26.7761 24 26.5V8H8ZM13 11.25C13.6904 11.25 14.25 11.8096 14.25 12.5V22.5C14.25 23.1904 13.6904 23.75 13 23.75C12.3096 23.75 11.75 23.1904 11.75 22.5V12.5C11.75 11.8096 12.3096 11.25 13 11.25ZM20.25 12.5C20.25 11.8096 19.6904 11.25 19 11.25C18.3096 11.25 17.75 11.8096 17.75 12.5V22.5C17.75 23.1904 18.3096 23.75 19 23.75C19.6904 23.75 20.25 23.1904 20.25 22.5V12.5Z"/></svg><span class="dropdown-menu-item-label">ごみ箱へ移動</span></button></div></div></div></div></td>  
+        </tr>  
+        <!-- Row 2: 請求済み -->  
+        <tr class="transition-colors">  
+          <td class="border-b border-divider"><div><a href="invoice/detail/invoice-detail.html" class="text-text-link hover:underline">20250325-002</a></div></td>  
+          <td class="border-b border-divider"><div class="whitespace-nowrap">2025/03/25</div></td>  
+          <td class="border-b border-divider"><div class="py-2">有限会社テスト工業</div></td>  
+          <td class="border-b border-divider"><div>コンサルティング業務委託</div></td>  
+          <td class="border-b border-divider"><div class="justify-end whitespace-nowrap">330,000円</div></td>  
+          <td class="border-b border-divider"><div class="whitespace-nowrap">2025/04/25</div></td>  
+          <td class="border-b border-divider"><div class="data-send-done flex">済</div></td>  
+          <td class="border-b border-divider align-middle"><div class="w-full justify-center"><div class="status-select-wrap"><button type="button" class="status-select status-select-trigger status-select--billed" aria-label="ステータス" aria-expanded="false" aria-haspopup="menu" onclick="event.stopPropagation(); toggleStatusSelectPanel(this)"><span class="status-select-tag"><span class="status-select-label">請求済み</span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" class="status-select-chevron"><title>下向矢印</title><path fill="currentColor" d="M14.9229 21.2941L6.43961 12.8108C5.85383 12.225 5.85383 11.2753 6.43961 10.6895C7.0254 10.1037 7.97515 10.1037 8.56093 10.6895L15.9998 18.1284L23.4384 10.6897C24.0242 10.1039 24.974 10.1039 25.5598 10.6897C26.1455 11.2755 26.1455 12.2253 25.5598 12.8111L17.0603 21.3105C16.4746 21.8963 15.5248 21.8963 14.939 21.3105C14.9336 21.305 14.9282 21.2996 14.9229 21.2941Z"/></svg></span></button><div class="status-select-panel"><div class="status-select-panel-card"><div class="status-select-panel-scroll" role="menu"><div class="status-select-panel-body"><button type="button" role="menuitem" class="status-select-item" data-pendo="invoice-status-unbilled" data-value="UNBILLED" onclick="event.stopPropagation(); applyInvoiceStatus(this)"><span class="status-select-item-label">未請求</span></button><button type="button" role="menuitem" class="status-select-item" data-pendo="invoice-status-billed" data-value="BILLED" onclick="event.stopPropagation(); applyInvoiceStatus(this)"><span class="status-select-item-label">請求済み</span></button><button type="button" role="menuitem" class="status-select-item" data-pendo="invoice-status-deposited" data-value="DEPOSITED" onclick="event.stopPropagation(); applyInvoiceStatus(this)"><span class="status-select-item-label">入金済み</span></button></div></div></div></div></div></div></td>  
+          <td class="border-b border-divider"><div><button class="icon-btn" disabled title="編集"><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M22.6041 2.71978C23.5638 1.76007 25.1198 1.76007 26.0795 2.71978L29.2802 5.92052C30.2399 6.88022 30.2399 8.43621 29.2802 9.39592L12.6602 26.016C12.3444 26.3317 11.9702 26.583 11.5584 26.7558L4.11857 29.8769C2.86005 30.4049 1.59514 29.1399 2.1231 27.8814L5.24422 20.4416C5.41698 20.0298 5.66826 19.6556 5.98404 19.3398L22.6041 2.71978ZM24.6953 5.50612C24.5001 5.31085 24.1835 5.31085 23.9882 5.50612L22.2061 7.28827L24.7117 9.79392L26.4939 8.01177C26.6891 7.81651 26.6891 7.49993 26.4939 7.30466L24.6953 5.50612ZM8.06928 21.4251C8.02417 21.4702 7.98827 21.5236 7.96359 21.5825L6.37932 25.3589C6.31005 25.524 6.47601 25.6899 6.64112 25.6207L10.4175 24.0364C10.4764 24.0117 10.5298 23.9758 10.5749 23.9307L22.5929 11.9128L20.0872 9.40714L8.06928 21.4251Z"/></svg></button></div></td>  
+          <td class="border-b border-divider"><div class="invoice-list-dropdown-anchor"><button class="icon-btn" title="その他" onclick="toggleMenu(this)"><svg width="20" height="20" viewBox="0 0 32 32"><circle cx="7" cy="16" r="2.5" fill="currentColor"/><circle cx="16" cy="16" r="2.5" fill="currentColor"/><circle cx="25" cy="16" r="2.5" fill="currentColor"/></svg></button><div class="dropdown-menu" data-part="positioner" data-scope="menu"><div class="dropdown-menu-card"><div class="dropdown-menu-panel" role="menu" tabindex="0" aria-label="その他の操作"><a href="#" title="複製" role="menuitem" data-pendo="link-invoice-duplicate" class="dropdown-menu-item-link"><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;flex-shrink:0"><path fill="currentColor" clip-rule="evenodd" fill-rule="evenodd" d="M12.4545 4.875L12.4546 4.86736V4.46426H13.2728V4.46429H18.9999V8.98361C18.9999 10.5714 20.282 11.8586 21.8636 11.8586H26.7726V11.8572C27.0564 11.8573 27.3416 11.7592 27.5735 11.5587C28.0871 11.1146 28.145 10.3367 27.7027 9.821L21.8514 2.999C21.3074 2.36475 20.5151 2 19.6814 2H12.8636C11.2821 2 10 3.28718 10 4.875V7H6.86363C5.28209 7 4 8.28718 4 9.875V27.125C4 28.7128 5.28209 30 6.86363 30H19.1363C20.7179 30 22 28.7128 22 27.125V25H25.1363C26.7179 25 28 23.7128 28 22.125V15.5536C28 14.8731 27.4505 14.3214 26.7727 14.3214C26.0949 14.3214 25.5454 14.8731 25.5454 15.5536V22.125L25.5454 22.1314V22.5357H25.1405L25.1363 22.5357H12.8636L12.8601 22.5357H12.4546V22.1342L12.4545 22.125V4.875ZM19.5454 25H12.8636C11.2821 25 10 23.7128 10 22.125V9.46429H7.27279V9.46426H6.45461V9.86736L6.45455 9.875V22.125L6.45455 22.1314V22.5357H6.86363H19.1363H19.5454V22.1342L19.5454 22.125V25ZM21.4545 5.30357V8.98361C21.4545 9.21571 21.6329 9.39497 21.8636 9.39497H25.0726L21.4545 5.30357Z"/></svg><span class="dropdown-menu-item-label">複製</span></a><button type="button" role="menuitem" data-pendo="button-create-receipt" class="dropdown-menu-item-btn"><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;flex-shrink:0"><path fill="currentColor" clip-rule="evenodd" fill-rule="evenodd" d="M27 8H5V24H27V8ZM5 5C3.34 5 2 6.34 2 8V24C2 25.66 3.34 27 5 27H27C28.66 27 30 25.66 30 24V8C30 6.34 28.66 5 27 5H5ZM12.5 13H9.5V19H12.5V13ZM7 10.5V21.5H15V10.5H7ZM17 10.5H25V13H17V10.5ZM17 14.75H25V17.25H17V14.75ZM17 19H25V21.5H17V19Z"/></svg><span class="dropdown-menu-item-label">領収書を作成（PDF）</span></button><hr class="dropdown-menu-hr" aria-orientation="horizontal" /><button type="button" role="menuitem" data-pendo="button-send-to-trash" class="dropdown-menu-item-btn" disabled><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;flex-shrink:0"><path fill="currentColor" d="M13 3.5C13 2.67157 13.6716 2 14.5 2H17.5C18.3284 2 19 2.67157 19 3.5C19 4.32843 18.3284 5 17.5 5H28.5C29.3284 5 30 5.67157 30 6.5C30 7.32843 29.3284 8 28.5 8H27V26.5C27 28.433 25.433 30 23.5 30H8.5C6.567 30 5 28.433 5 26.5V8H3.5C2.67157 8 2 7.32843 2 6.5C2 5.67157 2.67157 5 3.5 5H14.5C13.6716 5 13 4.32843 13 3.5ZM8 8V26.5C8 26.7761 8.22386 27 8.5 27H23.5C23.7761 27 24 26.7761 24 26.5V8H8ZM13 11.25C13.6904 11.25 14.25 11.8096 14.25 12.5V22.5C14.25 23.1904 13.6904 23.75 13 23.75C12.3096 23.75 11.75 23.1904 11.75 22.5V12.5C11.75 11.8096 12.3096 11.25 13 11.25ZM20.25 12.5C20.25 11.8096 19.6904 11.25 19 11.25C18.3096 11.25 17.75 11.8096 17.75 12.5V22.5C17.75 23.1904 18.3096 23.75 19 23.75C19.6904 23.75 20.25 23.1904 20.25 22.5V12.5Z"/></svg><span class="dropdown-menu-item-label">ごみ箱へ移動</span></button></div></div></div></div></td>  
+        </tr>  
+        <!-- Row 3: 入金済み -->  
+        <tr class="transition-colors">  
+          <td class="border-b border-divider"><div><a href="invoice/detail/invoice-detail.html" class="text-text-link hover:underline">20250310-003</a></div></td>  
+          <td class="border-b border-divider"><div class="whitespace-nowrap">2025/03/10</div></td>  
+          <td class="border-b border-divider"><div class="py-2">合同会社デモ企画</div></td>  
+          <td class="border-b border-divider"><div>デザイン制作一式</div></td>  
+          <td class="border-b border-divider"><div class="justify-end whitespace-nowrap">1,100,000円</div></td>  
+          <td class="border-b border-divider"><div class="whitespace-nowrap">2025/03/31</div></td>  
+          <td class="border-b border-divider"><div class="data-send-done flex">済</div></td>  
+          <td class="border-b border-divider align-middle"><div class="w-full justify-center"><div class="status-select-wrap"><button type="button" class="status-select status-select-trigger status-select--deposited" aria-label="ステータス" aria-expanded="false" aria-haspopup="menu" onclick="event.stopPropagation(); toggleStatusSelectPanel(this)"><span class="status-select-tag"><span class="status-select-label">入金済み</span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" class="status-select-chevron"><title>下向矢印</title><path fill="currentColor" d="M14.9229 21.2941L6.43961 12.8108C5.85383 12.225 5.85383 11.2753 6.43961 10.6895C7.0254 10.1037 7.97515 10.1037 8.56093 10.6895L15.9998 18.1284L23.4384 10.6897C24.0242 10.1039 24.974 10.1039 25.5598 10.6897C26.1455 11.2755 26.1455 12.2253 25.5598 12.8111L17.0603 21.3105C16.4746 21.8963 15.5248 21.8963 14.939 21.3105C14.9336 21.305 14.9282 21.2996 14.9229 21.2941Z"/></svg></span></button><div class="status-select-panel"><div class="status-select-panel-card"><div class="status-select-panel-scroll" role="menu"><div class="status-select-panel-body"><button type="button" role="menuitem" class="status-select-item" data-pendo="invoice-status-unbilled" data-value="UNBILLED" onclick="event.stopPropagation(); applyInvoiceStatus(this)"><span class="status-select-item-label">未請求</span></button><button type="button" role="menuitem" class="status-select-item" data-pendo="invoice-status-billed" data-value="BILLED" onclick="event.stopPropagation(); applyInvoiceStatus(this)"><span class="status-select-item-label">請求済み</span></button><button type="button" role="menuitem" class="status-select-item" data-pendo="invoice-status-deposited" data-value="DEPOSITED" onclick="event.stopPropagation(); applyInvoiceStatus(this)"><span class="status-select-item-label">入金済み</span></button></div></div></div></div></div></div></td>  
+          <td class="border-b border-divider"><div><button class="icon-btn" disabled title="編集"><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M22.6041 2.71978C23.5638 1.76007 25.1198 1.76007 26.0795 2.71978L29.2802 5.92052C30.2399 6.88022 30.2399 8.43621 29.2802 9.39592L12.6602 26.016C12.3444 26.3317 11.9702 26.583 11.5584 26.7558L4.11857 29.8769C2.86005 30.4049 1.59514 29.1399 2.1231 27.8814L5.24422 20.4416C5.41698 20.0298 5.66826 19.6556 5.98404 19.3398L22.6041 2.71978ZM24.6953 5.50612C24.5001 5.31085 24.1835 5.31085 23.9882 5.50612L22.2061 7.28827L24.7117 9.79392L26.4939 8.01177C26.6891 7.81651 26.6891 7.49993 26.4939 7.30466L24.6953 5.50612ZM8.06928 21.4251C8.02417 21.4702 7.98827 21.5236 7.96359 21.5825L6.37932 25.3589C6.31005 25.524 6.47601 25.6899 6.64112 25.6207L10.4175 24.0364C10.4764 24.0117 10.5298 23.9758 10.5749 23.9307L22.5929 11.9128L20.0872 9.40714L8.06928 21.4251Z"/></svg></button></div></td>  
+          <td class="border-b border-divider"><div class="invoice-list-dropdown-anchor"><button class="icon-btn" title="その他" onclick="toggleMenu(this)"><svg width="20" height="20" viewBox="0 0 32 32"><circle cx="7" cy="16" r="2.5" fill="currentColor"/><circle cx="16" cy="16" r="2.5" fill="currentColor"/><circle cx="25" cy="16" r="2.5" fill="currentColor"/></svg></button><div class="dropdown-menu" data-part="positioner" data-scope="menu"><div class="dropdown-menu-card"><div class="dropdown-menu-panel" role="menu" tabindex="0" aria-label="その他の操作"><a href="#" title="複製" role="menuitem" data-pendo="link-invoice-duplicate" class="dropdown-menu-item-link"><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;flex-shrink:0"><path fill="currentColor" clip-rule="evenodd" fill-rule="evenodd" d="M12.4545 4.875L12.4546 4.86736V4.46426H13.2728V4.46429H18.9999V8.98361C18.9999 10.5714 20.282 11.8586 21.8636 11.8586H26.7726V11.8572C27.0564 11.8573 27.3416 11.7592 27.5735 11.5587C28.0871 11.1146 28.145 10.3367 27.7027 9.821L21.8514 2.999C21.3074 2.36475 20.5151 2 19.6814 2H12.8636C11.2821 2 10 3.28718 10 4.875V7H6.86363C5.28209 7 4 8.28718 4 9.875V27.125C4 28.7128 5.28209 30 6.86363 30H19.1363C20.7179 30 22 28.7128 22 27.125V25H25.1363C26.7179 25 28 23.7128 28 22.125V15.5536C28 14.8731 27.4505 14.3214 26.7727 14.3214C26.0949 14.3214 25.5454 14.8731 25.5454 15.5536V22.125L25.5454 22.1314V22.5357H25.1405L25.1363 22.5357H12.8636L12.8601 22.5357H12.4546V22.1342L12.4545 22.125V4.875ZM19.5454 25H12.8636C11.2821 25 10 23.7128 10 22.125V9.46429H7.27279V9.46426H6.45461V9.86736L6.45455 9.875V22.125L6.45455 22.1314V22.5357H6.86363H19.1363H19.5454V22.1342L19.5454 22.125V25ZM21.4545 5.30357V8.98361C21.4545 9.21571 21.6329 9.39497 21.8636 9.39497H25.0726L21.4545 5.30357Z"/></svg><span class="dropdown-menu-item-label">複製</span></a><button type="button" role="menuitem" data-pendo="button-create-receipt" class="dropdown-menu-item-btn"><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;flex-shrink:0"><path fill="currentColor" clip-rule="evenodd" fill-rule="evenodd" d="M27 8H5V24H27V8ZM5 5C3.34 5 2 6.34 2 8V24C2 25.66 3.34 27 5 27H27C28.66 27 30 25.66 30 24V8C30 6.34 28.66 5 27 5H5ZM12.5 13H9.5V19H12.5V13ZM7 10.5V21.5H15V10.5H7ZM17 10.5H25V13H17V10.5ZM17 14.75H25V17.25H17V14.75ZM17 19H25V21.5H17V19Z"/></svg><span class="dropdown-menu-item-label">領収書を作成（PDF）</span></button><hr class="dropdown-menu-hr" aria-orientation="horizontal" /><button type="button" role="menuitem" data-pendo="button-send-to-trash" class="dropdown-menu-item-btn" disabled><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;flex-shrink:0"><path fill="currentColor" d="M13 3.5C13 2.67157 13.6716 2 14.5 2H17.5C18.3284 2 19 2.67157 19 3.5C19 4.32843 18.3284 5 17.5 5H28.5C29.3284 5 30 5.67157 30 6.5C30 7.32843 29.3284 8 28.5 8H27V26.5C27 28.433 25.433 30 23.5 30H8.5C6.567 30 5 28.433 5 26.5V8H3.5C2.67157 8 2 7.32843 2 6.5C2 5.67157 2.67157 5 3.5 5H14.5C13.6716 5 13 4.32843 13 3.5ZM8 8V26.5C8 26.7761 8.22386 27 8.5 27H23.5C23.7761 27 24 26.7761 24 26.5V8H8ZM13 11.25C13.6904 11.25 14.25 11.8096 14.25 12.5V22.5C14.25 23.1904 13.6904 23.75 13 23.75C12.3096 23.75 11.75 23.1904 11.75 22.5V12.5C11.75 11.8096 12.3096 11.25 13 11.25ZM20.25 12.5C20.25 11.8096 19.6904 11.25 19 11.25C18.3096 11.25 17.75 11.8096 17.75 12.5V22.5C17.75 23.1904 18.3096 23.75 19 23.75C19.6904 23.75 20.25 23.1904 20.25 22.5V12.5Z"/></svg><span class="dropdown-menu-item-label">ごみ箱へ移動</span></button></div></div></div></div></td>  
+        </tr>  
+        <!-- Row 4: 未請求 + メール送信失敗 -->  
+        <tr class="transition-colors">  
+          <td class="border-b border-divider"><div class="flex-col items-start !py-2"><a href="invoice/detail/invoice-detail.html" class="text-text-link hover:underline">20250305-004</a><div class="flex items-center gap-1 text-base" style="color:#D32F2F;"><img src="img/mail_red.svg" width="16" height="16" alt="" class="shrink-0" aria-hidden="true" />送信失敗</div></div></td>  
+          <td class="border-b border-divider"><div class="whitespace-nowrap">2025/03/05</div></td>  
+          <td class="border-b border-divider"><div class="flex-wrap gap-2 py-2">株式会社ABC<span class="mx-2 border-r border-divider self-stretch inline-block h-4 align-middle"></span>東京支店</div></td>  
+          <td class="border-b border-divider"><div>システム保守費用（3月分）</div></td>  
+          <td class="border-b border-divider"><div class="justify-end whitespace-nowrap">88,000円</div></td>  
+          <td class="border-b border-divider"><div class="whitespace-nowrap">2025/04/05</div></td>  
+          <td class="border-b border-divider"><div class="data-send-cell flex"><div class="data-send-incomplete"><div class="data-send-incomplete-status" role="status"><img src="img/connection_red.svg" width="16" height="16" alt="" class="shrink-0" aria-hidden="true" />未完了</div><button type="button" class="data-send-btn" title="再実行"><img src="img/connection.svg" width="16" height="16" alt="" class="shrink-0" aria-hidden="true" />再実行</button></div></div></td>  
+          <td class="border-b border-divider align-middle"><div class="w-full justify-center"><div class="status-select-wrap"><button type="button" class="status-select status-select-trigger status-select--unbilled" aria-label="ステータス" aria-expanded="false" aria-haspopup="menu" onclick="event.stopPropagation(); toggleStatusSelectPanel(this)"><span class="status-select-tag"><span class="status-select-label">未請求</span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" class="status-select-chevron"><title>下向矢印</title><path fill="currentColor" d="M14.9229 21.2941L6.43961 12.8108C5.85383 12.225 5.85383 11.2753 6.43961 10.6895C7.0254 10.1037 7.97515 10.1037 8.56093 10.6895L15.9998 18.1284L23.4384 10.6897C24.0242 10.1039 24.974 10.1039 25.5598 10.6897C26.1455 11.2755 26.1455 12.2253 25.5598 12.8111L17.0603 21.3105C16.4746 21.8963 15.5248 21.8963 14.939 21.3105C14.9336 21.305 14.9282 21.2996 14.9229 21.2941Z"/></svg></span></button><div class="status-select-panel"><div class="status-select-panel-card"><div class="status-select-panel-scroll" role="menu"><div class="status-select-panel-body"><button type="button" role="menuitem" class="status-select-item" data-pendo="invoice-status-unbilled" data-value="UNBILLED" onclick="event.stopPropagation(); applyInvoiceStatus(this)"><span class="status-select-item-label">未請求</span></button><button type="button" role="menuitem" class="status-select-item" data-pendo="invoice-status-billed" data-value="BILLED" onclick="event.stopPropagation(); applyInvoiceStatus(this)"><span class="status-select-item-label">請求済み</span></button><button type="button" role="menuitem" class="status-select-item" data-pendo="invoice-status-deposited" data-value="DEPOSITED" onclick="event.stopPropagation(); applyInvoiceStatus(this)"><span class="status-select-item-label">入金済み</span></button></div></div></div></div></div></div></td>  
+          <td class="border-b border-divider"><div><button class="icon-btn" title="編集"><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M22.6041 2.71978C23.5638 1.76007 25.1198 1.76007 26.0795 2.71978L29.2802 5.92052C30.2399 6.88022 30.2399 8.43621 29.2802 9.39592L12.6602 26.016C12.3444 26.3317 11.9702 26.583 11.5584 26.7558L4.11857 29.8769C2.86005 30.4049 1.59514 29.1399 2.1231 27.8814L5.24422 20.4416C5.41698 20.0298 5.66826 19.6556 5.98404 19.3398L22.6041 2.71978ZM24.6953 5.50612C24.5001 5.31085 24.1835 5.31085 23.9882 5.50612L22.2061 7.28827L24.7117 9.79392L26.4939 8.01177C26.6891 7.81651 26.6891 7.49993 26.4939 7.30466L24.6953 5.50612ZM8.06928 21.4251C8.02417 21.4702 7.98827 21.5236 7.96359 21.5825L6.37932 25.3589C6.31005 25.524 6.47601 25.6899 6.64112 25.6207L10.4175 24.0364C10.4764 24.0117 10.5298 23.9758 10.5749 23.9307L22.5929 11.9128L20.0872 9.40714L8.06928 21.4251Z"/></svg></button></div></td>  
+          <td class="border-b border-divider"><div class="invoice-list-dropdown-anchor"><button class="icon-btn" title="その他" onclick="toggleMenu(this)"><svg width="20" height="20" viewBox="0 0 32 32"><circle cx="7" cy="16" r="2.5" fill="currentColor"/><circle cx="16" cy="16" r="2.5" fill="currentColor"/><circle cx="25" cy="16" r="2.5" fill="currentColor"/></svg></button><div class="dropdown-menu" data-part="positioner" data-scope="menu"><div class="dropdown-menu-card"><div class="dropdown-menu-panel" role="menu" tabindex="0" aria-label="その他の操作"><a href="#" title="複製" role="menuitem" data-pendo="link-invoice-duplicate" class="dropdown-menu-item-link"><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;flex-shrink:0"><path fill="currentColor" clip-rule="evenodd" fill-rule="evenodd" d="M12.4545 4.875L12.4546 4.86736V4.46426H13.2728V4.46429H18.9999V8.98361C18.9999 10.5714 20.282 11.8586 21.8636 11.8586H26.7726V11.8572C27.0564 11.8573 27.3416 11.7592 27.5735 11.5587C28.0871 11.1146 28.145 10.3367 27.7027 9.821L21.8514 2.999C21.3074 2.36475 20.5151 2 19.6814 2H12.8636C11.2821 2 10 3.28718 10 4.875V7H6.86363C5.28209 7 4 8.28718 4 9.875V27.125C4 28.7128 5.28209 30 6.86363 30H19.1363C20.7179 30 22 28.7128 22 27.125V25H25.1363C26.7179 25 28 23.7128 28 22.125V15.5536C28 14.8731 27.4505 14.3214 26.7727 14.3214C26.0949 14.3214 25.5454 14.8731 25.5454 15.5536V22.125L25.5454 22.1314V22.5357H25.1405L25.1363 22.5357H12.8636L12.8601 22.5357H12.4546V22.1342L12.4545 22.125V4.875ZM19.5454 25H12.8636C11.2821 25 10 23.7128 10 22.125V9.46429H7.27279V9.46426H6.45461V9.86736L6.45455 9.875V22.125L6.45455 22.1314V22.5357H6.86363H19.1363H19.5454V22.1342L19.5454 22.125V25ZM21.4545 5.30357V8.98361C21.4545 9.21571 21.6329 9.39497 21.8636 9.39497H25.0726L21.4545 5.30357Z"/></svg><span class="dropdown-menu-item-label">複製</span></a><button type="button" role="menuitem" data-pendo="button-create-receipt" class="dropdown-menu-item-btn"><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;flex-shrink:0"><path fill="currentColor" clip-rule="evenodd" fill-rule="evenodd" d="M27 8H5V24H27V8ZM5 5C3.34 5 2 6.34 2 8V24C2 25.66 3.34 27 5 27H27C28.66 27 30 25.66 30 24V8C30 6.34 28.66 5 27 5H5ZM12.5 13H9.5V19H12.5V13ZM7 10.5V21.5H15V10.5H7ZM17 10.5H25V13H17V10.5ZM17 14.75H25V17.25H17V14.75ZM17 19H25V21.5H17V19Z"/></svg><span class="dropdown-menu-item-label">領収書を作成（PDF）</span></button><hr class="dropdown-menu-hr" aria-orientation="horizontal" /><button type="button" role="menuitem" data-pendo="button-send-to-trash" class="dropdown-menu-item-btn"><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;flex-shrink:0"><path fill="currentColor" d="M13 3.5C13 2.67157 13.6716 2 14.5 2H17.5C18.3284 2 19 2.67157 19 3.5C19 4.32843 18.3284 5 17.5 5H28.5C29.3284 5 30 5.67157 30 6.5C30 7.32843 29.3284 8 28.5 8H27V26.5C27 28.433 25.433 30 23.5 30H8.5C6.567 30 5 28.433 5 26.5V8H3.5C2.67157 8 2 7.32843 2 6.5C2 5.67157 2.67157 5 3.5 5H14.5C13.6716 5 13 4.32843 13 3.5ZM8 8V26.5C8 26.7761 8.22386 27 8.5 27H23.5C23.7761 27 24 26.7761 24 26.5V8H8ZM13 11.25C13.6904 11.25 14.25 11.8096 14.25 12.5V22.5C14.25 23.1904 13.6904 23.75 13 23.75C12.3096 23.75 11.75 23.1904 11.75 22.5V12.5C11.75 11.8096 12.3096 11.25 13 11.25ZM20.25 12.5C20.25 11.8096 19.6904 11.25 19 11.25C18.3096 11.25 17.75 11.8096 17.75 12.5V22.5C17.75 23.1904 18.3096 23.75 19 23.75C19.6904 23.75 20.25 23.1904 20.25 22.5V12.5Z"/></svg><span class="dropdown-menu-item-label">ごみ箱へ移動</span></button></div></div></div></div></td>  
+        </tr>  
+        <!-- Row 5: 請求済み, 番号なし -->  
+        <tr class="transition-colors">  
+          <td class="border-b border-divider"><div><a href="invoice/detail/invoice-detail.html" class="text-text-link hover:underline">(指定なし)</a></div></td>  
+          <td class="border-b border-divider"><div class="whitespace-nowrap">2025/02/28</div></td>  
+          <td class="border-b border-divider"><div class="py-2">NPO法人サポートセンター</div></td>  
+          <td class="border-b border-divider"><div>—</div></td>  
+          <td class="border-b border-divider"><div class="justify-end whitespace-nowrap">0円</div></td>  
+          <td class="border-b border-divider"><div>—</div></td>  
+          <td class="border-b border-divider"><div class="data-send-cell flex"><button type="button" class="data-send-btn" title="送信"><img src="img/connection.svg" width="16" height="16" alt="" class="shrink-0" aria-hidden="true" />送信</button></div></td>  
+          <td class="border-b border-divider align-middle"><div class="w-full justify-center"><div class="status-select-wrap"><button type="button" class="status-select status-select-trigger status-select--billed" aria-label="ステータス" aria-expanded="false" aria-haspopup="menu" onclick="event.stopPropagation(); toggleStatusSelectPanel(this)"><span class="status-select-tag"><span class="status-select-label">請求済み</span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" class="status-select-chevron"><title>下向矢印</title><path fill="currentColor" d="M14.9229 21.2941L6.43961 12.8108C5.85383 12.225 5.85383 11.2753 6.43961 10.6895C7.0254 10.1037 7.97515 10.1037 8.56093 10.6895L15.9998 18.1284L23.4384 10.6897C24.0242 10.1039 24.974 10.1039 25.5598 10.6897C26.1455 11.2755 26.1455 12.2253 25.5598 12.8111L17.0603 21.3105C16.4746 21.8963 15.5248 21.8963 14.939 21.3105C14.9336 21.305 14.9282 21.2996 14.9229 21.2941Z"/></svg></span></button><div class="status-select-panel"><div class="status-select-panel-card"><div class="status-select-panel-scroll" role="menu"><div class="status-select-panel-body"><button type="button" role="menuitem" class="status-select-item" data-pendo="invoice-status-unbilled" data-value="UNBILLED" onclick="event.stopPropagation(); applyInvoiceStatus(this)"><span class="status-select-item-label">未請求</span></button><button type="button" role="menuitem" class="status-select-item" data-pendo="invoice-status-billed" data-value="BILLED" onclick="event.stopPropagation(); applyInvoiceStatus(this)"><span class="status-select-item-label">請求済み</span></button><button type="button" role="menuitem" class="status-select-item" data-pendo="invoice-status-deposited" data-value="DEPOSITED" onclick="event.stopPropagation(); applyInvoiceStatus(this)"><span class="status-select-item-label">入金済み</span></button></div></div></div></div></div></div></td>  
+          <td class="border-b border-divider"><div><button class="icon-btn" disabled title="編集"><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M22.6041 2.71978C23.5638 1.76007 25.1198 1.76007 26.0795 2.71978L29.2802 5.92052C30.2399 6.88022 30.2399 8.43621 29.2802 9.39592L12.6602 26.016C12.3444 26.3317 11.9702 26.583 11.5584 26.7558L4.11857 29.8769C2.86005 30.4049 1.59514 29.1399 2.1231 27.8814L5.24422 20.4416C5.41698 20.0298 5.66826 19.6556 5.98404 19.3398L22.6041 2.71978ZM24.6953 5.50612C24.5001 5.31085 24.1835 5.31085 23.9882 5.50612L22.2061 7.28827L24.7117 9.79392L26.4939 8.01177C26.6891 7.81651 26.6891 7.49993 26.4939 7.30466L24.6953 5.50612ZM8.06928 21.4251C8.02417 21.4702 7.98827 21.5236 7.96359 21.5825L6.37932 25.3589C6.31005 25.524 6.47601 25.6899 6.64112 25.6207L10.4175 24.0364C10.4764 24.0117 10.5298 23.9758 10.5749 23.9307L22.5929 11.9128L20.0872 9.40714L8.06928 21.4251Z"/></svg></button></div></td>  
+          <td class="border-b border-divider"><div class="invoice-list-dropdown-anchor"><button class="icon-btn" title="その他" onclick="toggleMenu(this)"><svg width="20" height="20" viewBox="0 0 32 32"><circle cx="7" cy="16" r="2.5" fill="currentColor"/><circle cx="16" cy="16" r="2.5" fill="currentColor"/><circle cx="25" cy="16" r="2.5" fill="currentColor"/></svg></button><div class="dropdown-menu" data-part="positioner" data-scope="menu"><div class="dropdown-menu-card"><div class="dropdown-menu-panel" role="menu" tabindex="0" aria-label="その他の操作"><a href="#" title="複製" role="menuitem" data-pendo="link-invoice-duplicate" class="dropdown-menu-item-link"><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;flex-shrink:0"><path fill="currentColor" clip-rule="evenodd" fill-rule="evenodd" d="M12.4545 4.875L12.4546 4.86736V4.46426H13.2728V4.46429H18.9999V8.98361C18.9999 10.5714 20.282 11.8586 21.8636 11.8586H26.7726V11.8572C27.0564 11.8573 27.3416 11.7592 27.5735 11.5587C28.0871 11.1146 28.145 10.3367 27.7027 9.821L21.8514 2.999C21.3074 2.36475 20.5151 2 19.6814 2H12.8636C11.2821 2 10 3.28718 10 4.875V7H6.86363C5.28209 7 4 8.28718 4 9.875V27.125C4 28.7128 5.28209 30 6.86363 30H19.1363C20.7179 30 22 28.7128 22 27.125V25H25.1363C26.7179 25 28 23.7128 28 22.125V15.5536C28 14.8731 27.4505 14.3214 26.7727 14.3214C26.0949 14.3214 25.5454 14.8731 25.5454 15.5536V22.125L25.5454 22.1314V22.5357H25.1405L25.1363 22.5357H12.8636L12.8601 22.5357H12.4546V22.1342L12.4545 22.125V4.875ZM19.5454 25H12.8636C11.2821 25 10 23.7128 10 22.125V9.46429H7.27279V9.46426H6.45461V9.86736L6.45455 9.875V22.125L6.45455 22.1314V22.5357H6.86363H19.1363H19.5454V22.1342L19.5454 22.125V25ZM21.4545 5.30357V8.98361C21.4545 9.21571 21.6329 9.39497 21.8636 9.39497H25.0726L21.4545 5.30357Z"/></svg><span class="dropdown-menu-item-label">複製</span></a><button type="button" role="menuitem" data-pendo="button-create-receipt" class="dropdown-menu-item-btn"><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;flex-shrink:0"><path fill="currentColor" clip-rule="evenodd" fill-rule="evenodd" d="M27 8H5V24H27V8ZM5 5C3.34 5 2 6.34 2 8V24C2 25.66 3.34 27 5 27H27C28.66 27 30 25.66 30 24V8C30 6.34 28.66 5 27 5H5ZM12.5 13H9.5V19H12.5V13ZM7 10.5V21.5H15V10.5H7ZM17 10.5H25V13H17V10.5ZM17 14.75H25V17.25H17V14.75ZM17 19H25V21.5H17V19Z"/></svg><span class="dropdown-menu-item-label">領収書を作成（PDF）</span></button><hr class="dropdown-menu-hr" aria-orientation="horizontal" /><button type="button" role="menuitem" data-pendo="button-send-to-trash" class="dropdown-menu-item-btn" disabled><svg role="img" width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;flex-shrink:0"><path fill="currentColor" d="M13 3.5C13 2.67157 13.6716 2 14.5 2H17.5C18.3284 2 19 2.67157 19 3.5C19 4.32843 18.3284 5 17.5 5H28.5C29.3284 5 30 5.67157 30 6.5C30 7.32843 29.3284 8 28.5 8H27V26.5C27 28.433 25.433 30 23.5 30H8.5C6.567 30 5 28.433 5 26.5V8H3.5C2.67157 8 2 7.32843 2 6.5C2 5.67157 2.67157 5 3.5 5H14.5C13.6716 5 13 4.32843 13 3.5ZM8 8V26.5C8 26.7761 8.22386 27 8.5 27H23.5C23.7761 27 24 26.7761 24 26.5V8H8ZM13 11.25C13.6904 11.25 14.25 11.8096 14.25 12.5V22.5C14.25 23.1904 13.6904 23.75 13 23.75C12.3096 23.75 11.75 23.1904 11.75 22.5V12.5C11.75 11.8096 12.3096 11.25 13 11.25ZM20.25 12.5C20.25 11.8096 19.6904 11.25 19 11.25C18.3096 11.25 17.75 11.8096 17.75 12.5V22.5C17.75 23.1904 18.3096 23.75 19 23.75C19.6904 23.75 20.25 23.1904 20.25 22.5V12.5Z"/></svg><span class="dropdown-menu-item-label">ごみ箱へ移動</span></button></div></div></div></div></td>  
+        </tr>  
+      </tbody>  
+    </table>  
+  </div>  
+  
+  <!-- Pagination -->  
+  <div class="flex justify-center items-center py-6 gap-1 flex-shrink-0">  
+    <button class="page-btn" disabled>&lt;</button>  
+    <button class="page-btn active">1</button>  
+    <button class="page-btn">&gt;</button>  
+  </div>  
+
+    </div>  
+  </div>  
+</div>  
+  
+<script src="invoice/invoice-list.js"></script>  
+<script src="components/layout-components.js"></script>  
+<script>  
+AppLayout.mount({ preset: 'invoice', pageTitle: '請求書', activeNav: 'invoice' });  
+</script>  
+  
+</body>  
+</html>

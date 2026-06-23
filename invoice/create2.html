@@ -1,0 +1,2226 @@
+﻿<!DOCTYPE html>  
+<html lang="ja">  
+<head>  
+  <meta charset="UTF-8" />  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />  
+  <script src="../components/set-app-base.js"></script>  
+  <title>請求書の新規作成（v2） - 弥生 請求書 Next</title>  
+  <link rel="stylesheet" href="styles.css" />  
+  <link rel="stylesheet" href="invoice/invoice-create2.css" />  
+  <script src="icons.js"></script>  
+  <script src="render.js"></script>  
+  <script src="layout-toggle.js"></script>  
+  <script src="side-nav-cascade.js"></script>
+
+</head>  
+<body>  
+<div class="L">  
+  <div class="Ld">  
+    <div class="invoice-create-wrap">  
+      <div class="page-root">  
+
+  <!-- エラーバナー領域 -->  
+  <div>  
+    <div class="error-banner" id="error-banner">  
+      <!-- ErrorBanner: loader/actionエラー、取引先削除、送付先削除等のメッセージ -->  
+    </div>  
+  </div>  
+  
+  <!-- エディタ本体 -->  
+  <div class="editor-root">  
+    <form id="invoice-create-form" method="post" aria-label="請求書の新規作成">  
+      <div class="editor-grid">  
+
+        <!-- 左ペイン: 入力 UI は #invoice-form-pane-body 内に追加 -->
+        <div class="form-pane">  
+          <div class="form-pane-scroll">
+          <div class="form-inner">  
+            <div class="form-pane__body" id="invoice-form-pane-body" aria-label="入力エリア">  
+
+              <div class="tab-bar">  
+                <div class="tab-bar__tabs" role="tablist" aria-label="請求書エディタ">  
+                  <button type="button" class="tab tab--no-icon tab--active" id="voucher-info-tab"  
+                          role="tab" aria-label="請求書の情報" aria-selected="true"  
+                          aria-controls="voucher-info"  
+                          onclick="switchTab('voucher-info')">  
+                    <span class="tab-label"><span>請求書の情報</span></span>  
+                  </button>  
+                  <button type="button" class="tab tab--no-icon tab--inactive" id="tax-config-tab"  
+                          role="tab" aria-label="課税設定" aria-selected="false"  
+                          aria-controls="tax-config"  
+                          onclick="switchTab('tax-config')">  
+                    <span class="tab-label"><span>課税設定</span></span>  
+                  </button>  
+                </div>  
+                <div class="tab-divider" aria-hidden="true"></div>  
+              </div>  
+
+              <div class="form-tab-panels">  
+                <div id="voucher-info" role="tabpanel" class="tabpanel tabpanel--active"  
+                     aria-labelledby="voucher-info-tab">  
+                  <div class="form-fields-in">  
+                    <!-- CommonInfo (common-info.tsx) -->  
+                    <div class="common-info">  
+
+                      <div class="common-info__left">  
+
+                        <div class="client-info-block">  
+                          <h2 class="section-heading">請求先情報</h2>  
+                          <div class="client-area">  
+                            <div class="form-group">  
+                              <div class="form-item">  
+                                <span class="form-item__label-row">  
+                                  <span id="client-selector" class="label">  
+                                    取引先名<span class="required-mark">(必須)</span>  
+                                  </span>  
+                                  <span class="tooltip-icon-wrap" aria-hidden="true"></span>  
+                                </span>  
+
+                                <div class="client-select-dropdown" id="client-select-dropdown">  
+                                  <div class="select-box-wrap">  
+                                    <button  
+                                      type="button"  
+                                      class="select-box-trigger placeholder"  
+                                      id="client-select-trigger"  
+                                      aria-labelledby="client-selector"  
+                                      aria-haspopup="dialog"  
+                                      aria-expanded="false"  
+                                      data-pendo="client-select-menu-trigger"  
+                                    >  
+                                      取引先を選択してください  
+                                    </button>  
+                                    <div class="trailing-icon-wrap" aria-hidden="true">  
+                                      <svg height="20" width="20" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg">  
+                                        <title>下向矢印</title>  
+                                        <path d="M16.1215 22.7454C15.6982 22.7796 15.2632 22.6347 14.9393 22.3109L4.43881 11.8104C3.85302 11.2246 3.85302 10.2749 4.43881 9.68907C5.02459 9.10328 5.97434 9.10328 6.56013 9.68907L16.0001 19.129L25.4401 9.68905C26.0259 9.10326 26.9756 9.10326 27.5614 9.68905C28.1472 10.2748 28.1472 11.2246 27.5614 11.8104L17.0609 22.3109C16.7989 22.5729 16.464 22.7178 16.1215 22.7454Z"/>  
+                                      </svg>  
+                                    </div>  
+                                  </div>  
+
+                                  <div class="popover-positioner" id="client-menu-popover" role="presentation">  
+                                    <div class="client-select-card card" role="menu" tabindex="-1">  
+                                      <div class="menu-wrap">  
+
+                                        <div class="menu-header">  
+                                          <span class="search-field-wrap">  
+                                            <svg class="search-icon" height="32" width="32" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">  
+                                              <path d="M7.6001 13.6C7.6001 10.2863 10.2864 7.59998 13.6001 7.59998C16.9138 7.59998 19.6001 10.2863 19.6001 13.6C19.6001 16.9137 16.9138 19.6 13.6001 19.6C10.2864 19.6 7.6001 16.9137 7.6001 13.6ZM13.6001 4.59998C8.62953 4.59998 4.6001 8.62941 4.6001 13.6C4.6001 18.5705 8.62953 22.6 13.6001 22.6C15.5438 22.6 17.3437 21.9838 18.8149 20.9361L24.9139 27.0352C25.4997 27.621 26.4495 27.621 27.0353 27.0352C27.6211 26.4494 27.6211 25.4996 27.0353 24.9138L20.9362 18.8148C21.9839 17.3436 22.6001 15.5437 22.6001 13.6C22.6001 8.62941 18.5707 4.59998 13.6001 4.59998Z"/>  
+                                            </svg>  
+                                            <input  
+                                              type="search"  
+                                              class="search-input"  
+                                              id="client-select-search"  
+                                              placeholder="取引先名で検索"  
+                                              aria-label="取引先名で検索"  
+                                              data-pendo="client-select-menu-search"  
+                                              autocomplete="off"  
+                                            />  
+                                          </span>  
+                                        </div>  
+
+                                        <div class="menu-list-container">  
+                                          <div class="menu-list" id="client-menu-list">  
+
+                                            <button type="button" role="menuitem" class="menu-item" aria-label="島田建設" data-pendo="client-select-menu-item" data-client-label="島田建設">  
+                                              <div class="menu-item-icon">  
+                                                <svg height="20" width="20" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">  
+                                                  <path d="M7 5H16V15.5V27H7V5ZM19 27V15H25V27H19ZM28 27V15.5C28 13.567 26.433 12 24.5 12H19.5C19.3302 12 19.1633 12.0121 19 12.0354V5.5C19 3.567 17.433 2 15.5 2H7.5C5.567 2 4 3.567 4 5.5V27H3.5C2.67157 27 2 27.6716 2 28.5C2 29.3284 2.67157 30 3.5 30H4H16H19H28H28.5C29.3284 30 30 29.3284 30 28.5C30 27.6716 29.3284 27 28.5 27H28ZM8.25 7.75C8.25 7.47386 8.47386 7.25 8.75 7.25H10.25C10.5261 7.25 10.75 7.47386 10.75 7.75V9.25C10.75 9.52614 10.5261 9.75 10.25 9.75H8.75C8.47386 9.75 8.25 9.52614 8.25 9.25V7.75ZM12.75 7.25C12.4739 7.25 12.25 7.47386 12.25 7.75V9.25C12.25 9.52614 12.4739 9.75 12.75 9.75H14.25C14.5261 9.75 14.75 9.52614 14.75 9.25V7.75C14.75 7.47386 14.5261 7.25 14.25 7.25H12.75ZM8.25 12.75C8.25 12.4739 8.47386 12.25 8.75 12.25H10.25C10.5261 12.25 10.75 12.4739 10.75 12.75V14.25C10.75 14.5261 10.5261 14.75 10.25 14.75H8.75C8.47386 14.75 8.25 14.5261 8.25 14.25V12.75ZM12.75 12.25C12.4739 12.25 12.25 12.4739 12.25 12.75V14.25C12.25 14.5261 12.4739 14.75 12.75 14.75H14.25C14.5261 14.75 14.75 14.5261 14.75 14.25V12.75C14.75 12.4739 14.5261 12.25 14.25 12.25H12.75ZM8.25 17.75C8.25 17.4739 8.47386 17.25 8.75 17.25H10.25C10.5261 17.25 10.75 17.4739 10.75 17.75V19.25C10.75 19.5261 10.5261 19.75 10.25 19.75H8.75C8.47386 19.75 8.25 19.5261 8.25 19.25V17.75ZM12.75 17.25C12.4739 17.25 12.25 17.4739 12.25 17.75V19.25C12.25 19.5261 12.4739 19.75 12.75 19.75H14.25C14.5261 19.75 14.75 19.5261 14.75 19.25V17.75C14.75 17.4739 14.5261 17.25 14.25 17.25H12.75ZM21.25 17.75C21.25 17.4739 21.4739 17.25 21.75 17.25H23.25C23.5261 17.25 23.75 17.4739 23.75 17.75V19.25C23.75 19.5261 23.5261 19.75 23.25 19.75H21.75C21.4739 19.75 21.25 19.5261 21.25 19.25V17.75ZM21.75 22.25C21.4739 22.25 21.25 22.4739 21.25 22.75V24.25C21.25 24.5261 21.4739 24.75 21.75 24.75H23.25C23.5261 24.75 23.75 24.5261 23.75 24.25V22.75C23.75 22.4739 23.5261 22.25 23.25 22.25H21.75Z"/>  
+                                                </svg>  
+                                              </div>  
+                                              <div class="menu-item-content">  
+                                                <div class="menu-item-main-text">島田建設</div>  
+                                              </div>  
+                                            </button>  
+
+                                            <button type="button" role="menuitem" class="menu-item" aria-label="Y坂建設 Y坂建設株式会社" data-pendo="client-select-menu-item" data-client-label="Y坂建設">  
+                                              <div class="menu-item-icon">  
+                                                <svg height="20" width="20" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">  
+                                                  <path d="M7 5H16V15.5V27H7V5ZM19 27V15H25V27H19ZM28 27V15.5C28 13.567 26.433 12 24.5 12H19.5C19.3302 12 19.1633 12.0121 19 12.0354V5.5C19 3.567 17.433 2 15.5 2H7.5C5.567 2 4 3.567 4 5.5V27H3.5C2.67157 27 2 27.6716 2 28.5C2 29.3284 2.67157 30 3.5 30H4H16H19H28H28.5C29.3284 30 30 29.3284 30 28.5C30 27.6716 29.3284 27 28.5 27H28Z"/>  
+                                                </svg>  
+                                              </div>  
+                                              <div class="menu-item-content">  
+                                                <div class="menu-item-main-text">  
+                                                  Y坂建設  
+                                                  <span class="menu-item-sub-text">Y坂建設株式会社</span>  
+                                                </div>  
+                                              </div>  
+                                            </button>  
+
+                                            <button type="button" role="menuitem" class="menu-item" aria-label="田中太郎 営業部 第一課 島田建設 島田建設株式会社" data-pendo="client-select-menu-item" data-client-label="田中太郎">  
+                                              <div class="menu-item-icon">  
+                                                <svg height="20" width="20" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">  
+                                                  <path d="M11 16C14.3137 16 17 13.3137 17 10C17 6.68629 14.3137 4 11 4C7.68629 4 5 6.68629 5 10C5 13.3137 7.68629 16 11 16ZM21.5 16C23.9853 16 26 13.9853 26 11.5C26 9.01472 23.9853 7 21.5 7C19.0147 7 17 9.01472 17 11.5C17 13.9853 19.0147 16 21.5 16ZM3 24.5C3 20.3579 6.35786 17 10.5 17H11.5C14.0133 17 16.2749 18.1379 17.7735 19.9275C17.2572 20.5498 16.8281 21.2467 16.5065 22H16.5C16.5 20.067 14.933 18.5 13 18.5H9C7.067 18.5 5.5 20.067 5.5 22V24.5C5.5 25.3284 6.17157 26 7 26H16.5C16.5 26.5344 16.5533 27.0568 16.6552 27.5614C16.2752 27.8456 15.8063 28.0146 15.2987 28H6.5C4.567 28 3 26.433 3 24.5ZM29 24.5C29 21.4624 26.5376 19 23.5 19H19.5C18.8153 19 18.1586 19.1154 17.5478 19.3282C18.7915 20.6964 19.5 22.5099 19.5 24.5V26C19.5 26.5523 19.9477 27 20.5 27H27C28.1046 27 29 26.1046 29 25V24.5Z"/>  
+                                                </svg>  
+                                              </div>  
+                                              <div class="menu-item-content">  
+                                                <div class="menu-item-main-text">  
+                                                  田中太郎  
+                                                  <span class="menu-item-sub-text dept-section">  
+                                                    <span>営業部</span>  
+                                                    <span>第一課</span>  
+                                                  </span>  
+                                                </div>  
+                                                <div class="menu-item-client-nickname">  
+                                                  島田建設  
+                                                  <span class="menu-item-client-name">島田建設株式会社</span>  
+                                                </div>  
+                                              </div>  
+                                            </button>  
+
+                                            <button type="button" role="menuitem" class="menu-item" aria-label="株式会社グローバルアーバンテクノロジー未来都市総合建設エンジニアリング" data-pendo="client-select-menu-item" data-client-label="株式会社グローバルアーバンテクノロジー未来都市総合建設エンジニアリング">  
+                                              <div class="menu-item-icon">  
+                                                <svg height="20" width="20" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">  
+                                                  <path d="M7 5H16V15.5V27H7V5ZM19 27V15H25V27H19ZM28 27V15.5C28 13.567 26.433 12 24.5 12H19.5C19.3302 12 19.1633 12.0121 19 12.0354V5.5C19 3.567 17.433 2 15.5 2H7.5C5.567 2 4 3.567 4 5.5V27H3.5C2.67157 27 2 27.6716 2 28.5C2 29.3284 2.67157 30 3.5 30H4H16H19H28H28.5C29.3284 30 30 29.3284 30 28.5C30 27.6716 29.3284 27 28.5 27H28ZM8.25 7.75C8.25 7.47386 8.47386 7.25 8.75 7.25H10.25C10.5261 7.25 10.75 7.47386 10.75 7.75V9.25C10.75 9.52614 10.5261 9.75 10.25 9.75H8.75C8.47386 9.75 8.25 9.52614 8.25 9.25V7.75ZM12.75 7.25C12.4739 7.25 12.25 7.47386 12.25 7.75V9.25C12.25 9.52614 12.4739 9.75 12.75 9.75H14.25C14.5261 9.75 14.75 9.52614 14.75 9.25V7.75C14.75 7.47386 14.5261 7.25 14.25 7.25H12.75ZM8.25 12.75C8.25 12.4739 8.47386 12.25 8.75 12.25H10.25C10.5261 12.25 10.75 12.4739 10.75 12.75V14.25C10.75 14.5261 10.5261 14.75 10.25 14.75H8.75C8.47386 14.75 8.25 14.5261 8.25 14.25V12.75ZM12.75 12.25C12.4739 12.25 12.25 12.4739 12.25 12.75V14.25C12.25 14.5261 12.4739 14.75 12.75 14.75H14.25C14.5261 14.75 14.75 14.5261 14.75 14.25V12.75C14.75 12.4739 14.5261 12.25 14.25 12.25H12.75ZM8.25 17.75C8.25 17.4739 8.47386 17.25 8.75 17.25H10.25C10.5261 17.25 10.75 17.4739 10.75 17.75V19.25C10.75 19.5261 10.5261 19.75 10.25 19.75H8.75C8.47386 19.75 8.25 19.5261 8.25 19.25V17.75ZM12.75 17.25C12.4739 17.25 12.25 17.4739 12.25 17.75V19.25C12.25 19.5261 12.4739 19.75 12.75 19.75H14.25C14.5261 19.75 14.75 19.5261 14.75 19.25V17.75C14.75 17.4739 14.5261 17.25 14.25 17.25H12.75ZM21.25 17.75C21.25 17.4739 21.4739 17.25 21.75 17.25H23.25C23.5261 17.25 23.75 17.4739 23.75 17.75V19.25C23.75 19.5261 23.5261 19.75 23.25 19.75H21.75C21.4739 19.75 21.25 19.5261 21.25 19.25V17.75ZM21.75 22.25C21.4739 22.25 21.25 22.4739 21.25 22.75V24.25C21.25 24.5261 21.4739 24.75 21.75 24.75H23.25C23.5261 24.75 23.75 24.5261 23.75 24.25V22.75C23.75 22.4739 23.5261 22.25 23.25 22.25H21.75Z"/>  
+                                                </svg>  
+                                              </div>  
+                                              <div class="menu-item-content">  
+                                                <div class="menu-item-main-text">株式会社グローバルアーバンテクノロジー未来都市総合建設エンジニアリング</div>  
+                                              </div>  
+                                            </button>  
+
+                                          </div>  
+                                        </div>  
+
+                                        <hr class="menu-divider" aria-orientation="horizontal" />  
+
+                                        <div class="menu-footer">  
+                                          <button type="button" class="text-button-primary" id="client-create-dialog-open" data-pendo="client-create">  
+                                            <span class="icon-wrap">  
+                                              <svg height="20" width="20" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">  
+                                                <path d="M16 4C16.8284 4 17.5 4.67157 17.5 5.5V14.5H26.5C27.3284 14.5 28 15.1716 28 16C28 16.8284 27.3284 17.5 26.5 17.5H17.5V26.5C17.5 27.3284 16.8284 28 16 28C15.1716 28 14.5 27.3284 14.5 26.5V17.5H5.5C4.67157 17.5 4 16.8284 4 16C4 15.1716 4.67157 14.5 5.5 14.5H14.5V5.5C14.5 4.67157 15.1716 4 16 4Z"/>  
+                                              </svg>  
+                                            </span>  
+                                            取引先を新規登録  
+                                          </button>  
+                                        </div>  
+
+                                      </div>  
+                                    </div>  
+                                  </div>  
+                                </div>  
+
+                                <div class="helper-text">  
+                                  <p></p>  
+                                </div>  
+                              </div>  
+                            </div>  
+
+                            <div id="client-selected-panel" class="client-selected-panel" hidden>  
+                              <div class="edit-grid">  
+                                <button type="button" class="text-button" id="client-update-dialog-open" data-pendo="client-edit" aria-haspopup="dialog" aria-controls="client-update-form-dialog">  
+                                  <span class="text-button__icon">  
+                                    <svg height="20" width="20" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">  
+                                      <path fill="currentcolor" d="M22.6041 2.71978C23.5638 1.76007 25.1198 1.76007 26.0795 2.71978L29.2802 5.92052C30.2399 6.88022 30.2399 8.43621 29.2802 9.39592L12.6602 26.016C12.3444 26.3317 11.9702 26.583 11.5584 26.7558L4.11857 29.8769C2.86005 30.4049 1.59514 29.1399 2.1231 27.8814L5.24422 20.4416C5.41698 20.0298 5.66826 19.6556 5.98404 19.3398L22.6041 2.71978ZM24.6953 5.50612C24.5001 5.31085 24.1835 5.31085 23.9882 5.50612L22.2061 7.28827L24.7117 9.79392L26.4939 8.01177C26.6891 7.81651 26.6891 7.49993 26.4939 7.30466L24.6953 5.50612ZM8.06928 21.4251C8.02417 21.4702 7.98827 21.5236 7.96359 21.5825L6.37932 25.3589C6.31005 25.524 6.47601 25.6899 6.64112 25.6207L10.4175 24.0364C10.4764 24.0117 10.5298 23.9758 10.5749 23.9307L22.5929 11.9128L20.0872 9.40714L8.06928 21.4251Z"/>  
+                                    </svg>  
+                                  </span>  
+                                  <span>取引先名の編集</span>  
+                                </button>  
+                                <button type="button" class="text-button" id="client-name-line-break-open" data-pendo="client-name-line-break" aria-controls="client-name-line-break-panel" aria-expanded="false">  
+                                  <span class="text-button__icon">  
+                                    <svg height="20" width="20" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">  
+                                      <path fill="currentcolor" d="M22.6041 2.71978C23.5638 1.76007 25.1198 1.76007 26.0795 2.71978L29.2802 5.92052C30.2399 6.88022 30.2399 8.43621 29.2802 9.39592L12.6602 26.016C12.3444 26.3317 11.9702 26.583 11.5584 26.7558L4.11857 29.8769C2.86005 30.4049 1.59514 29.1399 2.1231 27.8814L5.24422 20.4416C5.41698 20.0298 5.66826 19.6556 5.98404 19.3398L22.6041 2.71978ZM24.6953 5.50612C24.5001 5.31085 24.1835 5.31085 23.9882 5.50612L22.2061 7.28827L24.7117 9.79392L26.4939 8.01177C26.6891 7.81651 26.6891 7.49993 26.4939 7.30466L24.6953 5.50612ZM8.06928 21.4251C8.02417 21.4702 7.98827 21.5236 7.96359 21.5825L6.37932 25.3589C6.31005 25.524 6.47601 25.6899 6.64112 25.6207L10.4175 24.0364C10.4764 24.0117 10.5298 23.9758 10.5749 23.9307L22.5929 11.9128L20.0872 9.40714L8.06928 21.4251Z"/>  
+                                    </svg>  
+                                  </span>  
+                                  <span>改行位置を調整</span>  
+                                </button>  
+                              </div>  
+
+                              <div id="client-name-line-break-panel" class="client-name-line-break-panel" hidden>  
+                                <div class="form-item">  
+                                  <span class="form-item__label-row">  
+                                    <label class="label" for="client-name-line-break-input">取引先名の改行</label>  
+                                  </span>  
+                                  <div class="text-area-wrap client-name-line-break-panel__text-area-wrap" id="client-name-line-break-text-area-wrap">  
+                                    <textarea id="client-name-line-break-input" class="text-area" name="client.voucherClientNameDisplay" rows="3" aria-label="取引先名の改行" data-pendo="input-client-name-line-break"></textarea>  
+                                    <span class="client-name-line-break-panel__error-icon" id="client-name-line-break-error-icon" aria-hidden="true">
+                                      <img src="img/exclamation_square.svg" alt="" width="20" height="20" decoding="async" />
+                                    </span>  
+                                  </div>  
+                                  <p class="client-name-line-break-panel__error" id="client-name-line-break-error" role="alert" hidden>選択された取引先名と、改行調整後の表記が一致していません。</p>  
+                                  <div class="client-name-line-break-panel__footer">  
+                                    <div class="form-item__helper">  
+                                      <p>改行はこの証憑のみ反映されます。</p>  
+                                    </div>  
+                                    <button type="button" class="client-name-line-break-panel__close" id="client-name-line-break-close" data-pendo="client-name-line-break-close">  
+                                      <span>閉じる</span>  
+                                    </button>  
+                                  </div>  
+                                </div>  
+                              </div>  
+
+                              <div class="delivery-destination-section">  
+                                <label class="label" id="delivery-destination-selector" for="dd-select-trigger">送付先</label>  
+
+                                <div>  
+                                  <div id="dd-create-only" class="dd-create-only" hidden>  
+                                    <button type="button" class="text-button js-dd-create-dialog-open" data-pendo="delivery-destination-create" data-testid="delivery-destination-create-button" aria-haspopup="dialog" aria-controls="dd-create-form-dialog">  
+                                      <span class="text-button__icon">  
+                                        <svg height="20" width="20" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">  
+                                          <path fill="currentcolor" d="M14.5 26.5C14.5 27.3284 15.1716 28 16 28C16.8284 28 17.5 27.3284 17.5 26.5V17.5H26.5C27.3284 17.5 28 16.8284 28 16C28 15.1716 27.3284 14.5 26.5 14.5H17.5V5.5C17.5 4.67157 16.8284 4 16 4C15.1716 4 14.5 4.67157 14.5 5.5V14.5H5.5C4.67157 14.5 4 15.1716 4 16C4 16.8284 4.67157 17.5 5.5 17.5H14.5V26.5Z"/>  
+                                        </svg>  
+                                      </span>  
+                                      <span>送付先を追加</span>  
+                                    </button>  
+                                  </div>  
+
+                                  <div class="delivery-select-dropdown" id="delivery-select-dropdown">  
+                                    <div class="select-box-wrap">  
+                                      <button  
+                                        type="button"  
+                                        class="select-box-trigger placeholder"  
+                                        id="dd-select-trigger"  
+                                        aria-labelledby="delivery-destination-selector"  
+                                        aria-haspopup="dialog"  
+                                        aria-expanded="false"  
+                                        data-pendo="delivery-destination-select-menu-trigger"  
+                                      >  
+                                        送付先を選択してください  
+                                      </button>  
+                                      <div class="trailing-icon-wrap" aria-hidden="true">  
+                                        <svg height="20" width="20" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg">  
+                                          <title>下向矢印</title>  
+                                          <path d="M16.1215 22.7454C15.6982 22.7796 15.2632 22.6347 14.9393 22.3109L4.43881 11.8104C3.85302 11.2246 3.85302 10.2749 4.43881 9.68907C5.02459 9.10328 5.97434 9.10328 6.56013 9.68907L16.0001 19.129L25.4401 9.68905C26.0259 9.10326 26.9756 9.10326 27.5614 9.68905C28.1472 10.2748 28.1472 11.2246 27.5614 11.8104L17.0609 22.3109C16.7989 22.5729 16.464 22.7178 16.1215 22.7454Z"/>  
+                                        </svg>  
+                                      </div>  
+                                    </div>  
+
+                                    <div class="popover-positioner" id="dd-menu-popover" role="presentation">  
+                                      <div class="client-select-card card" role="menu" tabindex="-1">  
+                                        <div class="menu-wrap">  
+
+                                          <div class="menu-header">  
+                                            <span class="search-field-wrap">  
+                                              <svg class="search-icon" height="32" width="32" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">  
+                                                <path d="M7.6 13.6C7.6 10.29 10.29 7.6 13.6 7.6C16.91 7.6 19.6 10.29 19.6 13.6C19.6 16.91 16.91 19.6 13.6 19.6C10.29 19.6 7.6 16.91 7.6 13.6ZM13.6 4.6C8.63 4.6 4.6 8.63 4.6 13.6C4.6 18.57 8.63 22.6 13.6 22.6C15.54 22.6 17.34 21.98 18.81 20.94L24.91 27.04C25.5 27.62 26.45 27.62 27.04 27.04C27.62 26.45 27.62 25.5 27.04 24.91L20.94 18.81C21.98 17.34 22.6 15.54 22.6 13.6C22.6 8.63 18.57 4.6 13.6 4.6Z"/>  
+                                              </svg>  
+                                              <input  
+                                                type="search"  
+                                                class="search-input"  
+                                                id="dd-menu-search"  
+                                                placeholder="送付先名で検索"  
+                                                aria-label="送付先名で検索"  
+                                                data-pendo="delivery-destination-select-menu-search"  
+                                                autocomplete="off"  
+                                              />  
+                                            </span>  
+                                          </div>  
+
+                                          <div class="menu-list-container">  
+                                            <div class="menu-list dd-menu-list" id="dd-menu-list">  
+
+                                              <button type="button" role="menuitem" class="menu-item dd-menu-item" data-pendo="delivery-destination-select-menu-item" data-dd-label="田中太郎 様">  
+                                                <div class="menu-item-icon">  
+                                                  <svg height="24" width="24" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">  
+                                                    <path d="M16 16C19.31 16 22 13.31 22 10C22 6.69 19.31 4 16 4C12.69 4 10 6.69 10 10C10 13.31 12.69 16 16 16ZM16 19C11.33 19 2 21.34 2 26V28C2 28.55 2.45 29 3 29H29C29.55 29 30 28.55 30 28V26C30 21.34 20.67 19 16 19Z"/>  
+                                                  </svg>  
+                                                </div>  
+                                                <div class="menu-item-content">  
+                                                  <div class="menu-item-main-text">田中太郎 様</div>  
+                                                </div>  
+                                              </button>  
+
+                                              <button type="button" role="menuitem" class="menu-item dd-menu-item" data-pendo="delivery-destination-select-menu-item" data-dd-label="島田建設株式会社 御中">  
+                                                <div class="menu-item-icon">  
+                                                  <svg height="24" width="24" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">  
+                                                    <path d="M7 5H16V15.5V27H7V5ZM19 27V15H25V27H19ZM28 27V15.5C28 13.57 26.43 12 24.5 12H19.5C19.33 12 19.16 12.01 19 12.04V5.5C19 3.57 17.43 2 15.5 2H7.5C5.57 2 4 3.57 4 5.5V27H3.5C2.67 27 2 27.67 2 28.5C2 29.33 2.67 30 3.5 30H28.5C29.33 30 30 29.33 30 28.5C30 27.67 29.33 27 28.5 27H28Z"/>  
+                                                  </svg>  
+                                                </div>  
+                                                <div class="menu-item-content">  
+                                                  <div class="menu-item-main-text">島田建設株式会社 御中</div>  
+                                                </div>  
+                                              </button>  
+
+                                              <button type="button" role="menuitem" class="menu-item dd-menu-item menu-item--no-selection" data-pendo="delivery-destination-select-menu-item" data-dd-clear="true">  
+                                                <div class="menu-item-icon no-selection">  
+                                                  <svg height="24" width="24" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">  
+                                                    <path d="M5 16C5 15.17 5.67 14.5 6.5 14.5H25.5C26.33 14.5 27 15.17 27 16C27 16.83 26.33 17.5 25.5 17.5H6.5C5.67 17.5 5 16.83 5 16Z"/>  
+                                                  </svg>  
+                                                </div>  
+                                                <div class="menu-item-content">  
+                                                  <div class="menu-item-main-text no-selection">選択しない</div>  
+                                                </div>  
+                                              </button>  
+
+                                            </div>  
+                                          </div>  
+
+                                          <hr class="menu-divider" aria-orientation="horizontal" />  
+
+                                          <div class="menu-footer">  
+                                            <button type="button" class="text-button-primary js-dd-create-dialog-open" data-pendo="delivery-destination-create" aria-haspopup="dialog" aria-controls="dd-create-form-dialog">  
+                                              <span class="icon-wrap">  
+                                                <svg height="20" width="20" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">  
+                                                  <path d="M16 4C16.83 4 17.5 4.67 17.5 5.5V14.5H26.5C27.33 14.5 28 15.17 28 16C28 16.83 27.33 17.5 26.5 17.5H17.5V26.5C17.5 27.33 16.83 28 16 28C15.17 28 14.5 27.33 14.5 26.5V17.5H5.5C4.67 17.5 4 16.83 4 16C4 15.17 4.67 14.5 5.5 14.5H14.5V5.5C14.5 4.67 15.17 4 16 4Z"/>  
+                                                </svg>  
+                                              </span>  
+                                              送付先を追加  
+                                            </button>  
+                                          </div>  
+
+                                        </div>  
+                                      </div>  
+                                    </div>  
+                                  </div>  
+                                </div>  
+
+                                <div class="delivery-destination-footer-row">  
+                                  <button type="button" class="text-button" id="dd-edit-button" hidden data-pendo="delivery-destination-edit" aria-haspopup="dialog" aria-controls="dd-update-form-dialog">  
+                                    <span class="text-button__icon">  
+                                      <svg height="20" width="20" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">  
+                                        <path fill="currentcolor" d="M22.6041 2.71978C23.5638 1.76007 25.1198 1.76007 26.0795 2.71978L29.2802 5.92052C30.2399 6.88022 30.2399 8.43621 29.2802 9.39592L12.6602 26.016C12.3444 26.3317 11.9702 26.583 11.5584 26.7558L4.11857 29.8769C2.86005 30.4049 1.59514 29.1399 2.1231 27.8814L5.24422 20.4416C5.41698 20.0298 5.66826 19.6556 5.98404 19.3398L22.6041 2.71978ZM24.6953 5.50612C24.5001 5.31085 24.1835 5.31085 23.9882 5.50612L22.2061 7.28827L24.7117 9.79392L26.4939 8.01177C26.6891 7.81651 26.6891 7.49993 26.4939 7.30466L24.6953 5.50612ZM8.06928 21.4251C8.02417 21.4702 7.98827 21.5236 7.96359 21.5825L6.37932 25.3589C6.31005 25.524 6.47601 25.6899 6.64112 25.6207L10.4175 24.0364C10.4764 24.0117 10.5298 23.9758 10.5749 23.9307L22.5929 11.9128L20.0872 9.40714L8.06928 21.4251Z"/>  
+                                      </svg>  
+                                    </span>  
+                                    <span>送付先を編集</span>  
+                                  </button>  
+                                  <div class="dd-guide-popover-anchor">  
+                                    <button type="button" class="text-button text-button--secondary text-button--guide" id="dd-guide-dialog-open" data-pendo="button-delivery-destination-guide" aria-haspopup="dialog" aria-expanded="false" aria-controls="delivery-destination-guide-popover">  
+                                      <span class="text-button__icon text-button__icon--sm">  
+                                        <svg height="16" width="16" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">  
+                                          <path fill="currentcolor" d="M4.89999 16C4.89999 9.92487 9.82486 5 15.9 5C21.9751 5 26.9 9.92487 26.9 16C26.9 22.0751 21.9751 27 15.9 27C9.82486 27 4.89999 22.0751 4.89999 16ZM15.9 2C8.16801 2 1.89999 8.26801 1.89999 16C1.89999 23.732 8.16801 30 15.9 30C23.632 30 29.9 23.732 29.9 16C29.9 8.26801 23.632 2 15.9 2ZM14.15 9.75C14.15 8.7835 14.9335 8 15.9 8C16.8665 8 17.65 8.7835 17.65 9.75C17.65 10.7165 16.8665 11.5 15.9 11.5C14.9335 11.5 14.15 10.7165 14.15 9.75ZM17.4 22.5C17.4 23.3284 16.7284 24 15.9 24C15.0716 24 14.4 23.3284 14.4 22.5V15C14.4 14.1716 15.0716 13.5 15.9 13.5C16.7284 13.5 17.4 14.1716 17.4 15V22.5Z"/>  
+                                        </svg>  
+                                      </span>  
+                                      <span>送付先とは</span>  
+                                    </button>  
+                                    <div id="delivery-destination-guide-popover" class="popover dd-guide-popover" role="dialog" aria-labelledby="dd-guide-heading">  
+                                      <div class="guide-card dd-guide-card">  
+                                        <button type="button" class="close-button dd-guide-close-button" id="dd-guide-popover-close" aria-label="閉じる" data-pendo="delivery-destination-guide-close-button">  
+                                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" role="img" aria-hidden="true">  
+                                            <path fill="currentColor" d="M8.70711 7.29289C8.31658 6.90237 7.68342 6.90237 7.29289 7.29289C6.90237 7.68342 6.90237 8.31658 7.29289 8.70711L14.5858 16L7.29289 23.2929C6.90237 23.6834 6.90237 24.3166 7.29289 24.7071C7.68342 25.0976 8.31658 25.0976 8.70711 24.7071L16 17.4142L23.2929 24.7071C23.6834 25.0976 24.3166 25.0976 24.7071 24.7071C25.0976 24.3166 25.0976 23.6834 24.7071 23.2929L17.4142 16L24.7071 8.70711C25.0976 8.31658 25.0976 7.68342 24.7071 7.29289C24.3166 6.90237 23.6834 6.90237 23.2929 7.29289L16 14.5858L8.70711 7.29289Z"/>  
+                                          </svg>  
+                                        </button>  
+                                        <h3 class="guide-heading" id="dd-guide-heading">  
+                                          「送付先」は、取引先に紐づく、より具体的な宛先情報です。  
+                                        </h3>  
+                                        <div class="description-card dd-guide-description-card">  
+                                          <div class="description-illust dd-guide-description-illust">  
+                                            <img src="img/delivery-destination-guide-illust.svg" alt="" width="240" height="92" decoding="async" data-pendo="delivery-destination-guide-illust" />  
+                                          </div>  
+                                          <div class="description-text dd-guide-description-text">  
+                                            証憑に表示する住所や宛名をあらかじめ登録しておくことで作成時の入力を簡単にできます。  
+                                          </div>  
+                                        </div>  
+                                        <div class="usage-wrap dd-guide-usage-wrap">  
+                                          <h4 class="usage-heading dd-guide-usage-heading">  
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" role="img" aria-hidden="true" class="usage-heading-icon">  
+                                              <path fill="currentColor" d="M4.89999 16C4.89999 9.92487 9.82486 5 15.9 5C21.9751 5 26.9 9.92487 26.9 16C26.9 22.0751 21.9751 27 15.9 27C9.82486 27 4.89999 22.0751 4.89999 16ZM15.9 2C8.16801 2 1.89999 8.26801 1.89999 16C1.89999 23.732 8.16801 30 15.9 30C23.632 30 29.9 23.732 29.9 16C29.9 8.26801 23.632 2 15.9 2ZM14.15 9.75C14.15 8.7835 14.9335 8 15.9 8C16.8665 8 17.65 8.7835 17.65 9.75C17.65 10.7165 16.8665 11.5 15.9 11.5C14.9335 11.5 14.15 10.7165 14.15 9.75ZM17.4 22.5C17.4 23.3284 16.7284 24 15.9 24C15.0716 24 14.4 23.3284 14.4 22.5V15C14.4 14.1716 15.0716 13.5 15.9 13.5C16.7284 13.5 17.4 14.1716 17.4 15V22.5Z"/>  
+                                            </svg>  
+                                            送付先の住所を呼び出す・登録する  
+                                          </h4>  
+                                          <ul class="usage-list dd-guide-usage-list">  
+                                            <li data-pendo="delivery-destination-guide-usage-1">窓付き封筒対応テンプレート選択時に送付先を選択すると、登録した住所が証憑の宛先欄に表示されます。</li>  
+                                            <li data-pendo="delivery-destination-guide-usage-2">住所が未登録の場合、送付先を選択後［送付先の編集］から住所を登録できます。</li>  
+                                          </ul>  
+                                        </div>  
+                                      </div>  
+                                    </div>  
+                                  </div>  
+                                </div>  
+                              </div>  
+                            </div>  
+                          </div>  
+                          <input type="hidden" name="client.clientName" value="">  
+                          <input type="hidden" name="client.honorific" value="">  
+                          <input type="hidden" name="client.departmentName" value="">  
+                          <input type="hidden" name="client.sectionName" value="">  
+                          <input type="hidden" name="client.repName" value="">  
+                          <input type="hidden" name="client.sharedMasterId" value="">  
+                          <input type="hidden" name="client.postCode" value="">  
+                          <input type="hidden" name="client.address1" value="">  
+                          <input type="hidden" name="client.address2" value="">  
+                          <input type="hidden" name="client.deliveryDestinationId" value="">  
+                          <input type="hidden" name="client.deliveryDestinationName" value="">  
+                        </div>  
+
+                        <div class="common-info__h-divider" aria-hidden="true"></div>  
+
+                        <div class="invoice-info-block">  
+                          <h2 class="section-heading">請求書情報</h2>  
+                          <div class="invoice-info-grid">  
+
+                            <div class="form-item grid-col-1-2" aria-required="true">  
+                              <span class="form-item__label-row">  
+                                <span class="label">請求日<span class="required-mark">(必須)</span></span>  
+                                <span class="tooltip-icon-wrap" aria-hidden="true"></span>  
+                              </span>  
+                              <div class="invoice-date-picker-root" data-dp-root data-state="closed" aria-label="日付選択フィールド">  
+                                <div class="date-picker-control">  
+                                  <span class="text-field-wrap">  
+                                    <input type="text" id="accrualDate" class="text-field" name="accrualDate"  
+                                           data-pendo="input-accrual-date" placeholder="yyyy/mm/dd"  
+                                           aria-label="請求日" aria-required="true" autocomplete="off" autocorrect="off" spellcheck="false">  
+                                  </span>  
+                                  <button type="button" class="calendar-icon-btn" data-dp-trigger  
+                                          aria-label="カレンダーを開く" aria-haspopup="dialog" aria-expanded="false"  
+                                          aria-controls="dp-content-accrual" data-pendo="icon-button-accrual-date">  
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" role="img" aria-hidden="true">  
+                                      <path fill="currentColor" d="M10 2C9.17157 2 8.5 2.67157 8.5 3.5V5H7.5C5.567 5 4 6.567 4 8.5V12C4 12.0909 4.00607 12.1804 4.01782 12.2681C4.00609 12.3437 4 12.4211 4 12.5V26.5C4 28.433 5.567 30 7.5 30H24.5C26.433 30 28 28.433 28 26.5V12.5C28 12.4212 27.9939 12.3437 27.9822 12.2681C27.9939 12.1804 28 12.0909 28 12V8.5C28 6.567 26.433 5 24.5 5H23.5V3.5C23.5 2.67157 22.8284 2 22 2C21.1716 2 20.5 2.67157 20.5 3.5V5H11.5V3.5C11.5 2.67157 10.8284 2 10 2ZM7 14H25V26.5C25 26.7761 24.7761 27 24.5 27H7.5C7.22386 27 7 26.7761 7 26.5V14ZM7.5 8H24.5C24.7761 8 25 8.22386 25 8.5V11H7V8.5C7 8.22386 7.22386 8 7.5 8ZM16 16.25C15.0335 16.25 14.25 17.0335 14.25 18C14.25 18.9665 15.0335 19.75 16 19.75C16.9665 19.75 17.75 18.9665 17.75 18C17.75 17.0335 16.9665 16.25 16 16.25ZM14.25 23C14.25 22.0335 15.0335 21.25 16 21.25C16.9665 21.25 17.75 22.0335 17.75 23C17.75 23.9665 16.9665 24.75 16 24.75C15.0335 24.75 14.25 23.9665 14.25 23ZM21 16.25C20.0335 16.25 19.25 17.0335 19.25 18C19.25 18.9665 20.0335 19.75 21 19.75C21.9665 19.75 22.75 18.9665 22.75 18C22.75 17.0335 21.9665 16.25 21 16.25ZM9.25 23C9.25 22.0335 10.0335 21.25 11 21.25C11.9665 21.25 12.75 22.0335 12.75 23C12.75 23.9665 11.9665 24.75 11 24.75C10.0335 24.75 9.25 23.9665 9.25 23ZM11 16.25C10.0335 16.25 9.25 17.0335 9.25 18C9.25 18.9665 10.0335 19.75 11 19.75C11.9665 19.75 12.75 18.9665 12.75 18C12.75 17.0335 11.9665 16.25 11 16.25Z"/>  
+                                    </svg>  
+                                  </button>  
+                                </div>  
+                                <div class="dp-content" id="dp-content-accrual" data-state="closed" data-part="content" role="dialog" aria-modal="true" aria-label="カレンダー" tabindex="-1">  
+                                  <div class="dp-card">  
+                                    <div class="dp-day-view" data-view="day">  
+                                      <div class="dp-view-control">  
+                                        <button type="button" class="dp-nav-button" data-dp-prev aria-label="前の月へ">  
+                                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" role="img" aria-hidden="true">  
+                                            <path fill="currentColor" d="M20.7071 7.29289C21.0976 7.68342 21.0976 8.31658 20.7071 8.70711L13.4142 16L20.7071 23.2929C21.0976 23.6834 21.0976 24.3166 20.7071 24.7071C20.3166 25.0976 19.6834 25.0976 19.2929 24.7071L11.2929 16.7071C10.9024 16.3166 10.9024 15.6834 11.2929 15.2929L19.2929 7.29289C19.6834 6.90237 20.3166 6.90237 20.7071 7.29289Z"/>  
+                                          </svg>  
+                                        </button>  
+                                        <button type="button" class="dp-view-trigger" data-dp-range-text aria-label="表示中の年月">2026年1月</button>  
+                                        <button type="button" class="dp-nav-button" data-dp-next aria-label="次の月へ">  
+                                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" role="img" aria-hidden="true">  
+                                            <path fill="currentColor" d="M11.2929 7.29289C10.9024 7.68342 10.9024 8.31658 11.2929 8.70711L18.5858 16L11.2929 23.2929C10.9024 23.6834 10.9024 24.3166 11.2929 24.7071C11.6834 25.0976 12.3166 25.0976 12.7071 24.7071L20.7071 16.7071C21.0976 16.3166 21.0976 15.6834 20.7071 15.2929L12.7071 7.29289C12.3166 6.90237 11.6834 6.90237 11.2929 7.29289Z"/>  
+                                          </svg>  
+                                        </button>  
+                                      </div>  
+                                      <table class="dp-table" aria-label="日付">  
+                                        <thead>  
+                                          <tr>  
+                                            <th scope="col">日</th><th scope="col">月</th><th scope="col">火</th><th scope="col">水</th><th scope="col">木</th><th scope="col">金</th><th scope="col">土</th>  
+                                          </tr>  
+                                        </thead>  
+                                        <tbody data-dp-calendar-body></tbody>  
+                                      </table>  
+                                    </div>  
+                                  </div>  
+                                </div>  
+                              </div>  
+                            </div>  
+
+                            <div class="form-item grid-col-2-3">  
+                              <span class="form-item__label-row">  
+                                <span class="label">お支払期限</span>  
+                                <span class="tooltip-icon-wrap" aria-hidden="true"></span>  
+                              </span>  
+                              <div class="invoice-date-picker-root" data-dp-root data-state="closed" aria-label="日付選択フィールド">  
+                                <div class="date-picker-control">  
+                                  <span class="text-field-wrap">  
+                                    <input type="text" id="dueDate" class="text-field" name="dueDate"  
+                                           data-pendo="input-due-date" placeholder="yyyy/mm/dd"  
+                                           aria-label="お支払期限" autocomplete="off" autocorrect="off" spellcheck="false">  
+                                  </span>  
+                                  <button type="button" class="calendar-icon-btn" data-dp-trigger  
+                                          aria-label="カレンダーを開く" aria-haspopup="dialog" aria-expanded="false"  
+                                          aria-controls="dp-content-due" data-pendo="icon-button-due-date">  
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" role="img" aria-hidden="true">  
+                                      <path fill="currentColor" d="M10 2C9.17157 2 8.5 2.67157 8.5 3.5V5H7.5C5.567 5 4 6.567 4 8.5V12C4 12.0909 4.00607 12.1804 4.01782 12.2681C4.00609 12.3437 4 12.4211 4 12.5V26.5C4 28.433 5.567 30 7.5 30H24.5C26.433 30 28 28.433 28 26.5V12.5C28 12.4212 27.9939 12.3437 27.9822 12.2681C27.9939 12.1804 28 12.0909 28 12V8.5C28 6.567 26.433 5 24.5 5H23.5V3.5C23.5 2.67157 22.8284 2 22 2C21.1716 2 20.5 2.67157 20.5 3.5V5H11.5V3.5C11.5 2.67157 10.8284 2 10 2ZM7 14H25V26.5C25 26.7761 24.7761 27 24.5 27H7.5C7.22386 27 7 26.7761 7 26.5V14ZM7.5 8H24.5C24.7761 8 25 8.22386 25 8.5V11H7V8.5C7 8.22386 7.22386 8 7.5 8ZM16 16.25C15.0335 16.25 14.25 17.0335 14.25 18C14.25 18.9665 15.0335 19.75 16 19.75C16.9665 19.75 17.75 18.9665 17.75 18C17.75 17.0335 16.9665 16.25 16 16.25ZM14.25 23C14.25 22.0335 15.0335 21.25 16 21.25C16.9665 21.25 17.75 22.0335 17.75 23C17.75 23.9665 16.9665 24.75 16 24.75C15.0335 24.75 14.25 23.9665 14.25 23ZM21 16.25C20.0335 16.25 19.25 17.0335 19.25 18C19.25 18.9665 20.0335 19.75 21 19.75C21.9665 19.75 22.75 18.9665 22.75 18C22.75 17.0335 21.9665 16.25 21 16.25ZM9.25 23C9.25 22.0335 10.0335 21.25 11 21.25C11.9665 21.25 12.75 22.0335 12.75 23C12.75 23.9665 11.9665 24.75 11 24.75C10.0335 24.75 9.25 23.9665 9.25 23ZM11 16.25C10.0335 16.25 9.25 17.0335 9.25 18C9.25 18.9665 10.0335 19.75 11 19.75C11.9665 19.75 12.75 18.9665 12.75 18C12.75 17.0335 11.9665 16.25 11 16.25Z"/>  
+                                    </svg>  
+                                  </button>  
+                                </div>  
+                                <div class="dp-content" id="dp-content-due" data-state="closed" data-part="content" role="dialog" aria-modal="true" aria-label="カレンダー" tabindex="-1">  
+                                  <div class="dp-card">  
+                                    <div class="dp-day-view" data-view="day">  
+                                      <div class="dp-view-control">  
+                                        <button type="button" class="dp-nav-button" data-dp-prev aria-label="前の月へ">  
+                                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" role="img" aria-hidden="true">  
+                                            <path fill="currentColor" d="M20.7071 7.29289C21.0976 7.68342 21.0976 8.31658 20.7071 8.70711L13.4142 16L20.7071 23.2929C21.0976 23.6834 21.0976 24.3166 20.7071 24.7071C20.3166 25.0976 19.6834 25.0976 19.2929 24.7071L11.2929 16.7071C10.9024 16.3166 10.9024 15.6834 11.2929 15.2929L19.2929 7.29289C19.6834 6.90237 20.3166 6.90237 20.7071 7.29289Z"/>  
+                                          </svg>  
+                                        </button>  
+                                        <button type="button" class="dp-view-trigger" data-dp-range-text aria-label="表示中の年月">2026年1月</button>  
+                                        <button type="button" class="dp-nav-button" data-dp-next aria-label="次の月へ">  
+                                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" role="img" aria-hidden="true">  
+                                            <path fill="currentColor" d="M11.2929 7.29289C10.9024 7.68342 10.9024 8.31658 11.2929 8.70711L18.5858 16L11.2929 23.2929C10.9024 23.6834 10.9024 24.3166 11.2929 24.7071C11.6834 25.0976 12.3166 25.0976 12.7071 24.7071L20.7071 16.7071C21.0976 16.3166 21.0976 15.6834 20.7071 15.2929L12.7071 7.29289C12.3166 6.90237 11.6834 6.90237 11.2929 7.29289Z"/>  
+                                          </svg>  
+                                        </button>  
+                                      </div>  
+                                      <table class="dp-table" aria-label="日付">  
+                                        <thead>  
+                                          <tr>  
+                                            <th scope="col">日</th><th scope="col">月</th><th scope="col">火</th><th scope="col">水</th><th scope="col">木</th><th scope="col">金</th><th scope="col">土</th>  
+                                          </tr>  
+                                        </thead>  
+                                        <tbody data-dp-calendar-body></tbody>  
+                                      </table>  
+                                    </div>  
+                                  </div>  
+                                </div>  
+                              </div>  
+                            </div>  
+
+                            <div class="form-item grid-col-1-3" aria-required="true">  
+                              <span class="form-item__label-row">  
+                                <label class="label" for="invoiceNumber">  
+                                  請求書番号<span class="required-mark">(必須)</span>  
+                                </label>  
+                                <span class="tooltip-icon-wrap" aria-hidden="true"></span>  
+                              </span>  
+                              <span class="text-field-wrap">  
+                                <input type="text" id="invoiceNumber" class="text-field" name="invoiceNumber" maxlength="12"  
+                                       data-pendo="input-invoice-number" aria-required="true" aria-label="請求書番号">  
+                              </span>  
+                            </div>  
+
+                            <div class="form-item grid-col-1-3">  
+                              <span class="form-item__label-row">  
+                                <label class="label" for="subject">件名</label>  
+                              </span>  
+                              <span class="text-field-wrap">  
+                                <input type="text" id="subject" class="text-field" name="subject" maxlength="70"  
+                                       data-pendo="input-subject" aria-label="件名">  
+                              </span>  
+                              <div class="text-length-counter" aria-live="polite">0/70</div>  
+                            </div>  
+
+                          </div>  
+                        </div>  
+
+                      </div>  
+
+                      <span class="common-info__v-divider" aria-hidden="true"></span>  
+
+                      <div class="common-info__right">  
+                        <h2 class="section-heading">請求元情報</h2>  
+                        <div class="own-company-fields">  
+
+                          <div class="form-item">  
+                            <span class="form-item__label-row">  
+                              <label class="label" for="ownCompany-companyName">  
+                                自社名<span class="required-mark">(必須)</span>  
+                              </label>  
+                            </span>  
+                            <div class="text-area-wrap">  
+                              <textarea id="ownCompany-companyName" class="text-area" name="ownCompany.companyName"  
+                                        data-pendo="input-own-company-name" rows="3" aria-label="自社名" aria-required="true">弥生建設株式会社</textarea>  
+                            </div>  
+                            <div class="form-item__helper">  
+                              <p></p>  
+                            </div>  
+                          </div>  
+
+                          <div class="form-item">  
+                            <span class="form-item__label-row">  
+                              <label class="label" for="ownCompany-registrationNumber">適格請求書発行事業者の登録番号</label>  
+                              <span class="tooltip-icon-wrap" aria-hidden="true"></span>  
+                            </span>  
+                            <span class="text-field-wrap">  
+                              <input type="text" id="ownCompany-registrationNumber" class="text-field"  
+                                     name="ownCompany.registrationNumber" value="T1234567891012"  
+                                     data-pendo="input-own-company-registration-number"  
+                                     aria-label="適格請求書発行事業者の登録番号">  
+                            </span>  
+                            <div class="form-item__helper">  
+                              <p>「T」+ 13桁の数字を入力します。</p>  
+                            </div>  
+                          </div>  
+
+                        </div>  
+
+                        <input type="hidden" name="ownCompany.address1" value="東京都千代田区外神田 4-14-1 秋葉原 UDX 21F" />  
+                        <input type="hidden" name="ownCompany.address2" value="" />  
+                        <input type="hidden" name="ownCompany.email" value="" />  
+                        <input type="hidden" name="ownCompany.fax" value="" />  
+                        <input type="hidden" name="ownCompany.logoKey" value="" />  
+                        <input type="hidden" name="ownCompany.postCode" value="101-0021" />  
+                        <input type="hidden" name="ownCompany.stampKey" value="" />  
+                        <input type="hidden" name="ownCompany.tel" value="03-1111-1111" />  
+                      </div>  
+
+                    </div>  
+
+                    <div class="invoice-lines-section" aria-label="明細">
+                      <div class="h-divider" aria-hidden="true"></div>
+                      <div class="lines-wrap">
+
+                        <div>
+                          <div class="switch-bar">
+                            <label class="switch-label" data-pendo="switch-multi-transaction-dates">
+                              <span>取引日を記入</span>
+                              <span class="switch-wrap">
+                                <input class="switch-input" name="hasMultiTransactionDates" role="switch" type="checkbox" />
+                                <span class="switch-track" aria-hidden="true">
+                                  <span class="switch-hover"></span>
+                                  <span class="switch-knob"></span>
+                                </span>
+                              </span>
+                            </label>
+                          </div>
+                        </div>
+
+                        <div class="gt-root">
+                          <div class="gt-table" role="table">
+
+                            <div class="gt-rowgroup" role="rowgroup">
+                              <div class="gt-row-header" role="row">
+                                <div class="gh" role="columnheader">品番・品名</div>
+                                <div class="gh" role="columnheader">数量</div>
+                                <div class="gh" role="columnheader">単位</div>
+                                <div class="gh" role="columnheader">単価</div>
+                                <div class="gh" role="columnheader">消費税率</div>
+                                <div class="gh" role="columnheader">金額</div>
+                                <div class="gh" role="columnheader"></div>
+                              </div>
+                            </div>
+
+                            <div class="gt-rowgroup" role="rowgroup" id="invoice-lines-data">
+
+                              <div class="gt-row" role="row">
+                                <div class="gc gc-dh" role="cell">
+                                  <div class="dh-wrap">
+                                    <button type="button" class="dh-btn" aria-label="行を並び替え" aria-roledescription="sortable" tabindex="0">
+                                      <svg height="20" width="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M11.5 23C12.8807 23 14 24.1193 14 25.5C14 26.8807 12.8807 28 11.5 28C10.1193 28 9 26.8807 9 25.5C9 24.1193 10.1193 23 11.5 23ZM20.5 23C21.8807 23 23 24.1193 23 25.5C23 26.8807 21.8807 28 20.5 28C19.1193 28 18 26.8807 18 25.5C18 24.1193 19.1193 23 20.5 23ZM11.5 13C12.8807 13 14 14.1193 14 15.5C14 16.8807 12.8807 18 11.5 18C10.1193 18 9 16.8807 9 15.5C9 14.1193 10.1193 13 11.5 13ZM20.5 13C21.8807 13 23 14.1193 23 15.5C23 16.8807 21.8807 18 20.5 18C19.1193 18 18 16.8807 18 15.5C18 14.1193 19.1193 13 20.5 13ZM11.5 4C12.8807 4 14 5.11929 14 6.5C14 7.88071 12.8807 9 11.5 9C10.1193 9 9 7.88071 9 6.5C9 5.11929 10.1193 4 11.5 4ZM20.5 4C21.8807 4 23 5.11929 23 6.5C23 7.88071 21.8807 9 20.5 9C19.1193 9 18 7.88071 18 6.5C18 5.11929 19.1193 4 20.5 4Z"/>
+                                      </svg>
+                                    </button>
+                                  </div>
+                                  <div class="lines-field-full">
+                                    <div class="combobox-root" data-scope="combobox" data-state="closed">
+                                      <div class="combobox-control">
+                                        <span class="combobox-input-container">
+                                          <input
+                                            class="combobox-input"
+                                            type="text"
+                                            role="combobox"
+                                            aria-autocomplete="list"
+                                            aria-expanded="false"
+                                            aria-label="明細 0 品番・品名"
+                                            autocomplete="off"
+                                            autocorrect="off"
+                                            autocapitalize="none"
+                                            spellcheck="false"
+                                            name="lines[0].productName"
+                                            data-pendo="input-lines-product-name"
+                                            value=""
+                                          />
+                                        </span>
+                                        <button
+                                          class="combobox-trigger"
+                                          type="button"
+                                          tabindex="-1"
+                                          aria-label="Toggle suggestions"
+                                          aria-haspopup="listbox"
+                                          aria-expanded="false"
+                                        >
+                                          <svg width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img">
+                                            <title>下向矢印</title>
+                                            <path fill="currentColor" d="M14.9229 21.2941L6.43961 12.8108C5.85383 12.225 5.85383 11.2753 6.43961 10.6895C7.0254 10.1037 7.97515 10.1037 8.56093 10.6895L15.9998 18.1284L23.4384 10.6897C24.0242 10.1039 24.974 10.1039 25.5598 10.6897C26.1455 11.2755 26.1455 12.2253 25.5598 12.8111L17.0603 21.3105C16.4746 21.8963 15.5248 21.8963 14.939 21.3105C14.9336 21.305 14.9282 21.2996 14.9229 21.2941Z"/>
+                                          </svg>
+                                        </button>
+                                      </div>
+                                      <div class="combobox-content" role="listbox" hidden>
+                                        <div class="combobox-menu" data-scope="combobox">
+                                          <button type="button" class="combobox-item" role="option" data-value="1">
+                                            <span class="combobox-item-text">【KS-401】型枠パイプ 2m</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="2">
+                                            <span class="combobox-item-text">【品番】BM-240815-A 【品名】ステンレス製アンカーボルト M12×120 高耐食グレード 建築資材 鉄骨・RC二次部材用 1箱50本入 現場搬入可 検査票同梱 納期7営業日 防錆塗装済 現品</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="3">
+                                            <span class="combobox-item-text">【品番】RC-0850 軽量間仕切りボード 12.5mm 準防火 建築内装用 1束10枚 現場搬入可</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="4">
+                                            <span class="combobox-item-text">【品番】ST-M12-120 アンカーボルト M12×120</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="5">
+                                            <span class="combobox-item-text">【BM-01】合板 12mm厚</span>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div></div>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <span class="tf-wrap">
+                                    <input type="text" class="tf align-r" aria-label="明細 0 数量"
+                                           name="lines[0].productQuantity" data-pendo="input-lines-product-quantity"
+                                           placeholder="0" value="" />
+                                  </span>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <span class="tf-wrap">
+                                    <input type="text" class="tf align-r" aria-label="明細 0 単位"
+                                           name="lines[0].productUnit" data-pendo="input-lines-product-unit"
+                                           placeholder="個" value="" />
+                                  </span>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <span class="tf-wrap">
+                                    <input type="text" class="tf align-r" aria-label="明細 0 単価"
+                                           name="lines[0].productPrice" data-pendo="input-lines-product-price"
+                                           placeholder="0" value="" />
+                                  </span>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <div class="sb-wrap">
+                                    <select class="sb" aria-label="明細 0 消費税率"
+                                            name="lines[0].consumptionTaxRate" data-pendo="select-lines-consumption-tax-rate">
+                                      <option value="PER10" data-pendo="option-lines-consumption-tax-rate-per10">10%</option>
+                                      <option value="PER8R" data-pendo="option-lines-consumption-tax-rate-per8r">軽減8%</option>
+                                      <option value="NA" data-pendo="option-lines-consumption-tax-rate-na">対象外</option>
+                                    </select>
+                                    <div class="sb-arrow">
+                                      <svg height="16" width="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                        <title>下向矢印</title>
+                                        <path d="M16.1215 22.7454C15.6982 22.7796 15.2632 22.6347 14.9393 22.3109L4.43881 11.8104C3.85302 11.2246 3.85302 10.2749 4.43881 9.68907C5.02459 9.10328 5.97434 9.10328 6.56013 9.68907L16.0001 19.129L25.4401 9.68905C26.0259 9.10326 26.9756 9.10326 27.5614 9.68905C28.1472 10.2748 28.1472 11.2246 27.5614 11.8104L17.0609 22.3109C16.7989 22.5729 16.464 22.7178 16.1215 22.7454Z"/>
+                                      </svg>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="gc gc-amount" role="cell" aria-label="明細 0 金額" id="line-form-amount-0"></div>
+                                <div class="gc gc-action" role="cell">
+                                  <button type="button" class="del-btn" aria-label="明細 0 削除" data-pendo="icon-button-remove-line">
+                                    <span class="del-btn__icon"><svg height="16" width="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M5.93934 23.9393C5.35355 24.5251 5.35355 25.4749 5.93934 26.0607C6.52513 26.6464 7.47487 26.6464 8.06066 26.0607L16 18.1213L23.9394 26.0607C24.5251 26.6465 25.4749 26.6465 26.0607 26.0607C26.6465 25.4749 26.6465 24.5251 26.0607 23.9394L18.1213 16L26.0607 8.06066C26.6464 7.47487 26.6464 6.52513 26.0607 5.93934C25.4749 5.35355 24.5251 5.35355 23.9393 5.93934L16 13.8787L8.06068 5.93936C7.47489 5.35357 6.52514 5.35357 5.93936 5.93936C5.35357 6.52514 5.35357 7.47489 5.93936 8.06068L13.8787 16L5.93934 23.9393Z"/>
+                                    </svg></span>
+                                  </button>
+                                </div>
+                              </div>
+
+                              <div class="gt-row" role="row">
+                                <div class="gc gc-dh" role="cell">
+                                  <div class="dh-wrap">
+                                    <button type="button" class="dh-btn" aria-label="行を並び替え" aria-roledescription="sortable" tabindex="0">
+                                      <svg height="20" width="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M11.5 23C12.8807 23 14 24.1193 14 25.5C14 26.8807 12.8807 28 11.5 28C10.1193 28 9 26.8807 9 25.5C9 24.1193 10.1193 23 11.5 23ZM20.5 23C21.8807 23 23 24.1193 23 25.5C23 26.8807 21.8807 28 20.5 28C19.1193 28 18 26.8807 18 25.5C18 24.1193 19.1193 23 20.5 23ZM11.5 13C12.8807 13 14 14.1193 14 15.5C14 16.8807 12.8807 18 11.5 18C10.1193 18 9 16.8807 9 15.5C9 14.1193 10.1193 13 11.5 13ZM20.5 13C21.8807 13 23 14.1193 23 15.5C23 16.8807 21.8807 18 20.5 18C19.1193 18 18 16.8807 18 15.5C18 14.1193 19.1193 13 20.5 13ZM11.5 4C12.8807 4 14 5.11929 14 6.5C14 7.88071 12.8807 9 11.5 9C10.1193 9 9 7.88071 9 6.5C9 5.11929 10.1193 4 11.5 4ZM20.5 4C21.8807 4 23 5.11929 23 6.5C23 7.88071 21.8807 9 20.5 9C19.1193 9 18 7.88071 18 6.5C18 5.11929 19.1193 4 20.5 4Z"/>
+                                      </svg>
+                                    </button>
+                                  </div>
+                                  <div class="lines-field-full">
+                                    <div class="combobox-root" data-scope="combobox" data-state="closed">
+                                      <div class="combobox-control">
+                                        <span class="combobox-input-container">
+                                          <input
+                                            class="combobox-input"
+                                            type="text"
+                                            role="combobox"
+                                            aria-autocomplete="list"
+                                            aria-expanded="false"
+                                            aria-label="明細 1 品番・品名"
+                                            autocomplete="off"
+                                            autocorrect="off"
+                                            autocapitalize="none"
+                                            spellcheck="false"
+                                            name="lines[1].productName"
+                                            data-pendo="input-lines-product-name"
+                                            value=""
+                                          />
+                                        </span>
+                                        <button
+                                          class="combobox-trigger"
+                                          type="button"
+                                          tabindex="-1"
+                                          aria-label="Toggle suggestions"
+                                          aria-haspopup="listbox"
+                                          aria-expanded="false"
+                                        >
+                                          <svg width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img">
+                                            <title>下向矢印</title>
+                                            <path fill="currentColor" d="M14.9229 21.2941L6.43961 12.8108C5.85383 12.225 5.85383 11.2753 6.43961 10.6895C7.0254 10.1037 7.97515 10.1037 8.56093 10.6895L15.9998 18.1284L23.4384 10.6897C24.0242 10.1039 24.974 10.1039 25.5598 10.6897C26.1455 11.2755 26.1455 12.2253 25.5598 12.8111L17.0603 21.3105C16.4746 21.8963 15.5248 21.8963 14.939 21.3105C14.9336 21.305 14.9282 21.2996 14.9229 21.2941Z"/>
+                                          </svg>
+                                        </button>
+                                      </div>
+                                      <div class="combobox-content" role="listbox" hidden>
+                                        <div class="combobox-menu" data-scope="combobox">
+                                          <button type="button" class="combobox-item" role="option" data-value="1">
+                                            <span class="combobox-item-text">【KS-401】型枠パイプ 2m</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="2">
+                                            <span class="combobox-item-text">【品番】BM-240815-A 【品名】ステンレス製アンカーボルト M12×120 高耐食グレード 建築資材 鉄骨・RC二次部材用 1箱50本入 現場搬入可 検査票同梱 納期7営業日 防錆塗装済 現品</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="3">
+                                            <span class="combobox-item-text">【品番】RC-0850 軽量間仕切りボード 12.5mm 準防火 建築内装用 1束10枚 現場搬入可</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="4">
+                                            <span class="combobox-item-text">【品番】ST-M12-120 アンカーボルト M12×120</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="5">
+                                            <span class="combobox-item-text">【BM-01】合板 12mm厚</span>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div></div>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <span class="tf-wrap"><input type="text" class="tf align-r" aria-label="明細 1 数量" name="lines[1].productQuantity" placeholder="0" value="" /></span>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <span class="tf-wrap"><input type="text" class="tf align-r" aria-label="明細 1 単位" name="lines[1].productUnit" placeholder="個" value="" /></span>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <span class="tf-wrap"><input type="text" class="tf align-r" aria-label="明細 1 単価" name="lines[1].productPrice" placeholder="0" value="" /></span>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <div class="sb-wrap">
+                                    <select class="sb" aria-label="明細 1 消費税率" name="lines[1].consumptionTaxRate" data-pendo="select-lines-consumption-tax-rate">
+                                      <option value="PER10" data-pendo="option-lines-consumption-tax-rate-per10">10%</option>
+                                      <option value="PER8R" data-pendo="option-lines-consumption-tax-rate-per8r">軽減8%</option>
+                                      <option value="NA" data-pendo="option-lines-consumption-tax-rate-na">対象外</option>
+                                    </select>
+                                    <div class="sb-arrow">
+                                      <svg height="16" width="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                        <title>下向矢印</title>
+                                        <path d="M16.1215 22.7454C15.6982 22.7796 15.2632 22.6347 14.9393 22.3109L4.43881 11.8104C3.85302 11.2246 3.85302 10.2749 4.43881 9.68907C5.02459 9.10328 5.97434 9.10328 6.56013 9.68907L16.0001 19.129L25.4401 9.68905C26.0259 9.10326 26.9756 9.10326 27.5614 9.68905C28.1472 10.2748 28.1472 11.2246 27.5614 11.8104L17.0609 22.3109C16.7989 22.5729 16.464 22.7178 16.1215 22.7454Z"/>
+                                      </svg>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="gc gc-amount" role="cell" aria-label="明細 1 金額" id="line-form-amount-1"></div>
+                                <div class="gc gc-action" role="cell">
+                                  <button type="button" class="del-btn" aria-label="明細 1 削除" data-pendo="icon-button-remove-line">
+                                    <span class="del-btn__icon"><svg height="16" width="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M5.93934 23.9393C5.35355 24.5251 5.35355 25.4749 5.93934 26.0607C6.52513 26.6464 7.47487 26.6464 8.06066 26.0607L16 18.1213L23.9394 26.0607C24.5251 26.6465 25.4749 26.6465 26.0607 26.0607C26.6465 25.4749 26.6465 24.5251 26.0607 23.9394L18.1213 16L26.0607 8.06066C26.6464 7.47487 26.6464 6.52513 26.0607 5.93934C25.4749 5.35355 24.5251 5.35355 23.9393 5.93934L16 13.8787L8.06068 5.93936C7.47489 5.35357 6.52514 5.35357 5.93936 5.93936C5.35357 6.52514 5.35357 7.47489 5.93936 8.06068L13.8787 16L5.93934 23.9393Z"/>
+                                    </svg></span>
+                                  </button>
+                                </div>
+                              </div>
+
+                              <div class="gt-row" role="row">
+                                <div class="gc gc-dh" role="cell">
+                                  <div class="dh-wrap">
+                                    <button type="button" class="dh-btn" aria-label="行を並び替え" aria-roledescription="sortable" tabindex="0">
+                                      <svg height="20" width="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M11.5 23C12.8807 23 14 24.1193 14 25.5C14 26.8807 12.8807 28 11.5 28C10.1193 28 9 26.8807 9 25.5C9 24.1193 10.1193 23 11.5 23ZM20.5 23C21.8807 23 23 24.1193 23 25.5C23 26.8807 21.8807 28 20.5 28C19.1193 28 18 26.8807 18 25.5C18 24.1193 19.1193 23 20.5 23ZM11.5 13C12.8807 13 14 14.1193 14 15.5C14 16.8807 12.8807 18 11.5 18C10.1193 18 9 16.8807 9 15.5C9 14.1193 10.1193 13 11.5 13ZM20.5 13C21.8807 13 23 14.1193 23 15.5C23 16.8807 21.8807 18 20.5 18C19.1193 18 18 16.8807 18 15.5C18 14.1193 19.1193 13 20.5 13ZM11.5 4C12.8807 4 14 5.11929 14 6.5C14 7.88071 12.8807 9 11.5 9C10.1193 9 9 7.88071 9 6.5C9 5.11929 10.1193 4 11.5 4ZM20.5 4C21.8807 4 23 5.11929 23 6.5C23 7.88071 21.8807 9 20.5 9C19.1193 9 18 7.88071 18 6.5C18 5.11929 19.1193 4 20.5 4Z"/>
+                                      </svg>
+                                    </button>
+                                  </div>
+                                  <div class="lines-field-full">
+                                    <div class="combobox-root" data-scope="combobox" data-state="closed">
+                                      <div class="combobox-control">
+                                        <span class="combobox-input-container">
+                                          <input
+                                            class="combobox-input"
+                                            type="text"
+                                            role="combobox"
+                                            aria-autocomplete="list"
+                                            aria-expanded="false"
+                                            aria-label="明細 2 品番・品名"
+                                            autocomplete="off"
+                                            autocorrect="off"
+                                            autocapitalize="none"
+                                            spellcheck="false"
+                                            name="lines[2].productName"
+                                            data-pendo="input-lines-product-name"
+                                            value=""
+                                          />
+                                        </span>
+                                        <button
+                                          class="combobox-trigger"
+                                          type="button"
+                                          tabindex="-1"
+                                          aria-label="Toggle suggestions"
+                                          aria-haspopup="listbox"
+                                          aria-expanded="false"
+                                        >
+                                          <svg width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img">
+                                            <title>下向矢印</title>
+                                            <path fill="currentColor" d="M14.9229 21.2941L6.43961 12.8108C5.85383 12.225 5.85383 11.2753 6.43961 10.6895C7.0254 10.1037 7.97515 10.1037 8.56093 10.6895L15.9998 18.1284L23.4384 10.6897C24.0242 10.1039 24.974 10.1039 25.5598 10.6897C26.1455 11.2755 26.1455 12.2253 25.5598 12.8111L17.0603 21.3105C16.4746 21.8963 15.5248 21.8963 14.939 21.3105C14.9336 21.305 14.9282 21.2996 14.9229 21.2941Z"/>
+                                          </svg>
+                                        </button>
+                                      </div>
+                                      <div class="combobox-content" role="listbox" hidden>
+                                        <div class="combobox-menu" data-scope="combobox">
+                                          <button type="button" class="combobox-item" role="option" data-value="1">
+                                            <span class="combobox-item-text">【KS-401】型枠パイプ 2m</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="2">
+                                            <span class="combobox-item-text">【品番】BM-240815-A 【品名】ステンレス製アンカーボルト M12×120 高耐食グレード 建築資材 鉄骨・RC二次部材用 1箱50本入 現場搬入可 検査票同梱 納期7営業日 防錆塗装済 現品</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="3">
+                                            <span class="combobox-item-text">【品番】RC-0850 軽量間仕切りボード 12.5mm 準防火 建築内装用 1束10枚 現場搬入可</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="4">
+                                            <span class="combobox-item-text">【品番】ST-M12-120 アンカーボルト M12×120</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="5">
+                                            <span class="combobox-item-text">【BM-01】合板 12mm厚</span>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div></div>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <span class="tf-wrap"><input type="text" class="tf align-r" aria-label="明細 2 数量" name="lines[2].productQuantity" placeholder="0" value="" /></span>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <span class="tf-wrap"><input type="text" class="tf align-r" aria-label="明細 2 単位" name="lines[2].productUnit" placeholder="個" value="" /></span>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <span class="tf-wrap"><input type="text" class="tf align-r" aria-label="明細 2 単価" name="lines[2].productPrice" placeholder="0" value="" /></span>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <div class="sb-wrap">
+                                    <select class="sb" aria-label="明細 2 消費税率" name="lines[2].consumptionTaxRate" data-pendo="select-lines-consumption-tax-rate">
+                                      <option value="PER10" data-pendo="option-lines-consumption-tax-rate-per10">10%</option>
+                                      <option value="PER8R" data-pendo="option-lines-consumption-tax-rate-per8r">軽減8%</option>
+                                      <option value="NA" data-pendo="option-lines-consumption-tax-rate-na">対象外</option>
+                                    </select>
+                                    <div class="sb-arrow">
+                                      <svg height="16" width="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                        <title>下向矢印</title>
+                                        <path d="M16.1215 22.7454C15.6982 22.7796 15.2632 22.6347 14.9393 22.3109L4.43881 11.8104C3.85302 11.2246 3.85302 10.2749 4.43881 9.68907C5.02459 9.10328 5.97434 9.10328 6.56013 9.68907L16.0001 19.129L25.4401 9.68905C26.0259 9.10326 26.9756 9.10326 27.5614 9.68905C28.1472 10.2748 28.1472 11.2246 27.5614 11.8104L17.0609 22.3109C16.7989 22.5729 16.464 22.7178 16.1215 22.7454Z"/>
+                                      </svg>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="gc gc-amount" role="cell" aria-label="明細 2 金額" id="line-form-amount-2"></div>
+                                <div class="gc gc-action" role="cell">
+                                  <button type="button" class="del-btn" aria-label="明細 2 削除" data-pendo="icon-button-remove-line">
+                                    <span class="del-btn__icon"><svg height="16" width="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M5.93934 23.9393C5.35355 24.5251 5.35355 25.4749 5.93934 26.0607C6.52513 26.6464 7.47487 26.6464 8.06066 26.0607L16 18.1213L23.9394 26.0607C24.5251 26.6465 25.4749 26.6465 26.0607 26.0607C26.6465 25.4749 26.6465 24.5251 26.0607 23.9394L18.1213 16L26.0607 8.06066C26.6464 7.47487 26.6464 6.52513 26.0607 5.93934C25.4749 5.35355 24.5251 5.35355 23.9393 5.93934L16 13.8787L8.06068 5.93936C7.47489 5.35357 6.52514 5.35357 5.93936 5.93936C5.35357 6.52514 5.35357 7.47489 5.93936 8.06068L13.8787 16L5.93934 23.9393Z"/>
+                                    </svg></span>
+                                  </button>
+                                </div>
+                              </div>
+
+                              <div class="gt-row" role="row">
+                                <div class="gc gc-dh" role="cell">
+                                  <div class="dh-wrap">
+                                    <button type="button" class="dh-btn" aria-label="行を並び替え" aria-roledescription="sortable" tabindex="0">
+                                      <svg height="20" width="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M11.5 23C12.8807 23 14 24.1193 14 25.5C14 26.8807 12.8807 28 11.5 28C10.1193 28 9 26.8807 9 25.5C9 24.1193 10.1193 23 11.5 23ZM20.5 23C21.8807 23 23 24.1193 23 25.5C23 26.8807 21.8807 28 20.5 28C19.1193 28 18 26.8807 18 25.5C18 24.1193 19.1193 23 20.5 23ZM11.5 13C12.8807 13 14 14.1193 14 15.5C14 16.8807 12.8807 18 11.5 18C10.1193 18 9 16.8807 9 15.5C9 14.1193 10.1193 13 11.5 13ZM20.5 13C21.8807 13 23 14.1193 23 15.5C23 16.8807 21.8807 18 20.5 18C19.1193 18 18 16.8807 18 15.5C18 14.1193 19.1193 13 20.5 13ZM11.5 4C12.8807 4 14 5.11929 14 6.5C14 7.88071 12.8807 9 11.5 9C10.1193 9 9 7.88071 9 6.5C9 5.11929 10.1193 4 11.5 4ZM20.5 4C21.8807 4 23 5.11929 23 6.5C23 7.88071 21.8807 9 20.5 9C19.1193 9 18 7.88071 18 6.5C18 5.11929 19.1193 4 20.5 4Z"/>
+                                      </svg>
+                                    </button>
+                                  </div>
+                                  <div class="lines-field-full">
+                                    <div class="combobox-root" data-scope="combobox" data-state="closed">
+                                      <div class="combobox-control">
+                                        <span class="combobox-input-container">
+                                          <input
+                                            class="combobox-input"
+                                            type="text"
+                                            role="combobox"
+                                            aria-autocomplete="list"
+                                            aria-expanded="false"
+                                            aria-label="明細 3 品番・品名"
+                                            autocomplete="off"
+                                            autocorrect="off"
+                                            autocapitalize="none"
+                                            spellcheck="false"
+                                            name="lines[3].productName"
+                                            data-pendo="input-lines-product-name"
+                                            value=""
+                                          />
+                                        </span>
+                                        <button
+                                          class="combobox-trigger"
+                                          type="button"
+                                          tabindex="-1"
+                                          aria-label="Toggle suggestions"
+                                          aria-haspopup="listbox"
+                                          aria-expanded="false"
+                                        >
+                                          <svg width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img">
+                                            <title>下向矢印</title>
+                                            <path fill="currentColor" d="M14.9229 21.2941L6.43961 12.8108C5.85383 12.225 5.85383 11.2753 6.43961 10.6895C7.0254 10.1037 7.97515 10.1037 8.56093 10.6895L15.9998 18.1284L23.4384 10.6897C24.0242 10.1039 24.974 10.1039 25.5598 10.6897C26.1455 11.2755 26.1455 12.2253 25.5598 12.8111L17.0603 21.3105C16.4746 21.8963 15.5248 21.8963 14.939 21.3105C14.9336 21.305 14.9282 21.2996 14.9229 21.2941Z"/>
+                                          </svg>
+                                        </button>
+                                      </div>
+                                      <div class="combobox-content" role="listbox" hidden>
+                                        <div class="combobox-menu" data-scope="combobox">
+                                          <button type="button" class="combobox-item" role="option" data-value="1">
+                                            <span class="combobox-item-text">【KS-401】型枠パイプ 2m</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="2">
+                                            <span class="combobox-item-text">【品番】BM-240815-A 【品名】ステンレス製アンカーボルト M12×120 高耐食グレード 建築資材 鉄骨・RC二次部材用 1箱50本入 現場搬入可 検査票同梱 納期7営業日 防錆塗装済 現品</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="3">
+                                            <span class="combobox-item-text">【品番】RC-0850 軽量間仕切りボード 12.5mm 準防火 建築内装用 1束10枚 現場搬入可</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="4">
+                                            <span class="combobox-item-text">【品番】ST-M12-120 アンカーボルト M12×120</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="5">
+                                            <span class="combobox-item-text">【BM-01】合板 12mm厚</span>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div></div>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <span class="tf-wrap"><input type="text" class="tf align-r" aria-label="明細 3 数量" name="lines[3].productQuantity" placeholder="0" value="" /></span>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <span class="tf-wrap"><input type="text" class="tf align-r" aria-label="明細 3 単位" name="lines[3].productUnit" placeholder="個" value="" /></span>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <span class="tf-wrap"><input type="text" class="tf align-r" aria-label="明細 3 単価" name="lines[3].productPrice" placeholder="0" value="" /></span>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <div class="sb-wrap">
+                                    <select class="sb" aria-label="明細 3 消費税率" name="lines[3].consumptionTaxRate" data-pendo="select-lines-consumption-tax-rate">
+                                      <option value="PER10" data-pendo="option-lines-consumption-tax-rate-per10">10%</option>
+                                      <option value="PER8R" data-pendo="option-lines-consumption-tax-rate-per8r">軽減8%</option>
+                                      <option value="NA" data-pendo="option-lines-consumption-tax-rate-na">対象外</option>
+                                    </select>
+                                    <div class="sb-arrow">
+                                      <svg height="16" width="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                        <title>下向矢印</title>
+                                        <path d="M16.1215 22.7454C15.6982 22.7796 15.2632 22.6347 14.9393 22.3109L4.43881 11.8104C3.85302 11.2246 3.85302 10.2749 4.43881 9.68907C5.02459 9.10328 5.97434 9.10328 6.56013 9.68907L16.0001 19.129L25.4401 9.68905C26.0259 9.10326 26.9756 9.10326 27.5614 9.68905C28.1472 10.2748 28.1472 11.2246 27.5614 11.8104L17.0609 22.3109C16.7989 22.5729 16.464 22.7178 16.1215 22.7454Z"/>
+                                      </svg>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="gc gc-amount" role="cell" aria-label="明細 3 金額" id="line-form-amount-3"></div>
+                                <div class="gc gc-action" role="cell">
+                                  <button type="button" class="del-btn" aria-label="明細 3 削除" data-pendo="icon-button-remove-line">
+                                    <span class="del-btn__icon"><svg height="16" width="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M5.93934 23.9393C5.35355 24.5251 5.35355 25.4749 5.93934 26.0607C6.52513 26.6464 7.47487 26.6464 8.06066 26.0607L16 18.1213L23.9394 26.0607C24.5251 26.6465 25.4749 26.6465 26.0607 26.0607C26.6465 25.4749 26.6465 24.5251 26.0607 23.9394L18.1213 16L26.0607 8.06066C26.6464 7.47487 26.6464 6.52513 26.0607 5.93934C25.4749 5.35355 24.5251 5.35355 23.9393 5.93934L16 13.8787L8.06068 5.93936C7.47489 5.35357 6.52514 5.35357 5.93936 5.93936C5.35357 6.52514 5.35357 7.47489 5.93936 8.06068L13.8787 16L5.93934 23.9393Z"/>
+                                    </svg></span>
+                                  </button>
+                                </div>
+                              </div>
+
+                              <div class="gt-row" role="row">
+                                <div class="gc gc-dh" role="cell">
+                                  <div class="dh-wrap">
+                                    <button type="button" class="dh-btn" aria-label="行を並び替え" aria-roledescription="sortable" tabindex="0">
+                                      <svg height="20" width="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M11.5 23C12.8807 23 14 24.1193 14 25.5C14 26.8807 12.8807 28 11.5 28C10.1193 28 9 26.8807 9 25.5C9 24.1193 10.1193 23 11.5 23ZM20.5 23C21.8807 23 23 24.1193 23 25.5C23 26.8807 21.8807 28 20.5 28C19.1193 28 18 26.8807 18 25.5C18 24.1193 19.1193 23 20.5 23ZM11.5 13C12.8807 13 14 14.1193 14 15.5C14 16.8807 12.8807 18 11.5 18C10.1193 18 9 16.8807 9 15.5C9 14.1193 10.1193 13 11.5 13ZM20.5 13C21.8807 13 23 14.1193 23 15.5C23 16.8807 21.8807 18 20.5 18C19.1193 18 18 16.8807 18 15.5C18 14.1193 19.1193 13 20.5 13ZM11.5 4C12.8807 4 14 5.11929 14 6.5C14 7.88071 12.8807 9 11.5 9C10.1193 9 9 7.88071 9 6.5C9 5.11929 10.1193 4 11.5 4ZM20.5 4C21.8807 4 23 5.11929 23 6.5C23 7.88071 21.8807 9 20.5 9C19.1193 9 18 7.88071 18 6.5C18 5.11929 19.1193 4 20.5 4Z"/>
+                                      </svg>
+                                    </button>
+                                  </div>
+                                  <div class="lines-field-full">
+                                    <div class="combobox-root" data-scope="combobox" data-state="closed">
+                                      <div class="combobox-control">
+                                        <span class="combobox-input-container">
+                                          <input
+                                            class="combobox-input"
+                                            type="text"
+                                            role="combobox"
+                                            aria-autocomplete="list"
+                                            aria-expanded="false"
+                                            aria-label="明細 4 品番・品名"
+                                            autocomplete="off"
+                                            autocorrect="off"
+                                            autocapitalize="none"
+                                            spellcheck="false"
+                                            name="lines[4].productName"
+                                            data-pendo="input-lines-product-name"
+                                            value=""
+                                          />
+                                        </span>
+                                        <button
+                                          class="combobox-trigger"
+                                          type="button"
+                                          tabindex="-1"
+                                          aria-label="Toggle suggestions"
+                                          aria-haspopup="listbox"
+                                          aria-expanded="false"
+                                        >
+                                          <svg width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" role="img">
+                                            <title>下向矢印</title>
+                                            <path fill="currentColor" d="M14.9229 21.2941L6.43961 12.8108C5.85383 12.225 5.85383 11.2753 6.43961 10.6895C7.0254 10.1037 7.97515 10.1037 8.56093 10.6895L15.9998 18.1284L23.4384 10.6897C24.0242 10.1039 24.974 10.1039 25.5598 10.6897C26.1455 11.2755 26.1455 12.2253 25.5598 12.8111L17.0603 21.3105C16.4746 21.8963 15.5248 21.8963 14.939 21.3105C14.9336 21.305 14.9282 21.2996 14.9229 21.2941Z"/>
+                                          </svg>
+                                        </button>
+                                      </div>
+                                      <div class="combobox-content" role="listbox" hidden>
+                                        <div class="combobox-menu" data-scope="combobox">
+                                          <button type="button" class="combobox-item" role="option" data-value="1">
+                                            <span class="combobox-item-text">【KS-401】型枠パイプ 2m</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="2">
+                                            <span class="combobox-item-text">【品番】BM-240815-A 【品名】ステンレス製アンカーボルト M12×120 高耐食グレード 建築資材 鉄骨・RC二次部材用 1箱50本入 現場搬入可 検査票同梱 納期7営業日 防錆塗装済 現品</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="3">
+                                            <span class="combobox-item-text">【品番】RC-0850 軽量間仕切りボード 12.5mm 準防火 建築内装用 1束10枚 現場搬入可</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="4">
+                                            <span class="combobox-item-text">【品番】ST-M12-120 アンカーボルト M12×120</span>
+                                          </button>
+                                          <button type="button" class="combobox-item" role="option" data-value="5">
+                                            <span class="combobox-item-text">【BM-01】合板 12mm厚</span>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div></div>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <span class="tf-wrap"><input type="text" class="tf align-r" aria-label="明細 4 数量" name="lines[4].productQuantity" placeholder="0" value="" /></span>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <span class="tf-wrap"><input type="text" class="tf align-r" aria-label="明細 4 単位" name="lines[4].productUnit" placeholder="個" value="" /></span>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <span class="tf-wrap"><input type="text" class="tf align-r" aria-label="明細 4 単価" name="lines[4].productPrice" placeholder="0" value="" /></span>
+                                </div>
+                                <div class="gc" role="cell">
+                                  <div class="sb-wrap">
+                                    <select class="sb" aria-label="明細 4 消費税率" name="lines[4].consumptionTaxRate" data-pendo="select-lines-consumption-tax-rate">
+                                      <option value="PER10" data-pendo="option-lines-consumption-tax-rate-per10">10%</option>
+                                      <option value="PER8R" data-pendo="option-lines-consumption-tax-rate-per8r">軽減8%</option>
+                                      <option value="NA" data-pendo="option-lines-consumption-tax-rate-na">対象外</option>
+                                    </select>
+                                    <div class="sb-arrow">
+                                      <svg height="16" width="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                        <title>下向矢印</title>
+                                        <path d="M16.1215 22.7454C15.6982 22.7796 15.2632 22.6347 14.9393 22.3109L4.43881 11.8104C3.85302 11.2246 3.85302 10.2749 4.43881 9.68907C5.02459 9.10328 5.97434 9.10328 6.56013 9.68907L16.0001 19.129L25.4401 9.68905C26.0259 9.10326 26.9756 9.10326 27.5614 9.68905C28.1472 10.2748 28.1472 11.2246 27.5614 11.8104L17.0609 22.3109C16.7989 22.5729 16.464 22.7178 16.1215 22.7454Z"/>
+                                      </svg>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="gc gc-amount" role="cell" aria-label="明細 4 金額" id="line-form-amount-4"></div>
+                                <div class="gc gc-action" role="cell">
+                                  <button type="button" class="del-btn" aria-label="明細 4 削除" data-pendo="icon-button-remove-line">
+                                    <span class="del-btn__icon"><svg height="16" width="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                      <path d="M5.93934 23.9393C5.35355 24.5251 5.35355 25.4749 5.93934 26.0607C6.52513 26.6464 7.47487 26.6464 8.06066 26.0607L16 18.1213L23.9394 26.0607C24.5251 26.6465 25.4749 26.6465 26.0607 26.0607C26.6465 25.4749 26.6465 24.5251 26.0607 23.9394L18.1213 16L26.0607 8.06066C26.6464 7.47487 26.6464 6.52513 26.0607 5.93934C25.4749 5.35355 24.5251 5.35355 23.9393 5.93934L16 13.8787L8.06068 5.93936C7.47489 5.35357 6.52514 5.35357 5.93936 5.93936C5.35357 6.52514 5.35357 7.47489 5.93936 8.06068L13.8787 16L5.93934 23.9393Z"/>
+                                    </svg></span>
+                                  </button>
+                                </div>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+
+                        <div id="invoice-dnd-described-by" class="invoice-dnd-described-by">
+                          ドラッグハンドルを掴んで行を上下に移動できます。
+                        </div>
+                        <div id="invoice-dnd-live" class="invoice-dnd-live-region" role="status" aria-live="polite" aria-atomic="true"></div>
+
+                        <div class="lines-footer">
+                          <div class="lines-footer-left">
+                            <button type="button" class="tb tb-normal" aria-label="行を追加" data-pendo="button-add-line">
+                              <span class="text-button__icon">
+                                <svg height="20" width="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                  <path d="M16 4C16.83 4 17.5 4.67 17.5 5.5V14.5H26.5C27.33 14.5 28 15.17 28 16C28 16.83 27.33 17.5 26.5 17.5H17.5V26.5C17.5 27.33 16.83 28 16 28C15.17 28 14.5 27.33 14.5 26.5V17.5H5.5C4.67 17.5 4 16.83 4 16C4 15.17 4.67 14.5 5.5 14.5H14.5V5.5C14.5 4.67 15.17 4 16 4Z"/>
+                                </svg>
+                              </span>
+                              行を追加
+                            </button>
+                            <p class="lines-hint">最大80行まで追加できます。</p>
+                          </div>
+                          <div class="lines-footer-summary">
+                            <dl class="la-wrap">
+                              <div class="la-row">
+                                <dt class="la-dt">小計</dt>
+                                <dd class="la-dd"><span>0</span></dd>
+                              </div>
+                              <div class="la-row">
+                                <dt class="la-dt">消費税</dt>
+                                <dd class="la-dd"><span>0</span></dd>
+                              </div>
+                              <div class="la-row">
+                                <dt class="la-dt">合計</dt>
+                                <dd class="la-dd"><span>0</span></dd>
+                              </div>
+                            </dl>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div class="invoice-note-bank" aria-label="備考・振込先">
+                        <div class="inv-nb-form-item">
+                          <span class="inv-nb-label-row">
+                            <label class="inv-nb-label-text" for="note-input">備考</label>
+                            <span class="inv-nb-icon-wrap-tooltip">
+                              <button type="button" class="inv-nb-tooltip-btn" title="伝達事項や挨拶などを入力します。&#10;例：「いつもご利用いただきありがとうございます。」">
+                                <svg height="16" width="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                  <path d="M4.9 16C4.9 9.92 9.82 5 15.9 5C21.98 5 26.9 9.92 26.9 16C26.9 22.08 21.98 27 15.9 27C9.82 27 4.9 22.08 4.9 16ZM15.9 2C8.17 2 1.9 8.27 1.9 16C1.9 23.73 8.17 30 15.9 30C23.63 30 29.9 23.73 29.9 16C29.9 8.27 23.63 2 15.9 2ZM16 10.5C14.62 10.5 13.5 11.62 13.5 13C13.5 13.83 12.83 14.5 12 14.5C11.17 14.5 10.5 13.83 10.5 13C10.5 9.96 12.96 7.5 16 7.5C19.04 7.5 21.5 9.96 21.5 13C21.5 14.94 20.36 16.12 19.4 16.83L18.12 17.65C17.83 17.83 17.71 17.91 17.67 17.94C17.5 18.07 17.5 18.17 17.5 19C17.5 19.83 16.83 20.5 16 20.5C15.17 20.5 14.5 19.83 14.5 19C14.5 17.07 15.67 16.17 16.5 15.67L17.5 15C18.17 14.5 18.5 14.08 18.5 13C18.5 11.62 17.38 10.5 16 10.5ZM16 22C15.17 22 14.5 22.67 14.5 23.5C14.5 24.33 15.17 25 16 25C16.83 25 17.5 24.33 17.5 23.5C17.5 22.67 16.83 22 16 22Z"/>
+                                </svg>
+                              </button>
+                            </span>
+                          </span>
+                          <div>
+                            <div class="inv-nb-ta-container">
+                              <div class="inv-nb-ta-wrap">
+                                <textarea class="inv-nb-ta" id="note-input" name="note" maxlength="1000" data-pendo="input-note" aria-label="備考" rows="4"></textarea>
+                              </div>
+                            </div>
+                            <span class="inv-nb-counter" id="note-counter" aria-live="polite">0/1000</span>
+                          </div>
+                          <div class="inv-nb-helper"><p></p></div>
+                        </div>
+
+                        <div>
+                          <h2 class="inv-nb-section-heading">振込先</h2>
+
+                          <div class="inv-nb-bank-row">
+                            <div class="inv-nb-form-item">
+                              <span class="inv-nb-label-row">
+                                <label class="inv-nb-label-text" for="ownBanks[0].bankName">金融機関名</label>
+                                <span class="inv-nb-icon-wrap-tooltip"></span>
+                              </span>
+                              <span class="inv-nb-tf-wrap">
+                                <input type="text" class="inv-nb-tf" id="ownBanks[0].bankName" name="ownBanks[0].bankName" aria-label="金融機関名1件目" data-pendo="input-own-bank-name" value="" />
+                              </span>
+                            </div>
+                            <div class="inv-nb-form-item">
+                              <span class="inv-nb-label-row">
+                                <label class="inv-nb-label-text" for="ownBanks[0].bankBranchName">支店名</label>
+                                <span class="inv-nb-icon-wrap-tooltip"></span>
+                              </span>
+                              <span class="inv-nb-tf-wrap">
+                                <input type="text" class="inv-nb-tf" id="ownBanks[0].bankBranchName" name="ownBanks[0].bankBranchName" aria-label="支店名1件目" data-pendo="input-own-bank-branch-name" value="" />
+                              </span>
+                            </div>
+                            <div class="inv-nb-form-item">
+                              <span class="inv-nb-label-row">
+                                <label class="inv-nb-label-text" for="ownBanks[0].bankAccountType">口座種別</label>
+                                <span class="inv-nb-icon-wrap-tooltip"></span>
+                              </span>
+                              <div class="inv-nb-sb-wrap">
+                                <select class="inv-nb-sb" id="ownBanks[0].bankAccountType" name="ownBanks[0].bankAccountType" aria-label="口座種別1件目" data-pendo="select-own-bank-account-type">
+                                  <option value="SAVINGS" data-pendo="option-own-bank-account-type-savings">普通預金</option>
+                                  <option value="CHECKING" data-pendo="option-own-bank-account-type-checking">当座預金</option>
+                                </select>
+                                <div class="inv-nb-sb-arrow">
+                                  <svg height="20" width="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16.1215 22.7454C15.6982 22.7796 15.2632 22.6347 14.9393 22.3109L4.43881 11.8104C3.85302 11.2246 3.85302 10.2749 4.43881 9.68907C5.02459 9.10328 5.97434 9.10328 6.56013 9.68907L16.0001 19.129L25.4401 9.68905C26.0259 9.10326 26.9756 9.10326 27.5614 9.68905C28.1472 10.2748 28.1472 11.2246 27.5614 11.8104L17.0609 22.3109C16.7989 22.5729 16.464 22.7178 16.1215 22.7454Z"/></svg>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="inv-nb-form-item">
+                              <span class="inv-nb-label-row">
+                                <label class="inv-nb-label-text" for="ownBanks[0].bankAccountNumber">口座番号</label>
+                                <span class="inv-nb-icon-wrap-tooltip"></span>
+                              </span>
+                              <span class="inv-nb-tf-wrap">
+                                <input type="text" class="inv-nb-tf" id="ownBanks[0].bankAccountNumber" name="ownBanks[0].bankAccountNumber" aria-label="口座番号1件目" data-pendo="input-own-bank-account-number" value="" />
+                              </span>
+                            </div>
+                            <div class="inv-nb-form-item">
+                              <span class="inv-nb-label-row">
+                                <label class="inv-nb-label-text" for="ownBanks[0].bankAccountName">口座名義</label>
+                                <span class="inv-nb-icon-wrap-tooltip"></span>
+                              </span>
+                              <span class="inv-nb-tf-wrap">
+                                <input type="text" class="inv-nb-tf" id="ownBanks[0].bankAccountName" name="ownBanks[0].bankAccountName" aria-label="口座名義1件目" data-pendo="input-own-bank-account-name" value="" />
+                              </span>
+                            </div>
+                          </div>
+
+                          <div class="inv-nb-bank-row">
+                            <div class="inv-nb-form-item">
+                              <span class="inv-nb-label-row">
+                                <label class="inv-nb-label-text" for="ownBanks[1].bankName">金融機関名</label>
+                                <span class="inv-nb-icon-wrap-tooltip"></span>
+                              </span>
+                              <span class="inv-nb-tf-wrap">
+                                <input type="text" class="inv-nb-tf" id="ownBanks[1].bankName" name="ownBanks[1].bankName" aria-label="金融機関名2件目" data-pendo="input-own-bank-name" value="" />
+                              </span>
+                            </div>
+                            <div class="inv-nb-form-item">
+                              <span class="inv-nb-label-row">
+                                <label class="inv-nb-label-text" for="ownBanks[1].bankBranchName">支店名</label>
+                                <span class="inv-nb-icon-wrap-tooltip"></span>
+                              </span>
+                              <span class="inv-nb-tf-wrap">
+                                <input type="text" class="inv-nb-tf" id="ownBanks[1].bankBranchName" name="ownBanks[1].bankBranchName" aria-label="支店名2件目" data-pendo="input-own-bank-branch-name" value="" />
+                              </span>
+                            </div>
+                            <div class="inv-nb-form-item">
+                              <span class="inv-nb-label-row">
+                                <label class="inv-nb-label-text" for="ownBanks[1].bankAccountType">口座種別</label>
+                                <span class="inv-nb-icon-wrap-tooltip"></span>
+                              </span>
+                              <div class="inv-nb-sb-wrap">
+                                <select class="inv-nb-sb" id="ownBanks[1].bankAccountType" name="ownBanks[1].bankAccountType" aria-label="口座種別2件目" data-pendo="select-own-bank-account-type">
+                                  <option value="SAVINGS" data-pendo="option-own-bank-account-type-savings">普通預金</option>
+                                  <option value="CHECKING" data-pendo="option-own-bank-account-type-checking">当座預金</option>
+                                </select>
+                                <div class="inv-nb-sb-arrow">
+                                  <svg height="20" width="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16.1215 22.7454C15.6982 22.7796 15.2632 22.6347 14.9393 22.3109L4.43881 11.8104C3.85302 11.2246 3.85302 10.2749 4.43881 9.68907C5.02459 9.10328 5.97434 9.10328 6.56013 9.68907L16.0001 19.129L25.4401 9.68905C26.0259 9.10326 26.9756 9.10326 27.5614 9.68905C28.1472 10.2748 28.1472 11.2246 27.5614 11.8104L17.0609 22.3109C16.7989 22.5729 16.464 22.7178 16.1215 22.7454Z"/></svg>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="inv-nb-form-item">
+                              <span class="inv-nb-label-row">
+                                <label class="inv-nb-label-text" for="ownBanks[1].bankAccountNumber">口座番号</label>
+                                <span class="inv-nb-icon-wrap-tooltip"></span>
+                              </span>
+                              <span class="inv-nb-tf-wrap">
+                                <input type="text" class="inv-nb-tf" id="ownBanks[1].bankAccountNumber" name="ownBanks[1].bankAccountNumber" aria-label="口座番号2件目" data-pendo="input-own-bank-account-number" value="" />
+                              </span>
+                            </div>
+                            <div class="inv-nb-form-item">
+                              <span class="inv-nb-label-row">
+                                <label class="inv-nb-label-text" for="ownBanks[1].bankAccountName">口座名義</label>
+                                <span class="inv-nb-icon-wrap-tooltip"></span>
+                              </span>
+                              <span class="inv-nb-tf-wrap">
+                                <input type="text" class="inv-nb-tf" id="ownBanks[1].bankAccountName" name="ownBanks[1].bankAccountName" aria-label="口座名義2件目" data-pendo="input-own-bank-account-name" value="" />
+                              </span>
+                            </div>
+                          </div>
+
+                          <div class="inv-nb-bank-row">
+                            <div class="inv-nb-form-item">
+                              <span class="inv-nb-label-row">
+                                <label class="inv-nb-label-text" for="ownBanks[2].bankName">金融機関名</label>
+                                <span class="inv-nb-icon-wrap-tooltip"></span>
+                              </span>
+                              <span class="inv-nb-tf-wrap">
+                                <input type="text" class="inv-nb-tf" id="ownBanks[2].bankName" name="ownBanks[2].bankName" aria-label="金融機関名3件目" data-pendo="input-own-bank-name" value="" />
+                              </span>
+                            </div>
+                            <div class="inv-nb-form-item">
+                              <span class="inv-nb-label-row">
+                                <label class="inv-nb-label-text" for="ownBanks[2].bankBranchName">支店名</label>
+                                <span class="inv-nb-icon-wrap-tooltip"></span>
+                              </span>
+                              <span class="inv-nb-tf-wrap">
+                                <input type="text" class="inv-nb-tf" id="ownBanks[2].bankBranchName" name="ownBanks[2].bankBranchName" aria-label="支店名3件目" data-pendo="input-own-bank-branch-name" value="" />
+                              </span>
+                            </div>
+                            <div class="inv-nb-form-item">
+                              <span class="inv-nb-label-row">
+                                <label class="inv-nb-label-text" for="ownBanks[2].bankAccountType">口座種別</label>
+                                <span class="inv-nb-icon-wrap-tooltip"></span>
+                              </span>
+                              <div class="inv-nb-sb-wrap">
+                                <select class="inv-nb-sb" id="ownBanks[2].bankAccountType" name="ownBanks[2].bankAccountType" aria-label="口座種別3件目" data-pendo="select-own-bank-account-type">
+                                  <option value="SAVINGS" data-pendo="option-own-bank-account-type-savings">普通預金</option>
+                                  <option value="CHECKING" data-pendo="option-own-bank-account-type-checking">当座預金</option>
+                                </select>
+                                <div class="inv-nb-sb-arrow">
+                                  <svg height="20" width="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16.1215 22.7454C15.6982 22.7796 15.2632 22.6347 14.9393 22.3109L4.43881 11.8104C3.85302 11.2246 3.85302 10.2749 4.43881 9.68907C5.02459 9.10328 5.97434 9.10328 6.56013 9.68907L16.0001 19.129L25.4401 9.68905C26.0259 9.10326 26.9756 9.10326 27.5614 9.68905C28.1472 10.2748 28.1472 11.2246 27.5614 11.8104L17.0609 22.3109C16.7989 22.5729 16.464 22.7178 16.1215 22.7454Z"/></svg>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="inv-nb-form-item">
+                              <span class="inv-nb-label-row">
+                                <label class="inv-nb-label-text" for="ownBanks[2].bankAccountNumber">口座番号</label>
+                                <span class="inv-nb-icon-wrap-tooltip"></span>
+                              </span>
+                              <span class="inv-nb-tf-wrap">
+                                <input type="text" class="inv-nb-tf" id="ownBanks[2].bankAccountNumber" name="ownBanks[2].bankAccountNumber" aria-label="口座番号3件目" data-pendo="input-own-bank-account-number" value="" />
+                              </span>
+                            </div>
+                            <div class="inv-nb-form-item">
+                              <span class="inv-nb-label-row">
+                                <label class="inv-nb-label-text" for="ownBanks[2].bankAccountName">口座名義</label>
+                                <span class="inv-nb-icon-wrap-tooltip"></span>
+                              </span>
+                              <span class="inv-nb-tf-wrap">
+                                <input type="text" class="inv-nb-tf" id="ownBanks[2].bankAccountName" name="ownBanks[2].bankAccountName" aria-label="口座名義3件目" data-pendo="input-own-bank-account-name" value="" />
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+                  </div>  
+                </div>  
+                <div id="tax-config" role="tabpanel" class="tabpanel"  
+                     aria-labelledby="tax-config-tab">  
+                  <div class="form-fields-in">  
+                    <div class="tax-config">  
+                      <h2 class="tax-config__title">課税設定</h2>  
+                      <div class="tax-config__content">  
+                        <div class="tax-config__intro">  
+                          <span>設定の「課税設定」で初期値を設定できます。</span>  
+                          <a href="/settings/taxation" target="_blank" rel="noreferrer" class="tax-config__link">  
+                            課税設定  
+                            <svg class="tax-config__link-icon" viewBox="0 0 24 24" fill="currentColor" role="img" aria-hidden="true">  
+                              <path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zM5 5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-7h-2v7H5V7h7V5H5z"/>  
+                            </svg>  
+                          </a>  
+                        </div>  
+
+                        <fieldset class="tax-config__fieldset">  
+                          <legend>  
+                            <span class="tax-config__legend-label">消費税設定</span>  
+                          </legend>  
+                          <div class="tax-config__radios">  
+                            <label class="tax-config__radio-label">  
+                              <span class="tax-config__radio-input-wrap">  
+                                <input type="radio" name="taxConfig.consumptionTax" value="EXCLUSIVE" class="tax-config__radio-native" aria-label="消費税設定 税別表示" checked />  
+                                <span class="tax-config__radio-ui" aria-hidden="true"></span>  
+                              </span>  
+                              <span class="tax-config__radio-text">税別表示</span>  
+                            </label>  
+                            <label class="tax-config__radio-label">  
+                              <span class="tax-config__radio-input-wrap">  
+                                <input type="radio" name="taxConfig.consumptionTax" value="INCLUSIVE" class="tax-config__radio-native" aria-label="消費税設定 税込表示" />  
+                                <span class="tax-config__radio-ui" aria-hidden="true"></span>  
+                              </span>  
+                              <span class="tax-config__radio-text">税込表示</span>  
+                            </label>  
+                          </div>  
+                        </fieldset>  
+
+                        <fieldset class="tax-config__fieldset">  
+                          <legend>  
+                            <span class="tax-config__legend-label">消費税端数処理</span>  
+                          </legend>  
+                          <div class="tax-config__radios">  
+                            <label class="tax-config__radio-label">  
+                              <span class="tax-config__radio-input-wrap">  
+                                <input type="radio" name="taxConfig.consumptionTaxFraction" value="ROUNDDOWN" class="tax-config__radio-native" aria-label="消費税端数処理 切り捨て" checked />  
+                                <span class="tax-config__radio-ui" aria-hidden="true"></span>  
+                              </span>  
+                              <span class="tax-config__radio-text">切り捨て</span>  
+                            </label>  
+                            <label class="tax-config__radio-label">  
+                              <span class="tax-config__radio-input-wrap">  
+                                <input type="radio" name="taxConfig.consumptionTaxFraction" value="ROUNDUP" class="tax-config__radio-native" aria-label="消費税端数処理 切り上げ" />  
+                                <span class="tax-config__radio-ui" aria-hidden="true"></span>  
+                              </span>  
+                              <span class="tax-config__radio-text">切り上げ</span>  
+                            </label>  
+                            <label class="tax-config__radio-label">  
+                              <span class="tax-config__radio-input-wrap">  
+                                <input type="radio" name="taxConfig.consumptionTaxFraction" value="ROUNDTONEAREST" class="tax-config__radio-native" aria-label="消費税端数処理 四捨五入" />  
+                                <span class="tax-config__radio-ui" aria-hidden="true"></span>  
+                              </span>  
+                              <span class="tax-config__radio-text">四捨五入</span>  
+                            </label>  
+                          </div>  
+                          <div class="tax-config__support">  
+                            <svg class="tax-config__support-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">  
+                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>  
+                            </svg>  
+                            <p>「小計」にかかる消費税の小数点以下の処理方法を選択します。</p>  
+                          </div>  
+                        </fieldset>  
+
+                        <fieldset class="tax-config__fieldset">  
+                          <legend>  
+                            <span class="tax-config__legend-label">明細行ごとの端数処理</span>  
+                          </legend>  
+                          <div class="tax-config__radios">  
+                            <label class="tax-config__radio-label">  
+                              <span class="tax-config__radio-input-wrap">  
+                                <input type="radio" name="taxConfig.lineFraction" value="ROUNDDOWN" class="tax-config__radio-native" aria-label="明細行ごとの端数処理 切り捨て" checked />  
+                                <span class="tax-config__radio-ui" aria-hidden="true"></span>  
+                              </span>  
+                              <span class="tax-config__radio-text">切り捨て</span>  
+                            </label>  
+                            <label class="tax-config__radio-label">  
+                              <span class="tax-config__radio-input-wrap">  
+                                <input type="radio" name="taxConfig.lineFraction" value="ROUNDUP" class="tax-config__radio-native" aria-label="明細行ごとの端数処理 切り上げ" />  
+                                <span class="tax-config__radio-ui" aria-hidden="true"></span>  
+                              </span>  
+                              <span class="tax-config__radio-text">切り上げ</span>  
+                            </label>  
+                            <label class="tax-config__radio-label">  
+                              <span class="tax-config__radio-input-wrap">  
+                                <input type="radio" name="taxConfig.lineFraction" value="ROUNDTONEAREST" class="tax-config__radio-native" aria-label="明細行ごとの端数処理 四捨五入" />  
+                                <span class="tax-config__radio-ui" aria-hidden="true"></span>  
+                              </span>  
+                              <span class="tax-config__radio-text">四捨五入</span>  
+                            </label>  
+                          </div>  
+                        </fieldset>  
+
+                        <fieldset class="tax-config__fieldset">  
+                          <legend>  
+                            <span class="tax-config__legend-label">源泉徴収設定</span>  
+                          </legend>  
+                          <div class="tax-config__radios">  
+                            <label class="tax-config__radio-label">  
+                              <span class="tax-config__radio-input-wrap">  
+                                <input type="radio" name="taxConfig.withheldTax" value="NONE" class="tax-config__radio-native" aria-label="源泉徴収設定 なし" checked />  
+                                <span class="tax-config__radio-ui" aria-hidden="true"></span>  
+                              </span>  
+                              <span class="tax-config__radio-text">なし</span>  
+                            </label>  
+                            <label class="tax-config__radio-label">  
+                              <span class="tax-config__radio-input-wrap">  
+                                <input type="radio" name="taxConfig.withheldTax" value="INCLUDE_RECONSTRUCTION_TAX" class="tax-config__radio-native" aria-label="源泉徴収設定 あり（復興税あり）" />  
+                                <span class="tax-config__radio-ui" aria-hidden="true"></span>  
+                              </span>  
+                              <span class="tax-config__radio-text">あり（復興税あり）</span>  
+                            </label>  
+                          </div>  
+                        </fieldset>  
+                      </div>  
+                    </div>  
+                  </div>  
+                </div>  
+              </div>  
+
+            </div>  
+          </div>  
+          <div class="inv-submit-bar-outer" id="invoice-form-pane-dock" aria-label="合計金額と保存">
+            <div class="inv-submit-bar">
+              <div class="inv-submit-amount-area" role="group" aria-label="金額内訳">
+                <div class="inv-submit-subtotal-tax-area">
+                  <div class="inv-submit-subtotal-tax-area">
+                    <div class="inv-submit-amount-wrap">
+                      <span class="inv-submit-term">小計</span>
+                      <span class="inv-submit-dd">
+                        <span class="inv-submit-amount-value">0</span>
+                        円
+                      </span>
+                    </div>
+                  </div>
+                  <div class="inv-submit-subtotal-tax-area">
+                    <div class="inv-submit-amount-wrap">
+                      <span class="inv-submit-term">消費税</span>
+                      <span class="inv-submit-dd">
+                        <span class="inv-submit-amount-value">0</span>
+                        円
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="inv-submit-v-divider" aria-hidden="true"></div>
+                <div class="inv-submit-amount-sum-wrap">
+                  <span class="inv-submit-term">合計</span>
+                  <span class="inv-submit-dd">
+                    <span class="inv-submit-amount-sum-value">0</span>
+                    円
+                  </span>
+                </div>
+              </div>
+              <div class="inv-submit-actions">
+                <button type="submit" class="inv-submit-btn-save" data-pendo="submit-invoice">
+                  <span>請求書を保存</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div><!-- /form-pane -->  
+
+        <!-- 右ペイン: プレビュー等は #invoice-preview-pane-body 内に追加 -->
+        <div class="preview-pane">  
+          <div class="preview-inner">  
+            <div class="inv-template-block" aria-label="請求書テンプレート">
+              <div class="inv-template-row">
+                <label class="inv-template-label" for="invoice-template-select">請求書のテンプレート</label>
+                <div class="inv-template-select-outer">
+                  <div class="inv-template-form-item">
+                    <div class="inv-template-sb-wrap">
+                      <select
+                        class="inv-template-sb"
+                        id="invoice-template-select"
+                        name="templateType"
+                        data-pendo="select-template-type"
+                        aria-label="請求書のテンプレート"
+                      >
+                        <option value="DEFAULT" data-pendo="option-template-type-default">標準</option>
+                        <option value="WINDOWED" data-pendo="option-template-type-windowed">窓付き封筒対応</option>
+                      </select>
+                      <div class="inv-template-sb-arrow" aria-hidden="true">
+                        <svg height="20" width="20" viewBox="0 0 32 32" role="img" xmlns="http://www.w3.org/2000/svg">
+                          <title>下向矢印</title>
+                          <path fill="currentColor" d="M16.1215 22.7454C15.6982 22.7796 15.2632 22.6347 14.9393 22.3109L4.43881 11.8104C3.85302 11.2246 3.85302 10.2749 4.43881 9.68907C5.02459 9.10328 5.97434 9.10328 6.56013 9.68907L16.0001 19.129L25.4401 9.68905C26.0259 9.10326 26.9756 9.10326 27.5614 9.68905C28.1472 10.2748 28.1472 11.2246 27.5614 11.8104L17.0609 22.3109C16.7989 22.5729 16.464 22.7178 16.1215 22.7454Z"/>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="inv-template-helper-text">
+                      <p></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="inv-template-divider" aria-hidden="true"></div>
+            </div>
+            <div class="preview-pane__body" id="invoice-preview-pane-body" aria-label="プレビューエリア">
+              <div class="inv-preview-panel">
+                <div class="inv-preview-cq">
+                  <div class="inv-preview-doc-inner">
+                    <main class="inv-inv-main">
+                      <div id="preview-layout-default" class="preview-template-layout">
+                      <div class="inv-inv-header-info">
+                        <p id="preview-doc-date"></p>
+                        <p id="preview-doc-invoice-no"></p>
+                      </div>
+                      <h1 class="inv-inv-invoice-title">請求書</h1>
+                      <div class="inv-inv-two-col-grid">
+                        <div class="inv-inv-client-col">
+                          <div class="inv-inv-preview-parties" id="preview-parties-wrap">
+                            <div class="inv-inv-preview-party inv-inv-preview-party--client" id="preview-client-block">
+                              <h2 class="inv-inv-client-name">
+                                <span id="preview-client-name"></span>
+                                <span class="inv-inv-client-name__honor-wrap">
+                                  <span class="inv-inv-honor-space" id="preview-client-honor-space" aria-hidden="true" hidden></span>
+                                  <span class="inv-inv-honorific" id="preview-client-honor"></span>
+                                </span>
+                              </h2>
+                            </div>
+                            <div class="inv-inv-preview-party inv-inv-preview-party--delivery" id="preview-delivery-block">
+                              <div class="inv-inv-delivery-name-line">
+                                <span id="preview-delivery-name"></span>
+                                <span class="inv-inv-honor-space" id="preview-delivery-honor-space" aria-hidden="true" hidden></span>
+                                <span class="inv-inv-honorific" id="preview-delivery-honor"></span>
+                              </div>
+                            </div>
+                          </div>
+                          <p class="inv-inv-subject-row">
+                            <span class="inv-inv-subject-label">件名</span>
+                            <span class="inv-inv-subject-value" id="preview-subject"></span>
+                          </p>
+                          <p class="inv-inv-greeting">下記のとおりご請求申し上げます。</p>
+                          <div class="inv-inv-total-amount-bar">
+                            <h3>ご請求金額</h3>
+                            <p id="preview-total-yen"></p>
+                          </div>
+                          <div class="inv-inv-payment-due-row">
+                            <h3>お支払期限</h3>
+                            <p id="preview-due-date"></p>
+                          </div>
+                        </div>
+                        <div class="inv-inv-own-col">
+                          <img alt="" class="inv-inv-logo-img" src="img/logo.png" width="250" decoding="async" />
+                          <div class="inv-inv-own-info-grid">
+                            <div class="inv-inv-own-detail">
+                              <h3 class="inv-inv-own-company-name" id="preview-own-name"></h3>
+                              <p id="preview-own-address"></p>
+                              <p id="preview-own-tel-fax"></p>
+                            </div>
+                            <img alt="" class="inv-inv-stamp-img" src="img/inei.png" width="85" height="85" decoding="async" />
+                          </div>
+                          <p id="preview-own-email"></p>
+                          <div class="inv-inv-registration-row">
+                            <h4>適格請求書発行事業者の登録番号</h4>
+                            <p id="preview-own-reg"></p>
+                          </div>
+                        </div>
+                      </div>
+                      </div>
+
+                      <div id="preview-layout-windowed" class="preview-template-layout" hidden>
+                        <div class="inv-inv-windowed-header-row">
+                          <div class="inv-inv-windowed-envelope">
+                            <div class="inv-inv-windowed-envelope-inner">
+                              <div id="preview-env-address-block" class="inv-inv-windowed-env-address"></div>
+                              <p class="inv-inv-windowed-env-client-line">
+                                <span id="preview-env-client"></span>
+                                <span class="inv-inv-windowed-env-client-line__honor-wrap">
+                                  <span class="inv-inv-honorific inv-inv-windowed-env-honor" id="preview-env-honor" hidden></span>
+                                </span>
+                              </p>
+                              <p class="inv-inv-windowed-env-delivery" id="preview-env-delivery"></p>
+                            </div>
+                          </div>
+                          <div class="inv-inv-own-col inv-inv-own-col--windowed">
+                            <img alt="" class="inv-inv-logo-img" src="img/logo.png" width="250" decoding="async" />
+                            <div class="inv-inv-own-info-grid inv-inv-own-info-grid--windowed">
+                              <div class="inv-inv-own-detail">
+                                <h3 class="inv-inv-own-company-name" id="preview-w-own-name"></h3>
+                                <p id="preview-w-own-address"></p>
+                                <p id="preview-w-own-tel-fax"></p>
+                              </div>
+                              <img alt="" class="inv-inv-stamp-img" src="img/inei.png" width="85" height="85" decoding="async" />
+                            </div>
+                            <p id="preview-w-own-email"></p>
+                            <div class="inv-inv-registration-row">
+                              <h4>適格請求書発行事業者の登録番号</h4>
+                              <p id="preview-w-own-reg"></p>
+                            </div>
+                          </div>
+                        </div>
+                        <h1 class="inv-inv-invoice-title inv-inv-invoice-title--windowed">請求書</h1>
+                        <div class="inv-inv-two-col-grid inv-inv-two-col-grid--windowed-below">
+                          <div class="inv-inv-client-col inv-inv-windowed-left-col">
+                            <p class="inv-inv-subject-row">
+                              <span class="inv-inv-subject-label">件名</span>
+                              <span class="inv-inv-subject-value" id="preview-w-subject"></span>
+                            </p>
+                            <p class="inv-inv-greeting">下記のとおりご請求申し上げます。</p>
+                            <div class="inv-inv-total-amount-bar">
+                              <h3>ご請求金額</h3>
+                              <p id="preview-w-total-yen"></p>
+                            </div>
+                            <div class="inv-inv-payment-due-row">
+                              <h3>お支払期限</h3>
+                              <p id="preview-w-due-date"></p>
+                            </div>
+                          </div>
+                          <div class="inv-inv-windowed-doc-meta">
+                            <p id="preview-w-doc-date"></p>
+                            <p id="preview-w-doc-invoice-no"></p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <table class="inv-inv-detail-table">
+                        <thead>
+                          <tr>
+                            <th>品番・品名</th>
+                            <th>数量</th>
+                            <th>単価</th>
+                            <th>金額</th>
+                          </tr>
+                        </thead>
+                        <tbody id="preview-detail-tbody"></tbody>
+                      </table>
+                      <div class="inv-inv-summary-area">
+                        <p class="inv-inv-reduced-tax-note" id="preview-reduced-tax-note">※は軽減税率</p>
+                        <table class="inv-inv-summary-table">
+                          <tbody>
+                            <tr>
+                              <th>小計</th>
+                              <td id="preview-sum-subtotal"></td>
+                            </tr>
+                            <tr>
+                              <th>消費税</th>
+                              <td id="preview-sum-tax"></td>
+                            </tr>
+                            <tr>
+                              <th>合計</th>
+                              <td id="preview-sum-total"></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <table class="inv-inv-summary-table inv-inv-summary-table--tax-breakdown">
+                        <tbody>
+                          <tr aria-label="10%の課税対象と消費税の合計">
+                            <th>10%対象</th>
+                            <td id="preview-tax10-base"></td>
+                            <th>消費税</th>
+                            <td id="preview-tax10-amount"></td>
+                          </tr>
+                          <tr id="preview-tax8-breakdown-row" aria-label="軽減8%の課税対象と消費税の合計">
+                            <th>軽減8%対象</th>
+                            <td id="preview-tax8-base"></td>
+                            <th>消費税</th>
+                            <td id="preview-tax8-amount"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <p class="inv-inv-note-text" id="preview-note"></p>
+                      <div class="inv-inv-bank-section">
+                        <h3>お振込先</h3>
+                        <div id="preview-bank-lines"></div>
+                      </div>
+                    </main>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>  
+        </div><!-- /preview-pane -->  
+
+      </div><!-- /editor-grid -->  
+
+    </form>  
+  </div><!-- /editor-root -->  
+</div><!-- /page-root -->  
+
+  <dialog class="client-dialog" id="client-form-dialog" aria-labelledby="client-create-heading">  
+    <div class="client-dialog-card">  
+      <h2 class="client-dialog-header" id="client-create-heading">取引先の新規登録</h2>  
+      <div class="client-dialog-content">  
+        <form action="/api/client" aria-label="取引先の新規登録" class="client-dialog-form" id="client-create" method="post">  
+          <input name="intent" type="hidden" value="create" />  
+          <input name="sharedMasterId" type="hidden" value="" />  
+          <input name="sharedMasterRowVersion" type="hidden" value="" />  
+
+          <div class="client-dialog-name-grid">  
+            <div class="client-dialog-field">  
+              <span class="client-dialog-label-row">  
+                <label class="client-dialog-label" for="client-create-name">  
+                  取引先正式名<span class="client-dialog-required">(必須)</span>  
+                </label>  
+                <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+              </span>  
+              <span class="client-dialog-input-wrap">  
+                <input class="client-dialog-input" autocomplete="organization" data-pendo="create-client-dialog-input-client-legal-name" id="client-create-name" name="name" type="text" value="" />  
+              </span>  
+              <div class="client-dialog-support"><p></p></div>  
+            </div>  
+
+            <div class="client-dialog-field">  
+              <span class="client-dialog-label-row">  
+                <label class="client-dialog-label" for="client-create-honorific">敬称</label>  
+                <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+              </span>  
+              <div class="client-dialog-select-wrap">  
+                <select class="client-dialog-select" aria-label="取引先の敬称" data-pendo="create-client-dialog-select-client-honorific" name="honorific" id="client-create-honorific">  
+                  <option data-pendo="create-client-dialog-option-client-honorific-0" value="">なし</option>  
+                  <option data-pendo="create-client-dialog-option-client-honorific-1" value="御中">御中</option>  
+                  <option data-pendo="create-client-dialog-option-client-honorific-2" value="様">様</option>  
+                </select>  
+                <div class="client-dialog-select-icon" aria-hidden="true">  
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" role="img">  
+                    <title>下向矢印</title>  
+                    <path fill="currentColor" d="M16.1215 22.7454C15.6982 22.7796 15.2632 22.6347 14.9393 22.3109L4.43881 11.8104C3.85302 11.2246 3.85302 10.2749 4.43881 9.68907C5.02459 9.10328 5.97434 9.10328 6.56013 9.68907L16.0001 19.129L25.4401 9.68905C26.0259 9.10326 26.9756 9.10326 27.5614 9.68905C28.1472 10.2748 28.1472 11.2246 27.5614 11.8104L17.0609 22.3109C16.7989 22.5729 16.464 22.7178 16.1215 22.7454Z"/>  
+                  </svg>  
+                </div>  
+              </div>  
+            </div>  
+          </div>  
+
+          <div class="client-dialog-field">  
+            <span class="client-dialog-label-row">  
+              <label class="client-dialog-label" for="client-create-nickname">  
+                取引先通称名<span class="client-dialog-required">(必須)</span>  
+              </label>  
+              <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+            </span>  
+            <span class="client-dialog-input-wrap">  
+              <input class="client-dialog-input" data-pendo="create-client-dialog-input-client-nickname" id="client-create-nickname" name="nickname" type="text" value="" />  
+            </span>  
+            <div class="client-dialog-support"><p></p></div>  
+          </div>  
+        </form>  
+      </div>  
+
+      <div class="client-dialog-footer">  
+        <button class="client-dialog-btn-primary" data-pendo="create-client-dialog-main-button" form="client-create" type="submit">  
+          <span>登録</span>  
+        </button>  
+        <button class="client-dialog-btn-cancel" id="client-create-dialog-cancel" data-pendo="create-client-dialog-sub-button" type="button">  
+          <span>キャンセル</span>  
+        </button>  
+      </div>  
+    </div>  
+  </dialog>  
+
+  <dialog class="client-dialog" id="client-update-form-dialog" aria-labelledby="client-edit-heading">  
+    <div class="client-dialog-card">  
+      <h2 class="client-dialog-header" id="client-edit-heading">取引先の編集</h2>  
+      <div class="client-dialog-content">  
+        <form action="/api/client" aria-label="取引先の編集" class="client-dialog-form" id="client-update" method="post">  
+          <input name="intent" type="hidden" value="update" />  
+          <input name="sharedMasterId" type="hidden" value="" />  
+          <input name="sharedMasterRowVersion" type="hidden" value="" />  
+
+          <div class="client-dialog-name-grid">  
+            <div class="client-dialog-field">  
+              <span class="client-dialog-label-row">  
+                <label class="client-dialog-label" for="client-update-name">  
+                  取引先正式名<span class="client-dialog-required">(必須)</span>  
+                </label>  
+                <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+              </span>  
+              <span class="client-dialog-input-wrap">  
+                <input class="client-dialog-input" autocomplete="organization" data-pendo="update-client-dialog-input-client-legal-name" id="client-update-name" name="name" type="text" value="" />  
+              </span>  
+              <div class="client-dialog-support"><p></p></div>  
+            </div>  
+
+            <div class="client-dialog-field">  
+              <span class="client-dialog-label-row">  
+                <label class="client-dialog-label" for="client-update-honorific">敬称</label>  
+                <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+              </span>  
+              <div class="client-dialog-select-wrap">  
+                <select class="client-dialog-select" aria-label="取引先の敬称" data-pendo="update-client-dialog-select-client-honorific" name="honorific" id="client-update-honorific">  
+                  <option data-pendo="update-client-dialog-option-client-honorific-0" value="">なし</option>  
+                  <option data-pendo="update-client-dialog-option-client-honorific-1" value="御中">御中</option>  
+                  <option data-pendo="update-client-dialog-option-client-honorific-2" value="様">様</option>  
+                </select>  
+                <div class="client-dialog-select-icon" aria-hidden="true">  
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20" role="img">  
+                    <title>下向矢印</title>  
+                    <path fill="currentColor" d="M16.1215 22.7454C15.6982 22.7796 15.2632 22.6347 14.9393 22.3109L4.43881 11.8104C3.85302 11.2246 3.85302 10.2749 4.43881 9.68907C5.02459 9.10328 5.97434 9.10328 6.56013 9.68907L16.0001 19.129L25.4401 9.68905C26.0259 9.10326 26.9756 9.10326 27.5614 9.68905C28.1472 10.2748 28.1472 11.2246 27.5614 11.8104L17.0609 22.3109C16.7989 22.5729 16.464 22.7178 16.1215 22.7454Z"/>  
+                  </svg>  
+                </div>  
+              </div>  
+            </div>  
+          </div>  
+
+          <div class="client-dialog-field">  
+            <span class="client-dialog-label-row">  
+              <label class="client-dialog-label" for="client-update-nickname">  
+                取引先通称名<span class="client-dialog-required">(必須)</span>  
+              </label>  
+              <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+            </span>  
+            <span class="client-dialog-input-wrap">  
+              <input class="client-dialog-input" data-pendo="update-client-dialog-input-client-nickname" id="client-update-nickname" name="nickname" type="text" value="" />  
+            </span>  
+            <div class="client-dialog-support"><p></p></div>  
+          </div>  
+        </form>  
+      </div>  
+
+      <div class="client-dialog-footer">  
+        <button class="client-dialog-btn-primary" data-pendo="update-client-dialog-main-button" form="client-update" type="submit">  
+          <span>保存</span>  
+        </button>  
+        <button class="client-dialog-btn-cancel" id="client-update-dialog-cancel" data-pendo="update-client-dialog-sub-button" type="button">  
+          <span>キャンセル</span>  
+        </button>  
+      </div>  
+    </div>  
+  </dialog>  
+
+  <dialog class="client-dialog" id="dd-create-form-dialog" aria-labelledby="dd-create-heading">  
+    <div class="client-dialog-card">  
+      <h2 class="client-dialog-header" id="dd-create-heading">  
+        送付先の追加<span class="dd-create-dialog-client-nick" id="dd-create-dialog-client-nick"></span>  
+      </h2>  
+      <div class="client-dialog-content">  
+        <form action="/resource/delivery-destination/create-dialog" aria-label="送付先の新規登録" class="client-dialog-form" id="delivery-destination-create" method="post">  
+          <input id="dd-create-client-id" name="clientId" type="hidden" value="" />  
+
+            <div class="client-dialog-field dd-create-icon-field">  
+              <span class="client-dialog-label-row">  
+                <label class="client-dialog-label" for="dd-create-icon-trigger">アイコン</label>  
+                <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+              </span>  
+                <div class="dd-create-icon-picker">  
+                  <button type="button" class="dd-create-icon-trigger client-dialog-select-like" id="dd-create-icon-trigger" aria-label="アイコン" aria-expanded="false" aria-haspopup="menu" data-pendo="create-delivery-destination-dialog-menu-icon">  
+                    <span class="dd-create-icon-display" id="dd-create-icon-display" aria-hidden="true">  
+                      <img class="dd-create-icon-img" src="img/people.svg" alt="" width="20" height="20" decoding="async" />  
+                    </span>  
+                    <span class="dd-create-icon-chevron" aria-hidden="true">  
+                      <svg width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><title>下向矢印</title><path fill="currentColor" d="M16.1215 22.7454C15.6982 22.7796 15.2632 22.6347 14.9393 22.3109L4.43881 11.8104C3.85302 11.2246 3.85302 10.2749 4.43881 9.68907C5.02459 9.10328 5.97434 9.10328 6.56013 9.68907L16.0001 19.129L25.4401 9.68905C26.0259 9.10326 26.9756 9.10326 27.5614 9.68905C28.1472 10.2748 28.1472 11.2246 27.5614 11.8104L17.0609 22.3109C16.7989 22.5729 16.464 22.7178 16.1215 22.7454Z"/></svg>  
+                    </span>  
+                  </button>  
+                  <input id="dd-create-type" name="type" type="hidden" value="INDIVIDUAL" />  
+                  <div class="dd-create-icon-menu" id="dd-create-icon-menu" role="menu" aria-labelledby="dd-create-icon-trigger" hidden>  
+                    <button type="button" class="dd-create-icon-menu-item" role="menuitem" data-dd-icon-type="INDIVIDUAL" data-pendo="create-delivery-destination-dialog-menu-icon-individual" aria-label="INDIVIDUAL">  
+                      <img class="dd-create-icon-img" src="img/people.svg" alt="" width="20" height="20" decoding="async" />  
+                    </button>  
+                    <button type="button" class="dd-create-icon-menu-item" role="menuitem" data-dd-icon-type="GROUP" data-pendo="create-delivery-destination-dialog-menu-icon-group" aria-label="GROUP">  
+                      <img class="dd-create-icon-img" src="img/people-group.svg" alt="" width="20" height="20" decoding="async" />  
+                    </button>  
+                    <button type="button" class="dd-create-icon-menu-item" role="menuitem" data-dd-icon-type="ORGANIZATION" data-pendo="create-delivery-destination-dialog-menu-icon-organization" aria-label="ORGANIZATION">  
+                      <img class="dd-create-icon-img" src="img/building.svg" alt="" width="20" height="20" decoding="async" />  
+                    </button>  
+                  </div>  
+                </div>  
+            </div>  
+
+            <div class="client-dialog-field">  
+              <span class="client-dialog-label-row">  
+                <label class="client-dialog-label" for="dd-create-name">送付先名</label>  
+                <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+              </span>  
+              <textarea class="client-dialog-textarea" id="dd-create-name" name="name" rows="3" maxlength="150" placeholder="例）営業部 佐藤様&#10;例）関西営業所御中" data-pendo="create-delivery-destination-dialog-input-name"></textarea>  
+              <div class="client-dialog-support"><p>証憑に表示される宛名です。150文字まで入力できます。</p></div>  
+            </div>  
+
+            <div class="client-dialog-fields-block">  
+              <h3 class="client-dialog-section-title">住所</h3>  
+                <div class="client-dialog-field">  
+                  <span class="client-dialog-label-row">  
+                    <label class="client-dialog-label" for="dd-create-postCode">郵便番号</label>  
+                    <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+                  </span>  
+                  <div class="client-dialog-postal-row">  
+                    <span class="client-dialog-postal-mark" aria-hidden="true">〒</span>  
+                    <div class="client-dialog-postal-input-wrap">  
+                      <span class="client-dialog-input-wrap">  
+                        <input class="client-dialog-input" id="dd-create-postCode" name="postCode" type="text" value="" data-pendo="create-delivery-destination-dialog-input-post-code" />  
+                      </span>  
+                    </div>  
+                  </div>  
+                  <div class="client-dialog-support"><p></p></div>  
+                </div>  
+                <div class="client-dialog-field">  
+                  <span class="client-dialog-label-row">  
+                    <label class="client-dialog-label" for="dd-create-address1">都道府県・市区町村・番地</label>  
+                    <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+                  </span>  
+                  <textarea class="client-dialog-textarea" id="dd-create-address1" name="address1" rows="2" data-pendo="create-delivery-destination-dialog-input-address1"></textarea>  
+                  <div class="client-dialog-support"><p></p></div>  
+                </div>  
+                <div class="client-dialog-field">  
+                  <span class="client-dialog-label-row">  
+                    <label class="client-dialog-label" for="dd-create-address2">建物名・号室等</label>  
+                    <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+                  </span>  
+                  <textarea class="client-dialog-textarea" id="dd-create-address2" name="address2" rows="2" data-pendo="create-delivery-destination-dialog-input-address2"></textarea>  
+                  <div class="client-dialog-support"><p></p></div>  
+                </div>  
+            </div>  
+
+            <div class="client-dialog-fields-block">  
+              <h3 class="client-dialog-section-title">連絡先</h3>  
+                <div class="client-dialog-field">  
+                  <span class="client-dialog-label-row">  
+                    <label class="client-dialog-label" for="dd-create-email">メールアドレス</label>  
+                    <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+                  </span>  
+                  <span class="client-dialog-input-wrap">  
+                    <input class="client-dialog-input" id="dd-create-email" name="email" type="email" value="" data-pendo="create-delivery-destination-dialog-input-email" />  
+                  </span>  
+                  <div class="client-dialog-support"><p>メール送信機能を利用するときに、宛先に自動入力されるメールアドレスです。</p></div>  
+                </div>  
+                <div class="client-dialog-field">  
+                  <span class="client-dialog-label-row">  
+                    <label class="client-dialog-label" for="dd-create-tel">電話番号</label>  
+                    <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+                  </span>  
+                  <div class="client-dialog-input-narrow">  
+                    <span class="client-dialog-input-wrap">  
+                      <input class="client-dialog-input" id="dd-create-tel" name="tel" type="text" value="" data-pendo="create-delivery-destination-dialog-input-tel" />  
+                    </span>  
+                  </div>  
+                  <div class="client-dialog-support"><p></p></div>  
+                </div>  
+                <div class="client-dialog-field">  
+                  <span class="client-dialog-label-row">  
+                    <label class="client-dialog-label" for="dd-create-fax">FAX番号</label>  
+                    <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+                  </span>  
+                  <div class="client-dialog-input-narrow">  
+                    <span class="client-dialog-input-wrap">  
+                      <input class="client-dialog-input" id="dd-create-fax" name="fax" type="text" value="" data-pendo="create-delivery-destination-dialog-input-fax" />  
+                    </span>  
+                  </div>  
+                  <div class="client-dialog-support"><p></p></div>  
+                </div>  
+            </div>  
+
+            <div class="client-dialog-field">  
+              <span class="client-dialog-label-row">  
+                <label class="client-dialog-label" for="dd-create-note">メモ</label>  
+                <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+              </span>  
+              <textarea class="client-dialog-textarea" id="dd-create-note" name="note" rows="3" data-pendo="create-delivery-destination-dialog-input-note"></textarea>  
+              <div class="client-dialog-support"><p>証憑には表示されないメモです</p></div>  
+            </div>  
+        </form>  
+      </div>  
+      <div class="client-dialog-footer">  
+        <button class="client-dialog-btn-primary" data-pendo="create-delivery-destination-dialog-main-button" form="delivery-destination-create" type="submit">  
+          <span>登録</span>  
+        </button>  
+        <button class="client-dialog-btn-cancel" id="dd-create-dialog-cancel" data-pendo="create-delivery-destination-dialog-sub-button" type="button">  
+          <span>キャンセル</span>  
+        </button>  
+      </div>  
+    </div>  
+  </dialog>  
+
+  <dialog class="client-dialog" id="dd-update-form-dialog" aria-labelledby="dd-update-heading">  
+    <div class="client-dialog-card">  
+      <h2 class="client-dialog-header" id="dd-update-heading">送付先の編集</h2>  
+      <div class="client-dialog-content">  
+        <form action="/resource/delivery-destination/update-dialog" aria-label="送付先の編集" class="client-dialog-form" id="delivery-destination-update" method="post">  
+          <input id="dd-update-record-id" name="id" type="hidden" value="" />  
+          <input id="dd-update-version" name="version" type="hidden" value="0" />  
+
+          <div class="client-dialog-field dd-create-icon-field">  
+            <span class="client-dialog-label-row">  
+              <label class="client-dialog-label" for="dd-update-icon-trigger">アイコン</label>  
+              <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+            </span>  
+            <div class="dd-create-icon-picker">  
+              <button type="button" class="dd-create-icon-trigger client-dialog-select-like" id="dd-update-icon-trigger" aria-label="アイコン" aria-expanded="false" aria-haspopup="menu" data-pendo="update-delivery-destination-dialog-menu-icon">  
+                <span class="dd-create-icon-display" id="dd-update-icon-display" aria-hidden="true">  
+                  <img class="dd-create-icon-img" src="img/people.svg" alt="" width="20" height="20" decoding="async" />  
+                </span>  
+                <span class="dd-create-icon-chevron" aria-hidden="true">  
+                  <svg width="20" height="20" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><title>下向矢印</title><path fill="currentColor" d="M16.1215 22.7454C15.6982 22.7796 15.2632 22.6347 14.9393 22.3109L4.43881 11.8104C3.85302 11.2246 3.85302 10.2749 4.43881 9.68907C5.02459 9.10328 5.97434 9.10328 6.56013 9.68907L16.0001 19.129L25.4401 9.68905C26.0259 9.10326 26.9756 9.10326 27.5614 9.68905C28.1472 10.2748 28.1472 11.2246 27.5614 11.8104L17.0609 22.3109C16.7989 22.5729 16.464 22.7178 16.1215 22.7454Z"/></svg>  
+                </span>  
+              </button>  
+              <input id="dd-update-type" name="type" type="hidden" value="INDIVIDUAL" />  
+              <div class="dd-create-icon-menu" id="dd-update-icon-menu" role="menu" aria-labelledby="dd-update-icon-trigger" hidden>  
+                <button type="button" class="dd-create-icon-menu-item" role="menuitem" data-dd-icon-type="INDIVIDUAL" data-pendo="update-delivery-destination-dialog-menu-icon-individual" aria-label="INDIVIDUAL">  
+                  <img class="dd-create-icon-img" src="img/people.svg" alt="" width="20" height="20" decoding="async" />  
+                </button>  
+                <button type="button" class="dd-create-icon-menu-item" role="menuitem" data-dd-icon-type="GROUP" data-pendo="update-delivery-destination-dialog-menu-icon-group" aria-label="GROUP">  
+                  <img class="dd-create-icon-img" src="img/people-group.svg" alt="" width="20" height="20" decoding="async" />  
+                </button>  
+                <button type="button" class="dd-create-icon-menu-item" role="menuitem" data-dd-icon-type="ORGANIZATION" data-pendo="update-delivery-destination-dialog-menu-icon-organization" aria-label="ORGANIZATION">  
+                  <img class="dd-create-icon-img" src="img/building.svg" alt="" width="20" height="20" decoding="async" />  
+                </button>  
+              </div>  
+            </div>  
+          </div>  
+
+          <div class="client-dialog-field">  
+            <span class="client-dialog-label-row">  
+              <label class="client-dialog-label" for="dd-update-name">送付先名</label>  
+              <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+            </span>  
+            <textarea class="client-dialog-textarea" id="dd-update-name" name="name" rows="3" maxlength="150" placeholder="例）営業部 佐藤様&#10;例）関西営業所御中" data-pendo="update-delivery-destination-dialog-input-name"></textarea>  
+            <div class="client-dialog-support"><p>証憑に表示される宛名です。150文字まで入力できます。</p></div>  
+          </div>  
+
+          <div class="client-dialog-fields-block">  
+            <h3 class="client-dialog-section-title">住所</h3>  
+            <div class="client-dialog-field">  
+              <span class="client-dialog-label-row">  
+                <label class="client-dialog-label" for="dd-update-postCode">郵便番号</label>  
+                <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+              </span>  
+              <div class="client-dialog-postal-row">  
+                <span class="client-dialog-postal-mark" aria-hidden="true">〒</span>  
+                <div class="client-dialog-postal-input-wrap">  
+                  <span class="client-dialog-input-wrap">  
+                    <input class="client-dialog-input" id="dd-update-postCode" name="postCode" type="text" value="" data-pendo="update-delivery-destination-dialog-input-post-code" />  
+                  </span>  
+                </div>  
+              </div>  
+              <div class="client-dialog-support"><p></p></div>  
+            </div>  
+            <div class="client-dialog-field">  
+              <span class="client-dialog-label-row">  
+                <label class="client-dialog-label" for="dd-update-address1">都道府県・市区町村・番地</label>  
+                <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+              </span>  
+              <textarea class="client-dialog-textarea" id="dd-update-address1" name="address1" rows="2" data-pendo="update-delivery-destination-dialog-input-address1"></textarea>  
+              <div class="client-dialog-support"><p></p></div>  
+            </div>  
+            <div class="client-dialog-field">  
+              <span class="client-dialog-label-row">  
+                <label class="client-dialog-label" for="dd-update-address2">建物名・号室等</label>  
+                <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+              </span>  
+              <textarea class="client-dialog-textarea" id="dd-update-address2" name="address2" rows="2" data-pendo="update-delivery-destination-dialog-input-address2"></textarea>  
+              <div class="client-dialog-support"><p></p></div>  
+            </div>  
+          </div>  
+
+          <div class="client-dialog-fields-block">  
+            <h3 class="client-dialog-section-title">連絡先</h3>  
+            <div class="client-dialog-field">  
+              <span class="client-dialog-label-row">  
+                <label class="client-dialog-label" for="dd-update-email">メールアドレス</label>  
+                <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+              </span>  
+              <span class="client-dialog-input-wrap">  
+                <input class="client-dialog-input" id="dd-update-email" name="email" type="email" value="" data-pendo="update-delivery-destination-dialog-input-email" />  
+              </span>  
+              <div class="client-dialog-support"><p>メール送信機能を利用するときに、宛先に自動入力されるメールアドレスです。</p></div>  
+            </div>  
+            <div class="client-dialog-field">  
+              <span class="client-dialog-label-row">  
+                <label class="client-dialog-label" for="dd-update-tel">電話番号</label>  
+                <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+              </span>  
+              <div class="client-dialog-input-narrow">  
+                <span class="client-dialog-input-wrap">  
+                  <input class="client-dialog-input" id="dd-update-tel" name="tel" type="text" value="" data-pendo="update-delivery-destination-dialog-input-tel" />  
+                </span>  
+              </div>  
+              <div class="client-dialog-support"><p></p></div>  
+            </div>  
+            <div class="client-dialog-field">  
+              <span class="client-dialog-label-row">  
+                <label class="client-dialog-label" for="dd-update-fax">FAX番号</label>  
+                <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+              </span>  
+              <div class="client-dialog-input-narrow">  
+                <span class="client-dialog-input-wrap">  
+                  <input class="client-dialog-input" id="dd-update-fax" name="fax" type="text" value="" data-pendo="update-delivery-destination-dialog-input-fax" />  
+                </span>  
+              </div>  
+              <div class="client-dialog-support"><p></p></div>  
+            </div>  
+          </div>  
+
+          <div class="client-dialog-field">  
+            <span class="client-dialog-label-row">  
+              <label class="client-dialog-label" for="dd-update-note">メモ</label>  
+              <span class="client-dialog-icon-space" aria-hidden="true"></span>  
+            </span>  
+            <textarea class="client-dialog-textarea" id="dd-update-note" name="note" rows="3" data-pendo="update-delivery-destination-dialog-input-note"></textarea>  
+            <div class="client-dialog-support"><p>証憑には表示されないメモです</p></div>  
+          </div>  
+        </form>  
+      </div>  
+      <div class="client-dialog-footer">  
+        <button class="client-dialog-btn-primary" data-pendo="update-delivery-destination-dialog-main-button" form="delivery-destination-update" type="submit">  
+          <span>保存</span>  
+        </button>  
+        <button class="client-dialog-btn-cancel" id="dd-update-dialog-cancel" data-pendo="update-delivery-destination-dialog-sub-button" type="button">  
+          <span>キャンセル</span>  
+        </button>  
+      </div>  
+    </div>  
+  </dialog>  
+
+    </div><!-- invoice-create-wrap -->  
+  </div><!-- .Ld -->  
+</div><!-- .L -->  
+
+<script src="invoice/invoice-create2.js"></script>  
+<script src="components/layout-components.js"></script>  
+<script>  
+AppLayout.mount({ preset: 'invoice', pageTitle: '請求書の新規作成（v2）', activeNav: 'invoice' });  
+if (typeof setDefaultAccrualDateIfEmpty === 'function') {  
+  setDefaultAccrualDateIfEmpty();  
+}  
+if (typeof setDefaultInvoiceNumberIfEmpty === 'function') {  
+  setDefaultInvoiceNumberIfEmpty();  
+}  
+if (typeof syncInvoicePreview === 'function') {  
+  syncInvoicePreview();  
+}  
+</script>  
+
+</body>  
+</html>
