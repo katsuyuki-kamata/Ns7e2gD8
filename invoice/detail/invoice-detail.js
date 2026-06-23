@@ -65,11 +65,8 @@ function switchShareLinkTab(id) {
 }
 
 function copyShareLinkUrl(btn) {
-  var row = btn.closest('.vd-share-url-row');
-  if (!row) return;
-  var urlEl = row.querySelector('.vd-share-url');
-  if (!urlEl) return;
-  var text = urlEl.textContent.trim();
+  var text = btn.getAttribute('data-share-url');
+  if (!text) return;
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(text);
   }
